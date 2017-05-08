@@ -1,12 +1,14 @@
 name: "my-website"
 output_dir: "."
 navbar:
-  title: "R 4 psychologists"
+  title: "Aiden Loe"
   left:
     - text: "Home"
-      href: r4psychologists.html
+      href: index.html
     - text: "About"
       href: about.html
+    - text: "R 4 Psychologists"
+      href: r4psychologists.html
 output:
   html_document:
     theme: cosmo
