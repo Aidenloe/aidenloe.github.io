@@ -12,7 +12,7 @@
 <meta name="author" content="aiden" />
 
 
-<title>index</title>
+<title>Home</title>
 
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -183,8 +183,21 @@ $(document).ready(function () {
 <li>
   <a href="about.html">About</a>
 </li>
-<li>
-  <a href="r4psychologists.html">R 4 Psychologists</a>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    R 4 Psychologists
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li class="dropdown-header">Heading 1</li>
+    <li>
+      <a href="introToR.html">Intro to R</a>
+    </li>
+    <li>
+      <a href="page_b.html">Page B</a>
+    </li>
+  </ul>
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
@@ -198,31 +211,21 @@ $(document).ready(function () {
 
 
 
-<h1 class="title toc-ignore">index</h1>
+<h1 class="title toc-ignore">Home</h1>
 <h4 class="author"><em>aiden</em></h4>
 <h4 class="date"><em>8 May 2017</em></h4>
 
 </div>
 
 
-<div id="r-markdown" class="section level2">
-<h2>R Markdown</h2>
-<p>This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <a href="http://rmarkdown.rstudio.com" class="uri">http://rmarkdown.rstudio.com</a>.</p>
-<p>When you click the <strong>Knit</strong> button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:</p>
-<pre class="r"><code>summary(cars)</code></pre>
-<pre><code>##      speed           dist       
-##  Min.   : 4.0   Min.   :  2.00  
-##  1st Qu.:12.0   1st Qu.: 26.00  
-##  Median :15.0   Median : 36.00  
-##  Mean   :15.4   Mean   : 42.98  
-##  3rd Qu.:19.0   3rd Qu.: 56.00  
-##  Max.   :25.0   Max.   :120.00</code></pre>
-</div>
-<div id="including-plots" class="section level2">
-<h2>Including Plots</h2>
-<p>You can also embed plots, for example:</p>
-<p><img src="index_files/figure-html/pressure-1.png" width="672" /></p>
-<p>Note that the <code>echo = FALSE</code> parameter was added to the code chunk to prevent printing of the R code that generated the plot.</p>
+<div id="hello" class="section level2">
+<h2>Hello</h2>
+<p>My name is Aiden loe and I am a PhD candidate at the University of Cambridge.</p>
+<p>I like to keep things simple and neat.</p>
+<p>That makes learning easier.</p>
+<p>Here we cover basic R and stats for our workshop.</p>
+<p>But I also add things that I pick up along the way.</p>
+<p>For more about me, please go to <a href="http://aidenloe.com" class="uri">http://aidenloe.com</a></p>
 </div>
 
 

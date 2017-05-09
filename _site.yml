@@ -9,8 +9,16 @@ navbar:
       href: about.html
     - text: "R 4 Psychologists"
       href: r4psychologists.html
+      menu:
+        - text: "Heading 1"
+        - text: "Intro to R"
+          href: introToR.html
+        - text: "Page B"
+          href: page_b.html
+ 
 output:
   html_document:
     theme: cosmo
     highlight: textmate
     css: style.css
+
