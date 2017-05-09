@@ -1,5 +1,5 @@
 ---
-title: "about"
+title: "About"
 author: "aiden"
 date: "8 May 2017"
 output: html_document
@@ -9,9 +9,13 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## R Markdown
+## Hello
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+You are probably here because either we directed you to the page, or you just happen to chance upon it. 
+It is within my interest to help you speed up your knowledge in R and statistics, but it doesn't mean I know everything. 
+
+There are many ways to teaching something, but I prefer situational based approach. 
+I think the best way of learning is by trying to solve a problem. So many of the examples here will be based within a certain context. In this case, it will mostl be psychological problems. 
 
 When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
 
