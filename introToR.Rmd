@@ -399,3 +399,15 @@ This will restructure your data. Making it easier to upload the dataset into R s
 <center>**Once you finish the questions, give yourself a pad in the back and look forward to the workshop!** </center>
 <br>
  <img src="images/youdidit.jpg" alt="Drawing" style="width: 400px;"/>
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-98916204-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
