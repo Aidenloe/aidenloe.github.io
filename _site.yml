@@ -13,8 +13,6 @@ navbar:
         - text: "What is R?"
         - text: "Intro to R"
           href: introToR.html
-        - text: "Page B"
-          href: page_b.html
  
 output:
   html_document:
