@@ -1,7 +1,7 @@
 ---
 title: "Introduction to R"
 author: "Aiden Loe"
-date: "5/9/2017"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
 output: html_document
 ---
 
@@ -14,9 +14,9 @@ You got here because you are keen on learning R, so luckily, I don't have to giv
 
 Here is the first question. How do you start using R? (Given that you have R and R studio in your computer) 
 
-Think of R as the engine of a car and R studio will be the structure of the car. 
+Think of R as the engine of a car and R studio as the structure of the car. 
 
-In order to make a car work, you first need the engine. Everything you do will be done in the Car, and not the engine itself. Simiarily, everything you do will be done using R Studio, and R will serve as the engine. 
+In order for your car to work, you first need the engine. So, in order for R studio to work, you need R. Manipulation is done via R studio, and not R itself. Just like how you would want to accelerate faster or slower, listen to music or turn on/off the air-condition in the car, the functions are found in the interior of the car which is then connected to the engine. So the basic idea is, your working environment will be R studio. 
 
 
 ## **R studio** 
@@ -93,29 +93,31 @@ The help text will appear in the Rstudio window on the bottom right.
  Take advantage of it by google-ing your question.
  There are numerous blogs, forums, tutorials and books with R code that you can just copy/paste and use.
 
-```{r help, results='hide'}
-help("install.packages")
-?mean
+```{r help, eval=FALSE}
+help("insert package name")
+mean
 ??bind
 ```
 
+<br>
 
 ##  **Working Directory**  
 
  Your "working directory" is the "folder" where R loads and saves data from in this session.
 
- You can change this location so that its convenient to access your files.
+ - You can change this location so that its convenient to access your files.
 
- The 'get working directory' command will show what your working directory is currently set to.
+ - The 'get working directory' command will show what your working directory is currently set to.
 
- the easiest way to do it in R Studio is to do it through the menus:
+ - The easiest way to do it in R Studio is to do it through the menus:
 
- Go to Session -> Set working directory -> Choose directory...
-```{r WD, results='hide'}
+ - Go to Session -> Set working directory -> Choose directory...
+```{r WD, eval= FALSE}
 getwd() #get current WD
-#setwd() set Work Directory e.g. setwd("~/desktop")
+setwd("~/desktop") #set Work Directory
 ```
 
+<br>
 
 ## **Installing and Loading Packages to extend R**   
 
@@ -125,13 +127,15 @@ You will have to do it again if you update R
 
 You will need to load the package each time you start an R session. Two approaches to do this. 
 
-```{r Install and Load, results='hide'}
-#install.packages("ggplot2")
+```{r Install and Load, eval=FALSE}
+install.packages("ggplot2")
 
 library(ggplot2)
 #     OR      
 require("ggplot2")
 ```
+
+<br>
 
 ##  **VARIABLES IN R**  
 
@@ -148,8 +152,9 @@ object = c(3,4,5,2,2,5,3,7,7,8,9)    # c() is a function that means 'combine'
 object
 ```
 
+<br>
 
-## **DATA STRUCTURES** 
+## **Data Structures** 
 
 R has different types of data structures:
 
@@ -244,6 +249,147 @@ family$Names #selecting specific columns by names
 
 ```
 
+<br>
 
-```{r dataframe, results='hide'}
+## **Load dataset**
+
+Loading your data into R studio is perhaps the most important part. 
+
+- We will use an online example dataset that is in my dropbox folder.
+
+- The link below will show you how to automatically download datasets from dropbox. 
+(http://stackoverflow.com/questions/35931923/read-csv-file-from-dropbox-and-plot-it-on-leaflet-map-in-shiny-app)
+
+*Note:* If your dataset is in your computer, you have to first set the working directory to where you saved "dataset1.csv". Otherwise you'll get an error saying: cannot open file 'dataset1.csv': No such file or directory. If you don't know how to do that, go to **Working Directory** section. 
+
+
+```{r load online data, results='hide'}
+R.Version()$version.string #check R version
+
+df <- read.csv('https://www.dropbox.com/s/lvzw37tkw9y5vnq/dataset1.csv?raw=1')
+
 ```
+
+
+We will work with csv files for simplicity. 
+
+If your dataset (csv file) is in your local folder. 
+
+ - file argument is the name of your dataset. 
+ - header argument tells R that the first row are the column names
+ 
+```{r load offline data, eval=FALSE}
+dataset <- read.csv(file = 'Dataset Name.csv', header=TRUE)
+
+```
+<br>
+
+## **Dealing with Variables**
+
+Here are some useful functions that will give you a feel for datasets you load into R
+
+```{r deal with variables, results='hide'}
+## Some useful commands that will quickly give you a feel for datasets you load into R
+head(df)  # first 6 observations, top of dataset
+dim(df)   # the dimensions of the dataset (how many rows by columns)
+names(df) # variable names. You could also do colnames(ippq)
+summary(df)	# summary statistics
+str(df) # gives the structure of the dataset     
+class(df) # data frame: different variables (numbers, characters etc.) stuck together in a table.
+# imported data are stored in the format of data frame, it looks almost the same as a matrix, but allows different data types (character/numeric/etc.)
+
+
+## Four ways of accessing data in the same variable
+df$job_satisfaction       # By column name (notice the $-sign)
+df[["job_satisfaction"]]  # By column name (notice the double brackets)
+df[, "job_satisfaction"]  # By column name (notice the comma)
+df[, 40]                  # By column number
+
+## How many male/female respondents do we have?
+table(df$gender)    # table(data$variable) gives you the frequency table
+summary(df$gender)  # summary(data$variable) gives you descriptive stats for that particular variable, NAs represent missing values. It works with categorical variable...
+summary(df$happiness_at_work) # ...as well as continuous variable
+```
+<br>
+
+## **Variable calculation**
+
+Variable calculation
+
+Lets do some calculations on the variable "job_satisfaction"
+
+ 1. What is the mean/average score of 'job_satisfaction'?
+ 2. What is the mean/average score of 'job_satisfaction' for males?
+ 4. Is there a significant differences in the average score of 'job_satisfaction' between males and females?
+
+
+```{r deal with simple calculations, results='hide', message=FALSE}
+#Find the average score of 'job_satisfaction'
+mean(df$job_satisfaction)  # Doesn't work if NAs exist in the dataset
+mean(df$job_satisfaction, na.rm = T) # Exclude NAs when calculating the average
+
+## Recode variable.
+## Lets convert gender into 0 = female, 1 = male
+df$is_male <- NA #create a new variable called is_male, and set it to NA for every row
+df[df$gender=="male", ]$is_male <- 1  # if gender equals to male, assign 1
+df[!df$gender=="male", ]$is_male <- 0 # Notice the '!' just after the opening square bracket. If gender does not equal to male, assign 0
+df$is_male
+
+## What's the average job satisfaction  at work for men?
+# Option 1
+# get a dataset of just men
+men = df[df$is_male == 1,]
+# calculate mean job satisfaction 
+mean(df$job_satisfaction, na.rm=T) #average male job satisfaction at work
+
+# Option 2 (functions within functions)
+# this does exactly the same thing in a single line of code, and has the advantage of not copying the data into a new variable
+mean(df$job_satisfaction[df$is_male == 1], na.rm = T)
+
+
+# Option 3 (Piping)
+# passing the output from one function to the next
+require(dplyr) # need this package to use the '%>%'
+mean(df$job_satisfaction[df$is_male == 1], na.rm = T)
+df$job_satisfaction[df$is_male == 1] %>% mean(na.rm=T)
+
+#Question 4
+## Are women statistically more satisfied in their jobs than men at work?
+# do a t-test to compare job satisfaction of women vs. men
+t.test(x=df$job_satisfaction[df$is_male == 1], y=df$job_satisfaction[df$is_male == 0])
+```
+
+<br>
+
+## **Questions**
+
+Here are some questions for you to answer. 
+
+First. Go to <http://personality-testing.info/_rawdata/>
+
+- You can download the Rosenburg Self-Esteem Questionnaire Scale dataset
+- Click on 'RSE' located in the last column
+- A codebook is provided that gives an explanation of the dataset
+
+Make sure to set your working directory to where you saved the dataset! 
+
+1. load dataset into R studio
+2. How many variables are there in the dataset?
+3. How many participants are there in the dataset?
+4. Convert all 0s to NAs (google!)
+5. Remove all NAs fom the dataset
+6. How many participants are left in the dataset?
+7. Create a new variable for Gender. Male = 1, Female =3
+8. Create a new variable for total score. [e.g. use rowMeans()]
+9. What is the average score of self-esteem? 
+10. What is the average score of self-esteem for males?
+11. What is the average score of self-esteem for females?
+12. Is there a significant difference between male and female in the self-esteem score? 
+13. Save your R script. 
+
+**Note**: For some, you might need to put the values into separate columns manually in excel. To do this, open the csv file in excel and highlight the entire column 1 (Not just the first cell!).
+
+Go to Data --> Text to Column --> Click "Delimited" --> Check "Tab" --> Click Finish. 
+
+This will restructure your data. Making it easier to upload the dataset into R studio. 
+

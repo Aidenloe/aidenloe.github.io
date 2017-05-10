@@ -1,7 +1,7 @@
 ---
 title: "About"
 author: "aiden"
-date: "8 May 2017"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
 output: html_document
 ---
 
@@ -9,26 +9,9 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## Hello
-
 You are probably here because either we directed you to the page, or you just happen to chance upon it. 
 It is within my interest to help you speed up your knowledge in R and statistics, but it doesn't mean I know everything. 
 
 There are many ways to teaching something, but I prefer situational based approach. 
-I think the best way of learning is by trying to solve a problem. So many of the examples here will be based within a certain context. In this case, it will mostl be psychological problems. 
+I think the best way of learning is by trying to solve a problem. So many of the examples here will be based within a certain context. In this case, it will mostly be psychological problems. 
 
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
-
-```{r cars}
-summary(cars)
-```
-
-## Including Plots
-
-You can also embed plots, for example:
-
-```{r pressure, echo=FALSE}
-plot(pressure)
-```
-
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
