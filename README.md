@@ -1,4 +1,4 @@
-# aidenloe.github.io
+# https://aidenloe.github.io
 
 This is a website for teaching individuals learning how to use R. 
 
