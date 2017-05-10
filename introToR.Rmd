@@ -376,10 +376,10 @@ Make sure to set your working directory to where you saved the dataset!
 1. Load dataset into R studio.
 2. How many variables are there in the dataset?
 3. How many participants are there in the dataset?
-4. Convert all 0s to NAs (google!).
+4. Convert all 0s to NAs. (google!)
 5. Remove all NAs fom the dataset.
 6. How many participants are left in the dataset?
-7. Subset the dataset (google). 
+7. Subset the dataset. (google!)
      - Data contains only males information
      - Data contains only females information
 8. Create a new variable in the dataset for total score. [e.g. use rowMeans()]
