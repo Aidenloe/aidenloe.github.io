@@ -308,6 +308,119 @@ library(ggplot2)
 #     OR      
 require(&quot;ggplot2&quot;)</code></pre>
 </div>
+<div id="variables-in-r" class="section level2">
+<h2><strong>VARIABLES IN R</strong></h2>
+<p>We store data in R by putting the data into a variable</p>
+<pre class="r"><code>object = &quot;data&quot;
+object
+
+numbers = 1:10 # 1 to 10
+numbers
+
+object = c(3,4,5,2,2,5,3,7,7,8,9)    # c() is a function that means &#39;combine&#39;
+object</code></pre>
+</div>
+<div id="data-structures" class="section level2">
+<h2><strong>DATA STRUCTURES</strong></h2>
+<p>R has different types of data structures:</p>
+<ol style="list-style-type: decimal">
+<li>Vectors</li>
+<li>Matrices</li>
+<li>Lists</li>
+<li>Data Frames</li>
+</ol>
+<div id="vectors" class="section level3">
+<h3>Vectors</h3>
+<pre class="r"><code>vector1 &lt;- c(&quot;A&quot;, &quot;B&quot;, &quot;C&quot;)
+vector1[3] #refer to the third element in the vector
+vector1[1:2] #refer to elements 1 to 2 in the vector
+length(vector1) #function to get the total length of the vector
+class(vector1) #what variable type is in the vector?
+
+
+vector2 &lt;- c(5,1,-7,-1,0) 
+vector2
+class(vector2) 
+
+
+## R performs mathematical calculations on numeric objects 
+vector3&lt;- c(1:5)
+vector3
+vector3 = vector3 * 2
+vector3
+
+# You can also replace a particular element of a vector using square brackets
+vector3[3]
+vector3[3] &lt;- 106
+vector3</code></pre>
+</div>
+<div id="matrix" class="section level3">
+<h3>Matrix</h3>
+<pre class="r"><code># a set of elements that are all the same type, but with rows and columns
+
+sample1 &lt;- matrix(c(1,2,4,4,7,5), nrow=2, byrow = T) #create the matrix
+head(sample1) # see first 6 rows
+tail(sample1) # see last 6 rows
+class(sample1) # see data type
+
+sample1[1,2] #refer to specific elements using square brackets. The first number is the row and the second is the column.
+sample1[1,] #if you leave one of them blank, you get the whole row or the whole column. So in this case we have row 1
+sample1[,2] #In this case we have column 2
+
+
+sample2 &lt;- matrix(c(4,7,9,3,7,1,8,2,8,4), ncol=5)
+sample2
+
+sample3 &lt;- matrix(c(4,7,9,3,7,1,8,2,8,4), nrow=2)
+sample3
+
+# join/bind matrices together
+cbind(sample1, sample2) # c = column-wise. So join by column
+rbind(sample3, sample2) # r = row-wise. So join by row
+
+# Assign column names
+row_matrix &lt;- rbind(sample3, sample2)
+colnames(row_matrix) &lt;- c(&quot;Maths&quot;,&quot;English&quot;,&quot;Physics&quot;,&quot;Law&quot;,&quot;Physical Education&quot;) #colnames function sets column names
+row_matrix
+row_matrix[,&quot;Maths&quot;] #so now you can refer by column name</code></pre>
+</div>
+<div id="lists" class="section level3">
+<h3>Lists</h3>
+<pre class="r"><code># a set of elements that are different data structure put together
+friend &lt;- list(name=&quot;Jasmine&quot;, age = 28)
+class(friend) # see data type
+
+friend[[&quot;age&quot;]] #Double square brackets to refer to a named list element
+friend$name #This also works, but it&#39;s less safe than the double brackets method
+friend[[2]] #or you can refer to the number of the element
+length(friend) #how many elements in the list</code></pre>
+</div>
+<div id="data-frame" class="section level3">
+<h3>Data frame</h3>
+<pre class="r"><code># similar to a matrix, but different class
+# a set of elements that are all the same type, but with rows and columns
+
+family &lt;- data.frame(Names=c(&#39;John&#39;, &#39;Jane&#39;,&#39;Paul&#39;,&#39;Mary&#39;),
+           Age=c(&#39;28&#39;, &#39;72&#39;, &#39;86&#39;, &#39;32&#39;),
+           Gender=c(0,1,0,1))
+head(family) # see first 6 rows
+tail(family) # see last 6 rows
+class(family) # see data type
+
+family$Names #selecting specific columns by names</code></pre>
+<pre class="r"><code># similar to a matrix, but different class
+# a set of elements that are all the same type, but with rows and columns
+
+family &lt;- data.frame(Names=c(&#39;John&#39;, &#39;Jane&#39;,&#39;Paul&#39;,&#39;Mary&#39;),
+           Age=c(&#39;28&#39;, &#39;72&#39;, &#39;86&#39;, &#39;32&#39;),
+           Gender=c(0,1,0,1))
+head(family) # see first 6 rows
+tail(family) # see last 6 rows
+class(family) # see data type
+
+family$Names #selecting specific columns by names</code></pre>
+</div>
+</div>
 
 
 

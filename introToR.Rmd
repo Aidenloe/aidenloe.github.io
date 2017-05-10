@@ -42,7 +42,7 @@ Type all your commands here along with detailed comments - comments are extremel
 You can save, edit and reuse this file as many times as you like. This is also a way of saving your output - you just re-run the code.
 Thus, its better to create script files than to directly type in the console (bottom left box in RStudio) which is not editable.
 
-### Commenting your R script
+#### Commenting your R script
 All code that follows a hash symbol (#) will be ignored by R. i.e. these will be considered comments.
 It's best practice to comment your script well so that its easy to come back to even a few months from now, let alone years!
 
@@ -133,5 +133,117 @@ library(ggplot2)
 require("ggplot2")
 ```
 
+##  **VARIABLES IN R**  
+
+We store data in R by putting the data into a variable
+
+```{r variables, results='hide'}
+object = "data"
+object
+
+numbers = 1:10 # 1 to 10
+numbers
+
+object = c(3,4,5,2,2,5,3,7,7,8,9)    # c() is a function that means 'combine'
+object
+```
 
 
+## **DATA STRUCTURES** 
+
+R has different types of data structures:
+
+  1. Vectors
+  2. Matrices
+  3. Lists
+  4. Data Frames
+
+### Vectors ###
+```{r vectors, results='hide'}
+vector1 <- c("A", "B", "C")
+vector1[3] #refer to the third element in the vector
+vector1[1:2] #refer to elements 1 to 2 in the vector
+length(vector1) #function to get the total length of the vector
+class(vector1) #what variable type is in the vector?
+
+
+vector2 <- c(5,1,-7,-1,0) 
+vector2
+class(vector2) 
+
+
+## R performs mathematical calculations on numeric objects 
+vector3<- c(1:5)
+vector3
+vector3 = vector3 * 2
+vector3
+
+# You can also replace a particular element of a vector using square brackets
+vector3[3]
+vector3[3] <- 106
+vector3
+```
+
+### Matrix ###
+```{r matrix, results='hide'}
+# a set of elements that are all the same type, but with rows and columns
+
+sample1 <- matrix(c(1,2,4,4,7,5), nrow=2, byrow = T) #create the matrix
+head(sample1) # see first 6 rows
+tail(sample1) # see last 6 rows
+class(sample1) # see data type
+
+sample1[1,2] #refer to specific elements using square brackets. The first number is the row and the second is the column.
+sample1[1,] #if you leave one of them blank, you get the whole row or the whole column. So in this case we have row 1
+sample1[,2] #In this case we have column 2
+
+
+sample2 <- matrix(c(4,7,9,3,7,1,8,2,8,4), ncol=5)
+sample2
+
+sample3 <- matrix(c(4,7,9,3,7,1,8,2,8,4), nrow=2)
+sample3
+
+# join/bind matrices together
+cbind(sample1, sample2) # c = column-wise. So join by column
+rbind(sample3, sample2) # r = row-wise. So join by row
+
+# Assign column names
+row_matrix <- rbind(sample3, sample2)
+colnames(row_matrix) <- c("Maths","English","Physics","Law","Physical Education") #colnames function sets column names
+row_matrix
+row_matrix[,"Maths"] #so now you can refer by column name
+
+```
+
+### Lists
+```{r lists, results='hide'}
+# a set of elements that are different data structure put together
+friend <- list(name="Jasmine", age = 28)
+class(friend) # see data type
+
+friend[["age"]] #Double square brackets to refer to a named list element
+friend$name #This also works, but it's less safe than the double brackets method
+friend[[2]] #or you can refer to the number of the element
+length(friend) #how many elements in the list
+```
+
+### Data frame
+```{r dataframe, results='hide'}
+# similar to a matrix, but different class
+# a set of elements that are all the same type, but with rows and columns
+
+family <- data.frame(Names=c('John', 'Jane','Paul','Mary'),
+           Age=c('28', '72', '86', '32'),
+           Gender=c(0,1,0,1))
+head(family) # see first 6 rows
+tail(family) # see last 6 rows
+class(family) # see data type
+
+family$Names #selecting specific columns by names
+
+```
+
+
+```{r dataframe, results='hide'}
+```
