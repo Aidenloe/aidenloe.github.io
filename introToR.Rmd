@@ -395,3 +395,7 @@ Go to Data --> Text to Column --> Click "Delimited" --> Check "Tab" --> Click Fi
 
 This will restructure your data. Making it easier to upload the dataset into R studio. 
 
+<br>
+<center>**Once you finish the questions, give yourself a pad in the back and look forward to the workshop!** </center>
+<br>
+ <img src="images/youdidit.jpg" alt="Drawing" style="width: 400px;"/>
