@@ -10,7 +10,7 @@ navbar:
     - text: "R 4 Psychologists"
       href: r4psychologists.html
       menu:
-        - text: "Heading 1"
+        - text: "What is R?"
         - text: "Intro to R"
           href: introToR.html
         - text: "Page B"
