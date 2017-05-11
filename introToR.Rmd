@@ -257,7 +257,7 @@ Loading your data into R studio is perhaps the most important part.
 
 - We will use an online example dataset that is in my dropbox folder.
 
-- The link below will show you how to automatically download datasets from dropbox. 
+- The link below will show you how to automatically download datasets from dropbox using Rstudio. 
 (http://stackoverflow.com/questions/35931923/read-csv-file-from-dropbox-and-plot-it-on-leaflet-map-in-shiny-app)
 
 *Note:* If your dataset is in your computer, you have to first set the working directory to where you saved "dataset1.csv". Otherwise you'll get an error saying: cannot open file 'dataset1.csv': No such file or directory. If you don't know how to do that, go to **Working Directory** section. 
@@ -276,7 +276,7 @@ We will work with csv files for simplicity.
 If your dataset (csv file) is in your local folder. 
 
  - file argument is the name of your dataset. 
- - header argument tells R that the first row are the column names
+ - header argument tells R that the first row is the column names
  
 ```{r load offline data, eval=FALSE}
 dataset <- read.csv(file = 'Dataset Name.csv', header=TRUE)
