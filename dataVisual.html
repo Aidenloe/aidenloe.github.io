@@ -4,7 +4,7 @@
 
 <head>
 
-<meta charset="utf-8">
+<meta charset="utf-8" />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
 
@@ -409,7 +409,7 @@ abline(lm(E_means~O_means), col=&quot;blue&quot;) # adds a regression line (y~x)
         xlab=&quot;Gender&quot;,       # x-axis label
         ylab=&quot;Likert Scale&quot;) # y-axis label</code></pre>
 <p><img src="dataVisual_files/figure-html/boxplot%20item%20scores-1.png" width="576" /></p>
-<p><strong>What happens if you are interested in differences in scores between a factor instead of an item?</strong></p>
+<p><strong>What happens if you are interested in differences in scores between gender for a factor instead of an item?</strong></p>
 <p>Then you need to first get the average score of each participant for the specific factor.</p>
 <pre class="r"><code>E &lt;- bfi[,11:15] #Extraversion items
 E_means &lt;- rowMeans(E) # mean score of each person for extraversion
@@ -424,10 +424,133 @@ boxplot(E_Means ~gender,             # variable ~ group
         notch=TRUE)                  # include notch</code></pre>
 <p><img src="dataVisual_files/figure-html/boxplot%20factor%20scores-1.png" width="576" /></p>
 <p><em>One thing to note is: There is ‘strong evidence’ that their medians differ if the two boxes’ notches do not overlap (Chambers et al., 1983, p. 62).</em></p>
+<p>This can be followed up by running t-test.</p>
 </div>
 </div>
 <div id="ggplot2" class="section level2">
 <h2><strong>GGPLOT2</strong></h2>
+<p>GGPLOT2 is perhaps one of the most widely used visualisation package. There are many resources out there to help you achieve what you need in order to use ggplot2.</p>
+<p>If you want Books about ggplot2:</p>
+<ul>
+<li><p>The <a href="https://www.amazon.com/dp/1449316956/ref=cm_sw_su_dp?tag=ggplot2-20">R Graphics Cookbook</a> by Winston Chang.</p></li>
+<li><p><a href="https://www.amazon.com/dp/0387981403/ref=cm_sw_su_dp?tag=ggplot2-20">ggplot2: Elegant Graphics for Data Analysis</a> by Hadley Wickham describes the theoretical underpinnings of ggplot2 and shows you how all the pieces fit together.</p></li>
+</ul>
+<p>If you want online resources about ggplot2:</p>
+<ul>
+<li><p><a href="http://ggplot2.org" class="uri">http://ggplot2.org</a></p></li>
+<li><p><a href="https://groups.google.com/forum/#!forum/ggplot2" class="uri">https://groups.google.com/forum/#!forum/ggplot2</a></p></li>
+<li><p><a href="http://www.cookbook-r.com/Graphs/" class="uri">http://www.cookbook-r.com/Graphs/</a></p></li>
+<li><p><a href="http://stackoverflow.com" class="uri">http://stackoverflow.com</a></p></li>
+</ul>
+<p>Here I will just describe the very basic of ggplot2. It is based on the grammar of graphics. Imagine that you want to form a sentence. You need to first know how you want to express yourself, then you find the words to say it. The words will only make sense if they are constructed correctly. If not, it is just jibberish. Similar to plotting using ggplot2. You need to have some idea of what you are trying to plot, then you add the pieces bit by bit in order to achieve the final look.</p>
+<p>First, you need to install and load the package:</p>
+<pre class="r"><code>#install.packages(&#39;ggplot2&#39;)
+library(ggplot2)</code></pre>
+<p>The basic generic code of ggplot is like this:</p>
+<p><strong>ggplot(dataset,aes(x,y)) + geom_type() + gg.title()</strong></p>
+<p>You can see that the <code>aes()</code> is embedded within the <code>ggplot()</code>. Anything that goes into the <code>aes()</code> means that you are trying to use some variable in your dataset and convert it into a graphical form.</p>
+<p>You need to:</p>
+<ol style="list-style-type: decimal">
+<li>Think about what you are trying to plot and how you want it to look.</li>
+<li>Think about the variables that becomes the x and y variables.<br />
+</li>
+<li>Think about the type of geometric object that exist in ggplot2 and can be used.</li>
+<li>Think about the aesthetics (i.e. title, colour, font size, background etc. )</li>
+</ol>
+<pre class="r"><code># read dataset from dropbox
+# big 5 scores with some demographics data
+big5 &lt;- read.csv(&#39;https://www.dropbox.com/s/xhhes7eu8nozvn2/big5.csv?raw=1&#39;)</code></pre>
+<div id="histogram-1" class="section level3">
+<h3><strong>Histogram</strong></h3>
+<p>For example, I would like to see the distribution for the conscientiousness variable.</p>
+<ol style="list-style-type: decimal">
+<li>I want to plot a histogram</li>
+<li>I only need the conscientiousness variable (con) as the x variable. So con goes inside the <code>aes()</code></li>
+<li>I can use the <code>geom_histogram()</code> to map the data values into a histogram</li>
+</ol>
+<pre class="r"><code>ggplot(big5, aes(x = con)) + # base
+  geom_histogram(binwidth=0.2, colour=&quot;black&quot;, fill=&quot;white&quot;)  # geometric object to represent the data</code></pre>
+<p><img src="dataVisual_files/figure-html/ggplot2%20histogram-1.png" width="672" /></p>
+<p>Now, what if I want to add a vertical line that represents the mean score of con?</p>
+<p>You simple use the ‘+’ sign and include a new geometric object that will represent the vertical line.</p>
+<p>The <code>geom_vline()</code> can be used to represent the vertical line. Since we are manipulating a specific variable in the dataset, we need to put it inside the <code>aes()</code>.</p>
+<pre class="r"><code>ggplot(big5, aes(x = con)) +
+  geom_histogram(binwidth=0.2, colour=&quot;black&quot;, fill=&quot;white&quot;) +
+  geom_vline(aes(xintercept=mean(con, na.rm=T)), colour=&quot;red&quot;, size=1, linetype=&quot;dashed&quot;)</code></pre>
+<p><img src="dataVisual_files/figure-html/ggplot2%20histogram%20with%20vertical%20line-1.png" width="672" /></p>
+</div>
+<div id="scatterplot-1" class="section level3">
+<h3><strong>Scatterplot</strong></h3>
+<p>Say your lecturer/line manager asks you to show them the relationship between 2 continuous variables - age and conscientiousness.</p>
+<p>How would you plot that relationship using ggplot2?</p>
+<pre class="r"><code>ggplot(big5, aes(x = age, y = con)) +   # x variable is age, y variable is conscientiousness
+  geom_point() +  # object to represent points in the scatter plot
+  geom_smooth(method=&quot;lm&quot;) # to draw the best fit line</code></pre>
+<p><img src="dataVisual_files/figure-html/ggplot2%20scatterplot-1.png" width="672" /></p>
+<p>Now let’s spice it up a little bit.</p>
+<p><strong>What if your lecturer/line manager asks you to differentiate the dots between gender? Would that be possible?</strong></p>
+<p>Of course! Remember, if you want to manipulate a specific component within the plot, you make changes to that specific part. Since we know that we want to differentiate the data points by gender, we put the <code>aes()</code> inside the <code>geom_point()</code> with <code>aes(color=gender)</code>. This means that ggplot2 will look into the dataset, search for the gender column, and differentiate by the numeric values. In this case, male = 0, and female = 1. Of course if you coded gender by another name, say sex, then it will be <code>aes(color=sex)</code></p>
+<p>In this case, you see a third variable NA. This happens because in the dataset there are missing data for the gender column. Hence, to make your graph look neater, you can always first remove all missing data before plotting.</p>
+<pre class="r"><code>ggplot(big5, aes(x = age, y = con)) +   # x variable is age, y variable is conscientiousness
+  geom_point(aes(color=gender)) +  # object to represent points in the scatter plot. 
+  geom_smooth(method=&quot;lm&quot;) # to draw the best fit line</code></pre>
+<p><img src="dataVisual_files/figure-html/ggplot2%20scatterplot%20with%20gender-1.png" width="672" /></p>
+</div>
+</div>
+<div id="questions" class="section level2">
+<h2>Questions</h2>
+<p>Okay. This is the basic principle of ggplot2. If you have gotten this far, then you are good to go for the exercises. These exercises below will be challenging if you are completely new to R but nevertheless, possible.</p>
+<p>You will need the help of google to help you for some of the exericses. The idea is to basically recreate the plots you see below.</p>
+<p>To ease the workload, I have written the structure of the code for you. In the script, you will see many XXXXs and your job is to remove the XXXXs and fill it in with the correct codes in order for the graph to be displayed.</p>
+<p>You can get the <a href="https://www.dropbox.com/s/77a1hqup3eek74s/Exercise%20%281-10%29.R?dl=0">script here</a>. You can use the <a href="https://www.dropbox.com/s/xhhes7eu8nozvn2/big5.csv?dl=0">dataset here</a>.</p>
+<pre class="r"><code>require(reshape)</code></pre>
+<pre><code>## Loading required package: reshape</code></pre>
+<pre class="r"><code>#### Load data set ####
+Big5mfq &lt;- big5
+
+########################################### Big 5 &amp; mfq (ggplot2 set)   #####################################################
+
+#remove missing data from Gender
+Big5mfq1 &lt;- Big5mfq[!is.na(Big5mfq$gender),]</code></pre>
+<div id="exercise-1" class="section level3">
+<h3>Exercise 1</h3>
+<p><img src="dataVisual_files/figure-html/Exercise%201-1.png" width="672" /></p>
+</div>
+<div id="exercise-2" class="section level3">
+<h3>Exercise 2</h3>
+<p><img src="dataVisual_files/figure-html/Exercise%202-1.png" width="672" /></p>
+</div>
+<div id="exercise-3" class="section level3">
+<h3>Exercise 3</h3>
+<p><img src="dataVisual_files/figure-html/Exercise%203-1.png" width="672" /></p>
+</div>
+<div id="exercise-4" class="section level3">
+<h3>Exercise 4</h3>
+<p><img src="dataVisual_files/figure-html/Exercise%204-1.png" width="672" /></p>
+</div>
+<div id="exercise-5" class="section level3">
+<h3>Exercise 5</h3>
+<p><img src="dataVisual_files/figure-html/Exercise%205-1.png" width="672" /></p>
+</div>
+<div id="exercise-6" class="section level3">
+<h3>Exercise 6</h3>
+<p><img src="dataVisual_files/figure-html/Exercise61-1.png" width="672" /></p>
+</div>
+<div id="exercise-7" class="section level3">
+<h3>Exercise 7</h3>
+<p><img src="dataVisual_files/figure-html/Exercise%207-1.png" width="672" /></p>
+</div>
+<div id="exercise-8" class="section level3">
+<h3>Exercise 8</h3>
+<p><img src="dataVisual_files/figure-html/Exercise%208-1.png" width="672" /></p>
+</div>
+<div id="exercise-9" class="section level3">
+<h3>EXERCISE 9</h3>
+<p><img src="dataVisual_files/figure-html/Exercise%209-1.png" width="672" /></p>
+</div>
+<div id="exercsie-10" class="section level3">
+<h3>EXERCSIE 10</h3>
+<p><img src="dataVisual_files/figure-html/Exercise%2010-1.png" width="672" /></p>
 <script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
@@ -438,6 +561,7 @@ boxplot(E_Means ~gender,             # variable ~ group
   ga('send', 'pageview');
 
 </script>
+</div>
 </div>
 
 
@@ -465,7 +589,7 @@ $(document).ready(function () {
   (function () {
     var script = document.createElement("script");
     script.type = "text/javascript";
-    script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
     document.getElementsByTagName("head")[0].appendChild(script);
   })();
 </script>

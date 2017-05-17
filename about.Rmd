@@ -21,7 +21,7 @@ Currently, there are only two areas that I am covering:
 
 1. [Intro to R](http://aidenloe.github.io/introToR.html)
 
-2. [Data Visualisation](http://aidenloe.github.io/ggplot2.html)
+2. [Data Visualisation](http://aidenloe.github.io/dataVisual.html)
 
 
 
