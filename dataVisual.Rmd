@@ -56,7 +56,7 @@ Here are some questions you might want to ask at the beginning.
 
 1. How does the distribution of my items look like? *(histogram)*
 2. Is there a relationship between openness and extraversion? *(scatterplot)*
-3. Are there differences in item score between gender? *(boxplot)*
+3. Are there differences in item scores between gender? *(boxplot)*
 
 ### **Histogram**
 
@@ -232,7 +232,7 @@ Now, what if I want to add a vertical line that represents the mean score of con
 
 You simple use the '+' sign and include a new geometric object that will represent the vertical line. 
 
-The `geom_vline()` can be used to represent the vertical line. Since we are manipulating a specific variable in the dataset, we need to put it inside the `aes()`. 
+The `geom_vline()` can be used to represent the vertical line. Since we are manipulating a specific variable in the dataset, we need to put `aes()` inside the `geom_vline()`. 
 
 ```{r ggplot2 histogram with vertical line}
 ggplot(big5, aes(x = con)) +
@@ -268,29 +268,67 @@ ggplot(big5, aes(x = age, y = con)) +   # x variable is age, y variable is consc
   geom_smooth(method="lm") # to draw the best fit line
 ```
 
-## Questions
+
+### **Aesthetics**
+
+So this will cover some of the aesthetics that you can design for your plot. 
+
+#### **Naming x and y axis**
+```{r aesthetics (axis), warning=FALSE}
+p <- ggplot(big5, aes(x = age, y= con)) +   # x variable is age, y variable is conscientiousness
+  geom_point(aes(color=gender)) +  # object to represent points in the scatter plot. 
+  geom_smooth(method="lm") # to draw the best fit line
+
+
+p <- p + scale_x_continuous(name="age")  #,limits=c(0,7), breaks=0:7
+p <- p + scale_y_continuous(name="conscientiousness")
+p
+
+
+```
+
+#### **Theme manipulation**
+```{r aesthetics (theme), warning=FALSE}
+p <- p + ggtitle("Scatterplot")
+p <- p + theme (plot.title=element_text(lineheight=.8, face="bold", size=18))
+p <- p + theme(axis.title.x = element_text(size=17, face="bold"))
+p <- p + theme(axis.title.y = element_text(size=17, face="bold", color="red"))
+p
+```
+
+
+#### **Changing the background colour**
+```{r aesthetics (background), warning=FALSE}
+p <- p + theme(panel.background = element_rect(fill = 'white', colour = 'red'))
+p <- p + theme(plot.background = element_rect(fill = 'white', colour = 'red'))
+p
+
+```
+
+<br>
+
+## **Questions**
 
 Okay. This is the basic principle of ggplot2. If you have gotten this far, then you are good to go for the exercises. These exercises below will be challenging if you are completely new to R but nevertheless, possible. 
 
-You will need the help of google to help you for some of the exericses. The idea is to basically recreate the plots you see below. 
+You will need the help of google for some of the exericses. The idea is to basically recreate the plots you see below. This should take about an hour if you already know R, but perhaps 2 hours if you are new to R. 
 
-To ease the workload, I have written the structure of the code for you. In the script, you will see many XXXXs  and your job is to remove the XXXXs and fill it in with the correct codes in order for the graph to be displayed.
+To ease the workload, I have written the structure of the code for you. In the script, you will see many XXXXs  and your job is to remove the XXXXs and fill it in with the correct code in order for the graph to be displayed.
 
 You can get the [script here](https://www.dropbox.com/s/77a1hqup3eek74s/Exercise%20%281-10%29.R?dl=0). You can use the [dataset here](https://www.dropbox.com/s/xhhes7eu8nozvn2/big5.csv?dl=0). 
 
 
-```{r dataset ggplot questions, result='hide'}
-require(reshape)
+Don't fret. Everyone's been there.
+
+```{r dataset ggplot questions, result='hide', message=FALSE, echo=FALSE}
+require(reshape) 
 #### Load data set ####
 Big5mfq <- big5
-
-########################################### Big 5 & mfq (ggplot2 set)   #####################################################
 
 #remove missing data from Gender
 Big5mfq1 <- Big5mfq[!is.na(Big5mfq$gender),]
 
 ```
-
 
 
 ### Exercise 1
@@ -379,6 +417,15 @@ p
 
 
 
+
+
+---
+<center>**Congratulations on completing the 10 exercises!** </center>
+
+<center>As usual, never stop learning. You are doing really well! </center>
+
+<br>
+ <img src="images/gj1.gif" alt="Drawing" style="width: 150px;"/>
 
 
 <script>
