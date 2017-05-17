@@ -1,6 +1,6 @@
 ---
 title: "About"
-author: "aiden"
+author: "Aiden"
 date: "`r format(Sys.time(), '%d %B, %Y')`"
 output: html_document
 ---
@@ -10,13 +10,21 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 
-### Test
-
 You are probably here because either we directed you to the page, or you just happen to chance upon it. 
 It is within my interest to help you speed up your knowledge in R and statistics, but it doesn't mean I know everything. 
 
 There are many ways to teaching something, but I prefer situational based approach. 
 I think the best way of learning is by trying to solve a problem. So many of the examples here will be based within a certain context. In this case, it will mostly be psychological problems. 
+
+
+Currently, there are only two areas that I am covering: 
+
+1. [Intro to R](http://aidenloe.github.io/introToR.html)
+
+2. [Data Visualisation](http://aidenloe.github.io/ggplot2.html)
+
+
+
 
 
 <script>

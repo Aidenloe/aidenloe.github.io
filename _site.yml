@@ -13,6 +13,8 @@ navbar:
         - text: "What is R?"
         - text: "Intro to R"
           href: introToR.html
+        - text: "Data Visualisation"
+          href: dataVisual.html
  
 output:
   html_document:

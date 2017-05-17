@@ -16,7 +16,7 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 
-## **How to start using R for analysis?**
+## **How to start using R?**
 
 You got here because you are keen on learning R, so luckily, I don't have to give you reasons to do so. 
 

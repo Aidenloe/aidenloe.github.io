@@ -1,0 +1,169 @@
+---
+title: "Data Visualisation"
+author: "Aiden"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output:
+  html_document:
+    toc: true
+    toc_depth: 3
+    toc_float: 
+      collapsed: false
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## **Intro to visualisation**
+
+There are tons of different packages that can be used to visualise data. I will be covering a couple of these packages. These should be good enough to get you started on your own. First we will start using the functions that are provided by base R. These plotting functions do not rely on any packages. Sort of like a quick dirty way to see your data. The plotting capabilities are super flexible, but we want to keep it simple and straightforward for our audience to understand. Then we will use the ggplot2 package to help us do more plotting. As usual, there are questions at the end for you to complete. In this case, we will only test you on ggplot2. 
+
+## **Dataset** 
+
+So let's use the bfi dataset from the `psych` package. If you want to see what is in the bfi dataset, all you need to do is to
+
+1. Install psych package `install.packages()`
+2. Load psych package `require()`
+3. load dataset `data()`
+4. See what is in the dataset `str()`
+
+
+```{r load package, results='hide', message=FALSE, echo=FALSE}
+require(psych)
+data(bfi)
+```
+
+
+To make things easy. I will quick a quick brief introduction to the data. For more information please see the documentation `?bfi`.
+
+* Five Personality Factors 
+
+    + 28 variables in total
+    + 25 personality items
+    + 5 items per factor
+    + 2800 observations
+    + Includes gender, edu and age. 
+    
+
+## **Generic Plotting**
+
+We can immediately start plotting to get a generate sense of the data we have. 
+
+Here are some questions you might want to ask at the beginning. 
+
+1. How does the distribution of my items look like? *(histogram)*
+2. Is there a relationship between openness and extraversion? *(scatterplot)*
+3. Are there differences in item score between gender? *(boxplot)*
+
+### **Histogram**
+
+To address the first question: *How does the distribution of my items look like?*
+
+We use the `hist` function. 
+
+You can try changing the variables in the dataset to see how the histogram changes. 
+```{r histogram}
+hist(bfi$A1)
+```
+
+Here are the few more arguments which you might want to use to beautify the plot before you show someone else. 
+
+This is usually good enough to show your colleagues what your data looks like. 
+```{r histogram2}
+r <- hist(bfi$A1,  
+          main= "Histogram",     # title
+          xlab="Likert scale",   # x-axis label
+          ylab="Frequency",      # y-axis label
+          col='green',           # colour of bins
+          ylim=c(0,1000),        # y-axis limits
+          xlim=c(0,7))           # x-axis limits
+```
+
+### **Scatter plot**
+
+To address the second question: *Is there a relationship between openness and extraversion??*
+
+We will use the `plot` function. 
+
+First, we need to get the average scores of each person per factor. 
+
+```{r average scores of ext and ope, results='hide'}
+names(bfi) #names
+E <- bfi[,11:15] #Extraversion
+O <- bfi[,21:25] #Openness
+
+E_means <- rowMeans(E) # mean score of each person for extraversion
+O_means <- rowMeans(O) # mean score of each person for openness
+```
+
+Given that we have the mean scores of each participant for both factors. We can see if the factors do in fact have a relationship via visualisation. 
+
+You can change the arguments in the `plot` function so that it will display what you want. This is just a simple example. 
+
+Here you can see that there is a positive relationship between the scores.
+
+What happens then? You normally test for significant relationship. But this give you quick a good idea of your data. 
+```{r scatterplot}
+plot(x = E_means,  
+     y = O_means,
+     pch= 3,         # the design of the points 
+     cex = 0.5,      # size of the points
+     col="dark red") # the colour of the points 
+
+abline(lm(E_means~O_means), col="blue") # adds a regression line (y~x), aka the best fit line. The abline draws the best fit line. The best fit line is derived from using the lm(), which is the linear regression function. Using just the lm function will give you the beta estimates and the significance of the relationship between the IVs and DVs. 
+```
+
+### **Boxplot**
+
+To finally address the third question: *Are there differences in item scores between gender?*
+
+We will use the `boxplot` function. 
+
+We can see that most people in the sample are scoring at the upper bound of the response scale. 
+
+
+```{r boxplot item scores}
+boxplot(A4~gender,           # variable ~ group
+        data=bfi,            # dataset
+        main="BFI Data",     # title
+        xlab="Gender",       # x-axis label
+        ylab="Likert Scale") # y-axis label
+
+
+```
+
+
+**What happens if you are interested in differences between factor scores instead?**
+
+```{r boxplot factor scores}
+E <- bfi[,11:15] #Extraversion items
+E_means <- rowMeans(E) # mean score of each person for extraversion
+bfi$E_Means <- E_means #Put it into a new column in the dataset
+
+boxplot(E_Means ~gender,             # variable ~ group
+        col=(c("gold","darkgreen")), # colour between boxplots
+        data=bfi,                    # dataset
+        main="BFI Data",             # title
+        xlab="Gender",               # x-axis label
+        ylab="Likert Scale",         # y-axis label
+        notch=TRUE)                  # include notch
+
+```
+
+*One thing to note is: if two boxes' notches do not overlap this is ‘strong evidence’ their medians differ (Chambers et al., 1983, p. 62).**
+
+## **GGPLOT2**
+
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-98916204-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
