@@ -79,7 +79,7 @@ r <- hist(bfi$A1,
           xlim=c(0,7))           # x-axis limits
 ```
 
-### **Scatter plot**
+### **Scatterplot**
 
 To address the second question: *Is there a relationship between openness and extraversion??*
 
