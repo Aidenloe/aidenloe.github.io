@@ -362,7 +362,7 @@ div.tocify {
 <p>We use the <code>hist</code> function.</p>
 <p>You can try changing the variables in the dataset to see how the histogram changes.</p>
 <pre class="r"><code>hist(bfi$A1)</code></pre>
-<p><img src="dataVisual_files/figure-html/histogram-1.png" width="672" /></p>
+<p><img src="dataVisual_files/figure-html/histogram-1.png" width="576" /></p>
 <p>Here are the few more arguments which you might want to use to beautify the plot before you show someone else.</p>
 <p>This is usually good enough to show your colleagues what your data looks like.</p>
 <pre class="r"><code>r &lt;- hist(bfi$A1,  
@@ -372,7 +372,7 @@ div.tocify {
           col=&#39;green&#39;,           # colour of bins
           ylim=c(0,1000),        # y-axis limits
           xlim=c(0,7))           # x-axis limits</code></pre>
-<p><img src="dataVisual_files/figure-html/histogram2-1.png" width="672" /></p>
+<p><img src="dataVisual_files/figure-html/histogram2-1.png" width="576" /></p>
 </div>
 <div id="scatter-plot" class="section level3">
 <h3><strong>Scatter plot</strong></h3>
@@ -396,7 +396,7 @@ O_means &lt;- rowMeans(O) # mean score of each person for openness</code></pre>
      col=&quot;dark red&quot;) # the colour of the points 
 
 abline(lm(E_means~O_means), col=&quot;blue&quot;) # adds a regression line (y~x), aka the best fit line. The abline draws the best fit line. The best fit line is derived from using the lm(), which is the linear regression function. Using just the lm function will give you the beta estimates and the significance of the relationship between the IVs and DVs. </code></pre>
-<p><img src="dataVisual_files/figure-html/scatterplot-1.png" width="672" /></p>
+<p><img src="dataVisual_files/figure-html/scatterplot-1.png" width="576" /></p>
 </div>
 <div id="boxplot" class="section level3">
 <h3><strong>Boxplot</strong></h3>
@@ -408,8 +408,9 @@ abline(lm(E_means~O_means), col=&quot;blue&quot;) # adds a regression line (y~x)
         main=&quot;BFI Data&quot;,     # title
         xlab=&quot;Gender&quot;,       # x-axis label
         ylab=&quot;Likert Scale&quot;) # y-axis label</code></pre>
-<p><img src="dataVisual_files/figure-html/boxplot%20item%20scores-1.png" width="672" /></p>
-<p><strong>What happens if you are interested in differences between factor scores instead?</strong></p>
+<p><img src="dataVisual_files/figure-html/boxplot%20item%20scores-1.png" width="576" /></p>
+<p><strong>What happens if you are interested in differences in scores between a factor instead of an item?</strong></p>
+<p>Then you need to first get the average score of each participant for the specific factor.</p>
 <pre class="r"><code>E &lt;- bfi[,11:15] #Extraversion items
 E_means &lt;- rowMeans(E) # mean score of each person for extraversion
 bfi$E_Means &lt;- E_means #Put it into a new column in the dataset
@@ -421,8 +422,8 @@ boxplot(E_Means ~gender,             # variable ~ group
         xlab=&quot;Gender&quot;,               # x-axis label
         ylab=&quot;Likert Scale&quot;,         # y-axis label
         notch=TRUE)                  # include notch</code></pre>
-<p><img src="dataVisual_files/figure-html/boxplot%20factor%20scores-1.png" width="672" /></p>
-<p>*One thing to note is: if two boxes’ notches do not overlap this is ‘strong evidence’ their medians differ (Chambers et al., 1983, p. 62).**</p>
+<p><img src="dataVisual_files/figure-html/boxplot%20factor%20scores-1.png" width="576" /></p>
+<p><em>One thing to note is: There is ‘strong evidence’ that their medians differ if the two boxes’ notches do not overlap (Chambers et al., 1983, p. 62).</em></p>
 </div>
 </div>
 <div id="ggplot2" class="section level2">

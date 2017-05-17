@@ -62,14 +62,14 @@ To address the first question: *How does the distribution of my items look like?
 We use the `hist` function. 
 
 You can try changing the variables in the dataset to see how the histogram changes. 
-```{r histogram}
+```{r histogram,fig.width = 6, fig.height = 6}
 hist(bfi$A1)
 ```
 
 Here are the few more arguments which you might want to use to beautify the plot before you show someone else. 
 
 This is usually good enough to show your colleagues what your data looks like. 
-```{r histogram2}
+```{r histogram2, fig.width = 6, fig.height = 6}
 r <- hist(bfi$A1,  
           main= "Histogram",     # title
           xlab="Likert scale",   # x-axis label
@@ -103,7 +103,7 @@ You can change the arguments in the `plot` function so that it will display what
 Here you can see that there is a positive relationship between the scores.
 
 What happens then? You normally test for significant relationship. But this give you quick a good idea of your data. 
-```{r scatterplot}
+```{r scatterplot, fig.width = 6, fig.height = 5}
 plot(x = E_means,  
      y = O_means,
      pch= 3,         # the design of the points 
@@ -122,7 +122,7 @@ We will use the `boxplot` function.
 We can see that most people in the sample are scoring at the upper bound of the response scale. 
 
 
-```{r boxplot item scores}
+```{r boxplot item scores, fig.width = 6, fig.height = 6}
 boxplot(A4~gender,           # variable ~ group
         data=bfi,            # dataset
         main="BFI Data",     # title
@@ -133,9 +133,11 @@ boxplot(A4~gender,           # variable ~ group
 ```
 
 
-**What happens if you are interested in differences between factor scores instead?**
+**What happens if you are interested in differences in scores between a factor instead of an item?**
 
-```{r boxplot factor scores}
+Then you need to first get the average score of each participant for the specific factor. 
+
+```{r boxplot factor scores, fig.width = 6, fig.height = 6}
 E <- bfi[,11:15] #Extraversion items
 E_means <- rowMeans(E) # mean score of each person for extraversion
 bfi$E_Means <- E_means #Put it into a new column in the dataset
@@ -150,7 +152,7 @@ boxplot(E_Means ~gender,             # variable ~ group
 
 ```
 
-*One thing to note is: if two boxes' notches do not overlap this is ‘strong evidence’ their medians differ (Chambers et al., 1983, p. 62).**
+*One thing to note is: There is ‘strong evidence’ that their medians differ if the two boxes' notches do not overlap  (Chambers et al., 1983, p. 62).*
 
 ## **GGPLOT2**
 
