@@ -23,6 +23,11 @@ But I also add things that I pick up along the way.
 
 For more about me, please go to http://aidenloe.com 
 
+
+
+
+
+
 <script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),

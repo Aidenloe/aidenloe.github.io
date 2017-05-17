@@ -2,12 +2,20 @@
 title: "Introduction to R"
 author: "Aiden Loe"
 date: "`r format(Sys.time(), '%d %B, %Y')`"
-output: html_document
+output:
+  html_document:
+    toc: true
+    toc_depth: 3
+    toc_float: 
+      collapsed: false
+      
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
+
+
 ## **How to start using R for analysis?**
 
 You got here because you are keen on learning R, so luckily, I don't have to give you reasons to do so. 
@@ -119,7 +127,7 @@ setwd("~/desktop") #set Work Directory
 
 <br>
 
-## **Installing and Loading Packages to extend R**   
+## **Installing and Loading Packages**   
 
 You need to install a package only once. 
 
@@ -137,7 +145,7 @@ require("ggplot2")
 
 <br>
 
-##  **VARIABLES IN R**  
+##  **Variables in R**  
 
 We store data in R by putting the data into a variable
 

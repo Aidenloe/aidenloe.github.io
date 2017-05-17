@@ -4,7 +4,7 @@
 
 <head>
 
-<meta charset="utf-8" />
+<meta charset="utf-8">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
 
@@ -20,6 +20,9 @@
 <script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
 <link href="site_libs/highlightjs-1.1/textmate.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-1.1/highlight.js"></script>
@@ -163,6 +166,107 @@ $(document).ready(function () {
 
 
 
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = false;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+  padding-left: 25px;
+  text-indent: 0;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+.tocify-subheader {
+  display: inline;
+}
+.tocify-subheader .tocify-item {
+  font-size: 0.95em;
+}
+
+</style>
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
 
 
 <div class="navbar navbar-default  navbar-fixed-top" role="navigation">
@@ -210,7 +314,7 @@ $(document).ready(function () {
 
 <h1 class="title toc-ignore">Introduction to R</h1>
 <h4 class="author"><em>Aiden Loe</em></h4>
-<h4 class="date"><em>10 May, 2017</em></h4>
+<h4 class="date"><em>17 May, 2017</em></h4>
 
 </div>
 
@@ -298,8 +402,8 @@ mean
 setwd(&quot;~/desktop&quot;) #set Work Directory</code></pre>
 <p><br></p>
 </div>
-<div id="installing-and-loading-packages-to-extend-r" class="section level2">
-<h2><strong>Installing and Loading Packages to extend R</strong></h2>
+<div id="installing-and-loading-packages" class="section level2">
+<h2><strong>Installing and Loading Packages</strong></h2>
 <p>You need to install a package only once.</p>
 <p>You will have to do it again if you update R</p>
 <p>You will need to load the package each time you start an R session. Two approaches to do this.</p>
@@ -311,7 +415,7 @@ require(&quot;ggplot2&quot;)</code></pre>
 <p><br></p>
 </div>
 <div id="variables-in-r" class="section level2">
-<h2><strong>VARIABLES IN R</strong></h2>
+<h2><strong>Variables in R</strong></h2>
 <p>We store data in R by putting the data into a variable</p>
 <pre class="r"><code>object = &quot;data&quot;
 object
@@ -419,7 +523,7 @@ family$Names #selecting specific columns by names</code></pre>
 <p>Loading your data into R studio is perhaps the most important part.</p>
 <ul>
 <li><p>We will use an online example dataset that is in my dropbox folder.</p></li>
-<li><p>The link below will show you how to automatically download datasets from dropbox. (<a href="http://stackoverflow.com/questions/35931923/read-csv-file-from-dropbox-and-plot-it-on-leaflet-map-in-shiny-app" class="uri">http://stackoverflow.com/questions/35931923/read-csv-file-from-dropbox-and-plot-it-on-leaflet-map-in-shiny-app</a>)</p></li>
+<li><p>The link below will show you how to automatically download datasets from dropbox using Rstudio. (<a href="http://stackoverflow.com/questions/35931923/read-csv-file-from-dropbox-and-plot-it-on-leaflet-map-in-shiny-app" class="uri">http://stackoverflow.com/questions/35931923/read-csv-file-from-dropbox-and-plot-it-on-leaflet-map-in-shiny-app</a>)</p></li>
 </ul>
 <p><em>Note:</em> If your dataset is in your computer, you have to first set the working directory to where you saved “dataset1.csv”. Otherwise you’ll get an error saying: cannot open file ‘dataset1.csv’: No such file or directory. If you don’t know how to do that, go to <strong>Working Directory</strong> section.</p>
 <pre class="r"><code>R.Version()$version.string #check R version
@@ -429,7 +533,7 @@ df &lt;- read.csv(&#39;https://www.dropbox.com/s/lvzw37tkw9y5vnq/dataset1.csv?ra
 <p>If your dataset (csv file) is in your local folder.</p>
 <ul>
 <li>file argument is the name of your dataset.</li>
-<li>header argument tells R that the first row are the column names</li>
+<li>header argument tells R that the first row is the column names</li>
 </ul>
 <pre class="r"><code>dataset &lt;- read.csv(file = &#39;Dataset Name.csv&#39;, header=TRUE)</code></pre>
 <p><br></p>
@@ -554,6 +658,8 @@ t.test(x=df$job_satisfaction[df$is_male == 1], y=df$job_satisfaction[df$is_male 
 
 
 
+</div>
+</div>
 
 </div>
 
@@ -575,7 +681,7 @@ $(document).ready(function () {
   (function () {
     var script = document.createElement("script");
     script.type = "text/javascript";
-    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
     document.getElementsByTagName("head")[0].appendChild(script);
   })();
 </script>
