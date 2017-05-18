@@ -570,9 +570,7 @@ percentile &lt;- f(theta.last.person) # returns the specific person percentile.
 
 your_percentile &lt;- round(f(theta.last.person)*100, 2) # specific value of the last person in percentile
 
-############## Percentile ###################
-#tec &lt;- tempfile(paste0(&quot;image&quot;,i), fileext = &quot;.png&quot;)
-
+#plot
 p &lt;- ggplot(scoreDensity, aes(x,y)) + geom_line()  + geom_ribbon(aes(ymin=0, ymax=y, fill=percentile)) +
    scale_fill_manual(values=c( &quot;#64FFDA&quot;,&quot;#FFCC80&quot;)) +  scale_x_continuous(breaks=quantiles) + xlab(&quot;Percentile&quot;) + ylab(&quot;Probability Density&quot;) +
   theme( plot.title = element_text(lineheight=1 ,size = rel(2), color=&quot;white&quot;),
