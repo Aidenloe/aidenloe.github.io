@@ -15,6 +15,11 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 
+## **Brief Summary**
+
+Here is a collection of plots that you can use either for publication/presentation or for an adaptive feedback. 
+
+
 ## **Install and load package**
 ```{r packages, warnings=FALSE, message=FALSE}
 library(eRm)
@@ -219,6 +224,9 @@ normal_prob_area_plotZ(2,semTheta=semTheta)
 
 ## **On-the-fly Normal plot**
 
+This is useful if you want to create a on-the-fly normal plot display. 
+
+For example, if you create an adaptive test, you can use this code to help generate a nice feedback at the end. 
 
 ```{r on the fly plot}
 ############## Percentile ###################
@@ -270,8 +278,14 @@ onTheFlyPlot(dataset = scoreDenstiy, quantiles = quantiles)
 
 ```
 
+<br>
 
 ## **Test Information plot**
+
+This helps to create a test information plot that is of publishable quality. 
+
+You will need the `eRm`,`grid`,`gtable` package. 
+
 
 ```{r test info, fig.width=8, fig.height=8}
 

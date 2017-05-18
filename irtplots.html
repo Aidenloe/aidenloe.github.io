@@ -351,6 +351,10 @@ div.tocify {
 </div>
 
 
+<div id="brief-summary" class="section level2">
+<h2><strong>Brief Summary</strong></h2>
+<p>Here is a collection of plots that you can use either for publication/presentation or for an adaptive feedback.</p>
+</div>
 <div id="install-and-load-package" class="section level2">
 <h2><strong>Install and load package</strong></h2>
 <pre class="r"><code>library(eRm)
@@ -540,6 +544,8 @@ normal_prob_area_plotZ(2,semTheta=semTheta)</code></pre>
 </div>
 <div id="on-the-fly-normal-plot" class="section level2">
 <h2><strong>On-the-fly Normal plot</strong></h2>
+<p>This is useful if you want to create a on-the-fly normal plot display.</p>
+<p>For example, if you create an adaptive test, you can use this code to help generate a nice feedback at the end.</p>
 <pre class="r"><code>############## Percentile ###################
 
 a &lt;-  rnorm(100)
@@ -586,9 +592,12 @@ return(p)
 }
 onTheFlyPlot(dataset = scoreDenstiy, quantiles = quantiles)</code></pre>
 <p><img src="irtplots_files/figure-html/on%20the%20fly%20plot-1.png" width="672" /></p>
+<p><br></p>
 </div>
 <div id="test-information-plot" class="section level2">
 <h2><strong>Test Information plot</strong></h2>
+<p>This helps to create a test information plot that is of publishable quality.</p>
+<p>You will need the <code>eRm</code>,<code>grid</code>,<code>gtable</code> package.</p>
 <pre class="r"><code>fit &lt;- PCM(pcmdat)
 
 tI&lt;- test_info(fit, theta=seq(-4,4,0.01)) %&gt;% as.data.frame
