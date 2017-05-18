@@ -17,11 +17,13 @@ There are many ways to teaching something, but I prefer situational based approa
 I think the best way of learning is by trying to solve a problem. So many of the examples here will be based within a certain context. In this case, it will mostly be psychological problems. 
 
 
-Currently, there are only two areas that I am covering: 
+Currently, there are only 3 areas that I intend to cover: 
 
-1. [Intro to R](http://aidenloe.github.io/introToR.html)
+1. [R for Psychologists](http://aidenloe.github.io/introToR.html)
 
-2. [Data Visualisation](http://aidenloe.github.io/dataVisual.html)
+2. [ML for Psychologists](http://aidenloe.github.io/introToML.html)
+
+3. [IRT for Psychologists](http://aidenloe.github.io/introToIRT.html)
 
 
 
