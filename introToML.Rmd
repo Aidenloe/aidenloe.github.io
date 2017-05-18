@@ -1,5 +1,5 @@
 ---
-title: "introToML"
+title: "Intro to ML"
 author: "Aiden Loe"
 date: "`r format(Sys.time(), '%d %B, %Y')`"
 output:
@@ -14,8 +14,19 @@ output:
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## R Markdown
-Coming soon!
+## R for big data
+
+Machine Learning is often used for dealing with big data. 
+
+I quite like this graph because it shows how many different packages can be used for big data. 
+
+Hence, it is quite impossible to know everything. 
+
+General understanding of machine learning is often good enough for psychologists. 
+
+But I will try to be as in-depth as possible. 
+
+More to come soon! 
 
 <img src="images/bigdatamap.png" alt="Drawing" style="width: 850px; height:800px"/>
 <center>[source](http://www.xmind.net/m/LKF2)</center>

@@ -21,6 +21,15 @@ navbar:
         - text: "What is ML?"
         - text: "Intro to ML"
           href: introToML.html
+    - text: "IRT 4 Psychologists"
+      href: irt.html
+      menu:
+        - text: "What is IRT?"
+        - text: "Intro to IRT"
+          href: introToIRT.html
+        - text: "Plotting to IRT"
+          href: irtplots.html
+          
 
  
 output:

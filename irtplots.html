@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+<meta name="author" content="Aiden Loe" />
+
+
+<title>IRT plots</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-1.1/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-1.1/highlight.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs && document.readyState && document.readyState === "complete") {
+   window.setTimeout(function() {
+      hljs.initHighlighting();
+   }, 0);
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 51px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+
+.section h2 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h3 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h4 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h5 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h6 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
+
+<!-- code folding -->
+
+
+
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = false;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+  padding-left: 25px;
+  text-indent: 0;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+.tocify-subheader {
+  display: inline;
+}
+.tocify-subheader .tocify-item {
+  font-size: 0.95em;
+}
+
+</style>
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Aiden Loe</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li>
+  <a href="about.html">About</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    R 4 Psychologists
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li class="dropdown-header">What is R?</li>
+    <li>
+      <a href="introToR.html">Intro to R</a>
+    </li>
+    <li>
+      <a href="dataVisual.html">Data Visualisation</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    ML 4 Psychologists
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li class="dropdown-header">What is ML?</li>
+    <li>
+      <a href="introToML.html">Intro to ML</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    IRT 4 Psychologists
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li class="dropdown-header">What is IRT?</li>
+    <li>
+      <a href="introToIRT.html">Intro to IRT</a>
+    </li>
+    <li>
+      <a href="irtplots.html">Plotting to IRT</a>
+    </li>
+  </ul>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">IRT plots</h1>
+<h4 class="author"><em>Aiden Loe</em></h4>
+<h4 class="date"><em>18 May, 2017</em></h4>
+
+</div>
+
+
+<div id="install-and-load-package" class="section level2">
+<h2><strong>Install and load package</strong></h2>
+<pre class="r"><code>library(eRm)
+library(reshape)
+library(dplyr)
+library(ggplot2)
+library(gtable)
+library(grid)</code></pre>
+<p><br></p>
+</div>
+<div id="normal-plot-percentile" class="section level2">
+<h2><strong>Normal plot (percentile)</strong></h2>
+<p>This gives you a plot with the ith percentile ranking at the bottom.</p>
+<pre class="r"><code>lb=20
+ub=140
+lb1=40
+ub1=120
+lb2=60
+ub2=100
+lb3=79.5
+ub3=80.5
+mean = 80
+sd = 20
+limits = c(mean - 4 * sd, mean + 4 * sd)
+engTheta &lt;- 0.5
+semTheta &lt;- engSem &lt;-0.5
+dnorm &lt;- engScore &lt;- 70
+dnorm= engScore #The location of the person&#39;s score on the y-axis.
+
+normal_prob_area_plot &lt;- function(dnorm=0.5,semTheta=0.5, lb=20, ub=140, lb1=40, ub1=120,lb2=60 ,ub2=100,
+                                  lb3=79.5,ub3=80.5,mean = 80, sd = 20,
+                                  limits = c(mean - 4 * sd, mean + 4 * sd)) {
+
+  dnorm &lt;- engTheta*sd+mean
+  engScore &lt;- dnorm
+  semScore &lt;- semTheta*20
+  (x &lt;- seq(limits[1], limits[2], length.out = 100))
+
+  xmin &lt;- max(lb, limits[1])
+  xmax &lt;- min(ub, limits[2])
+  x1min &lt;- max(lb1, limits[1])
+  x1max &lt;- min(ub1, limits[2])
+  x2min &lt;- max(lb2, limits[1])
+  x2max &lt;- min(ub2, limits[2])
+  x3min &lt;- max(lb3, limits[1])
+  x3max &lt;- min(ub3, limits[2])
+
+  areax &lt;- seq(xmin, xmax, length.out = 100)
+  areax1 &lt;- seq(x1min, x1max, length.out = 100)
+  areax2 &lt;- seq(x2min, x2max, length.out = 100)
+  areax3 &lt;- seq(x3min, x3max, length.out = 100)
+
+  area &lt;- data.frame(x = areax, ymin = 0, ymax = dnorm(areax, mean = mean, sd = sd))
+  area1 &lt;- data.frame(x = areax1, ymin = 0, ymax = dnorm(areax1, mean = mean, sd = sd))
+  area2 &lt;- data.frame(x = areax2, ymin = 0, ymax = dnorm(areax2, mean = mean, sd = sd))
+  area3 &lt;- data.frame(x = areax3, ymin = 0, ymax = dnorm(areax2, mean = mean, sd = sd))
+
+  #adding two x- axis
+  dnorm(engScore,mean,sd)
+  perc &lt;- quantile(x,seq(from = 0,to = 1,by = 1/14)) # quantile range based on x,by = 1/14, because mean is 60, sd=20. cut into 14 parts. -4 to 4.
+  labels &lt;- names(perc)
+  m &lt;- gregexpr(&#39;[0-9]+&#39;,labels)
+  labels &lt;-regmatches(labels,m)
+  labels &lt;- do.call(rbind,labels)
+  (labels &lt;- paste0(round(as.numeric(paste0(labels[,1],&quot;.&quot;,labels[,2]))),&quot;%&quot;))
+  (perc &lt;- round(perc,1))
+  (l &lt;- paste(perc,labels,sep = &quot;\n&quot;))
+
+  f &lt;- ecdf(x) # convert the percentile ranking
+  f(engScore) # find the percentile score within the ranking
+
+      (ggplot()
+    + geom_line(data.frame(x = x, y = dnorm(x, mean = mean, sd = sd)),
+                mapping = aes(x = x, y = y))
+    + geom_ribbon(data = area, mapping = aes(x = x, ymin = ymin, ymax = ymax),fill=&quot;#F70025&quot;)
+    + geom_ribbon(data = area1, mapping = aes(x = x, ymin = ymin, ymax = ymax),fill=&quot;#F25C00&quot;)
+    + geom_ribbon(data = area2, mapping = aes(x = x, ymin = ymin, ymax = ymax),fill=&quot;#F9A603&quot;)
+    + geom_ribbon(data = area3, mapping = aes(x = x, ymin = ymin, ymax = ymax),fill=&quot;black&quot;)
+  +  geom_point( data=data.frame(x=dnorm,y=dnorm(dnorm, mean,sd)), aes(x,y), color=&quot;blue&quot;, size=3) #person&#39;s theta
+        + geom_errorbarh(aes(xmax = (dnorm+semScore), xmin = (dnorm-semScore), x=dnorm,y=dnorm(dnorm, mean,sd)),height = .001,color=&quot;blue&quot;,size=1)
+    + scale_x_continuous(limits = limits)
+  + xlab(&quot;Standardized Score / Percentile Rank&quot;) + ylab(&quot;Probability Density&quot;)  +   scale_x_continuous(breaks=perc, labels= l) +
+   theme( plot.title = element_text(lineheight=1 ,size = rel(2), color=&quot;white&quot;),
+           axis.title.x = element_text(size=12, color=&quot;black&quot;),
+           axis.title.y = element_text(size=12, color=&quot;black&quot;),
+           axis.text.x = element_text(colour=&quot;black&quot;, size=&quot;10&quot;),
+           axis.text.y = element_text(colour=&quot;black&quot;, size=&quot;10&quot;),
+           #axis.text.y = element_blank(),
+            axis.ticks.x = element_line(colour=&quot;black&quot;),
+          # axis.ticks.y =element_blank(),
+           plot.background = element_rect(fill = &quot;white&quot;, size=3),
+           panel.background = element_rect(fill = &quot;white&quot;),
+           panel.border = element_rect(fill=NA,color=&quot;black&quot;, size=.5, linetype=&quot;solid&quot;),
+           panel.grid.major = element_blank(), panel.grid.minor = element_blank()))
+
+
+}
+
+normal_prob_area_plot(dnorm=engTheta,semTheta=engSem)</code></pre>
+<p><img src="irtplots_files/figure-html/normal%20distribution-1.png" width="672" /></p>
+<p><br></p>
+</div>
+<div id="normal-plot-standardized" class="section level2">
+<h2><strong>Normal plot (standardized)</strong></h2>
+<p>This gives you a plot with the z score.</p>
+<pre class="r"><code>#adjusting to mean =80 and sd = 20
+engTheta &lt;--4 # zscore
+engScore &lt;- (engTheta*20) + 80 # standardizd score with mean = 80, sd = 20
+mean =80; sd = 20
+limits = c(mean - 4 * sd, mean + 4 * sd)
+x &lt;- seq(limits[1], limits[2], length.out = 100)
+f &lt;- ecdf(x) # convert the percentile ranking
+percentile &lt;- f(engScore) # find the percentile score within the ranking
+
+lb=-3
+ub=3
+lb1=-2
+ub1=2
+lb2=-1
+ub2=1
+lb3=-0.1
+ub3=0.1
+mean = 0
+sd = 1
+engTheta &lt;- -1
+semTheta=-0.5
+limits = c(mean - 4 * sd, mean + 4 * sd) # creating a range vector
+dnorm = engTheta # to get position on y -axis
+#pnorm(engScore, mean = 80, sd =20) # to get person&#39;s score
+f &lt;- ecdf(x)
+
+# plot is based on mean = 0 and sd= 1
+normal_prob_area_plotZ &lt;- function(dnorm= engTheta, semTheta= semTheta, lb=-3, ub=3, lb1=-2, ub1=2,lb2=-1 ,ub2=1,
+                                  lb3=-0.05,ub3=0.05,mean = 0, sd = 1,
+                                  limits = c(mean - 4 * sd, mean + 4 * sd)) {
+  x &lt;- seq(limits[1], limits[2], length.out = 100)
+
+  xmin &lt;- max(lb, limits[1])
+  xmax &lt;- min(ub, limits[2])
+  x1min &lt;- max(lb1, limits[1])
+  x1max &lt;- min(ub1, limits[2])
+  x2min &lt;- max(lb2, limits[1])
+  x2max &lt;- min(ub2, limits[2])
+  x3min &lt;- max(lb3, limits[1])
+  x3max &lt;- min(ub3, limits[2])
+
+  areax &lt;- seq(xmin, xmax, length.out = 100)
+  areax1 &lt;- seq(x1min, x1max, length.out = 100)
+  areax2 &lt;- seq(x2min, x2max, length.out = 100)
+  areax3 &lt;- seq(x3min, x3max, length.out = 100)
+
+  area &lt;- data.frame(x = areax, ymin = 0, ymax = dnorm(areax, mean = mean, sd = sd))
+  area1 &lt;- data.frame(x = areax1, ymin = 0, ymax = dnorm(areax1, mean = mean, sd = sd))
+  area2 &lt;- data.frame(x = areax2, ymin = 0, ymax = dnorm(areax2, mean = mean, sd = sd))
+  area3 &lt;- data.frame(x = areax3, ymin = 0, ymax = dnorm(areax2, mean = mean, sd = sd))
+
+  (ggplot()
+  + geom_line(data.frame(x = x, y = dnorm(x, mean = mean, sd = sd)),
+              mapping = aes(x = x, y = y))
+    + geom_line(data.frame(x = x, y = dnorm(x, mean = mean, sd = sd)), mapping = aes(x = x, y = y))
+    + geom_ribbon(data = area, mapping = aes(x = x, ymin = ymin, ymax = ymax),fill=&quot;#07575b&quot;)
+    + geom_ribbon(data = area1, mapping = aes(x = x, ymin = ymin, ymax = ymax),fill=&quot;#66A5AD&quot;)
+    + geom_ribbon(data = area2, mapping = aes(x = x, ymin = ymin, ymax = ymax),fill=&quot;#C4DFE6&quot;)
+    + geom_ribbon(data = area3, mapping = aes(x = x, ymin = ymin, ymax = ymax),fill=&quot;black&quot;)
+    +  geom_point( data=data.frame(x=dnorm,y=dnorm(dnorm, mean,sd)), aes(x,y), color=&quot;red&quot;, size=2) #person&#39;s theta
+    + geom_errorbarh(aes(xmax = dnorm + semTheta, xmin = dnorm - semTheta, x=dnorm,y=dnorm(dnorm, mean,sd)),height = .01,color=&quot;red&quot;,size=1)
+    + scale_x_continuous(limits = limits)
+    + xlab(&quot;Z-score&quot;) + ylab(&quot;Probability Density&quot;)  +
+      theme( plot.title = element_text(lineheight=1 ,size = rel(2), color=&quot;white&quot;),
+             axis.title.x = element_text(size=10, color=&quot;black&quot;),
+             axis.title.y = element_text(size=10, color=&quot;black&quot;),
+             axis.text.x = element_text(colour=&quot;black&quot;, size=&quot;10&quot;),
+             axis.text.y = element_text(colour=&quot;black&quot;, size=&quot;10&quot;),
+             #axis.text.y = element_blank(),
+             axis.ticks.x = element_line(colour=&quot;black&quot;),
+             # axis.ticks.y =element_blank(),
+             plot.background = element_rect(fill = &quot;white&quot;, size=3),
+             panel.background = element_rect(fill = &quot;white&quot;),
+             panel.border = element_rect(fill=NA,color=&quot;black&quot;, size=.5, linetype=&quot;solid&quot;),
+             panel.grid.major = element_blank(), panel.grid.minor = element_blank()))
+
+
+}
+normal_prob_area_plotZ(2,semTheta=semTheta)</code></pre>
+<p><img src="irtplots_files/figure-html/z%20score-1.png" width="768" /></p>
+<p><br></p>
+</div>
+<div id="on-the-fly-normal-plot" class="section level2">
+<h2><strong>On-the-fly Normal plot</strong></h2>
+<pre class="r"><code>############## Percentile ###################
+
+a &lt;-  rnorm(100)
+
+onTheFlyPlot &lt;- function(dataset, quantiles){
+dens &lt;- density(a)
+scoreDensity &lt;- data.frame(x=dens$x,  y=dens$y) # convert to data frame
+
+theta &lt;- length(a)
+theta.last.person &lt;-  a[theta] #summed score of last person
+findInterval(scoreDensity$x, theta.last.person)
+scoreDensity$percentile &lt;- factor(findInterval(scoreDensity$x, theta.last.person))
+
+# Person&#39;s Percentile
+f &lt;- ecdf(a) # create culminate distribution (vector) based on values before converting to density
+percentile &lt;- f(theta.last.person) # returns the specific person percentile.
+
+ #quantile blocks to insert for x axis coordinates.
+  probs &lt;- c(0.01, 0.25, 0.5, 0.75,0.99)
+ # quantiles &lt;- quantile(finalCATscores$theta, prob=probs) # based on data frame before converting to density
+  quantiles &lt;- quantile(a, prob=probs)
+
+your_percentile &lt;- round(f(theta.last.person)*100, 2) # specific value of the last person in percentile
+
+############## Percentile ###################
+#tec &lt;- tempfile(paste0(&quot;image&quot;,i), fileext = &quot;.png&quot;)
+
+p &lt;- ggplot(scoreDensity, aes(x,y)) + geom_line()  + geom_ribbon(aes(ymin=0, ymax=y, fill=percentile)) +
+   scale_fill_manual(values=c( &quot;#64FFDA&quot;,&quot;#FFCC80&quot;)) +  scale_x_continuous(breaks=quantiles) + xlab(&quot;Percentile&quot;) + ylab(&quot;Probability Density&quot;) +
+  theme( plot.title = element_text(lineheight=1 ,size = rel(2), color=&quot;white&quot;),
+          axis.title.x = element_text(size=12, color=&quot;black&quot;),
+         axis.title.y = element_text(size=12, color=&quot;black&quot;),
+          axis.text.x = element_text(colour=&quot;black&quot;, size=&quot;12&quot;),
+          axis.text.y = element_text(colour=&quot;black&quot;, size=&quot;12&quot;),
+          #axis.text.y = element_blank(),
+            axis.ticks.x = element_line(colour=&quot;black&quot;),
+         # axis.ticks.y =element_blank(),
+          plot.background = element_rect(fill = &quot;white&quot;, size=3),
+          panel.background = element_rect(fill = &quot;white&quot;),
+          panel.border = element_rect(fill=NA,color=&quot;black&quot;, size=.5, linetype=&quot;solid&quot;),
+         # panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+          legend.position=&quot;none&quot;)
+return(p)
+}
+onTheFlyPlot(dataset = scoreDenstiy, quantiles = quantiles)</code></pre>
+<p><img src="irtplots_files/figure-html/on%20the%20fly%20plot-1.png" width="672" /></p>
+</div>
+<div id="test-information-plot" class="section level2">
+<h2><strong>Test Information plot</strong></h2>
+<pre class="r"><code>fit &lt;- PCM(pcmdat)
+
+tI&lt;- test_info(fit, theta=seq(-4,4,0.01)) %&gt;% as.data.frame
+se&lt;- 1/(sqrt(tI))
+tI&lt;- cbind.data.frame(tI,seq(-6,6,length.out=801), se)
+colnames(tI) &lt;- c(&quot;information&quot;, &quot;xAxis&quot;,&quot;se&quot;)
+p1 &lt;- ggplot(tI, aes(x=xAxis, y=information, colour=&quot;black&quot;)) + geom_line()  + theme_bw() +
+  scale_colour_identity(name=&quot;&quot;, guide=&quot;legend&quot;, labels=c(&quot;Information&quot;)) +
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+        panel.background = element_blank(), axis.line = element_blank(),
+        axis.text=element_text(size=14),
+        axis.title=element_text(size=14),
+        legend.text=element_text(size=14),
+        legend.title=element_text(size=14),
+        plot.title = element_text(hjust = 0.5, size=16, face=&quot;bold&quot;),
+        legend.position=&quot;bottom&quot;) +
+  labs(x=&quot;\nTheta&quot;, y = &quot;Information\n&quot;) +
+  scale_x_continuous(breaks=c(-6,-4,-2,0,2,4,6)) +ggtitle(&quot;Test Information Curve\n&quot;)
+
+
+p2 &lt;- ggplot(tI, aes(x=xAxis, y=se, colour=&quot;red&quot;))  + geom_line(linetype = &quot;dashed&quot;) + theme_bw() +
+  scale_colour_identity(name=&quot;&quot;, guide=&quot;legend&quot;, labels=c(&quot;SE&quot;)) +
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+        panel.background = element_blank(), axis.line = element_blank(),
+        axis.text=element_text(size=13),
+        axis.title=element_text(size=13),
+        axis.text.y = element_text(colour = &quot;red&quot;),
+        legend.text=element_text(size=13),
+        legend.title=element_text(size=13),
+        legend.position=&quot;bottom&quot;)+
+  scale_x_continuous(breaks=c(-6,-4,-2,0,2,4,6))
+
+
+
+# extract gtable
+g1 &lt;- ggplot_gtable(ggplot_build(p1))
+g2 &lt;- ggplot_gtable(ggplot_build(p2))
+
+# overlap the panel of 2nd plot on that of 1st plot
+pp &lt;- c(subset(g1$layout, name == &quot;panel&quot;, se = t:r))
+g &lt;- gtable_add_grob(g1, g2$grobs[[which(g2$layout$name == &quot;panel&quot;)]], pp$t,
+                     pp$l, pp$b, pp$l)
+
+# axis tweaks
+ia &lt;- which(g$layout$name == &quot;ylab&quot;)
+ia &lt;- which(g2$layout$name == &quot;axis-l&quot;)
+ga &lt;- g2$grobs[[ia]]
+ax &lt;- ga$children[[2]]
+ax$widths &lt;- rev(ax$widths)
+ax$grobs &lt;- rev(ax$grobs)
+ax$grobs[[1]]$x &lt;- ax$grobs[[1]]$x - unit(1, &quot;npc&quot;) + unit(0.08, &quot;cm&quot;)
+g &lt;- gtable_add_cols(g, g2$widths[g2$layout[ia, ]$l], length(g$widths) - 1)
+g &lt;- gtable_add_grob(g, ax, pp$t, length(g$widths) - 1, pp$b)
+
+# extract legend
+leg1 &lt;- g1$grobs[[which(g1$layout$name == &quot;guide-box&quot;)]]
+leg2 &lt;- g2$grobs[[which(g2$layout$name == &quot;guide-box&quot;)]]
+
+g$grobs[[which(g$layout$name == &quot;guide-box&quot;)]] &lt;-
+  gtable:::cbind_gtable(leg1, leg2, &quot;first&quot;)
+
+# draw it
+grid.draw(g)</code></pre>
+<p><img src="irtplots_files/figure-html/test%20info-1.png" width="768" /></p>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

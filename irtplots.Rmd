@@ -1,0 +1,342 @@
+---
+title: "IRT plots"
+author: "Aiden Loe"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output:
+  html_document:
+    toc: true
+    toc_depth: 3
+    toc_float: 
+      collapsed: false
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+## **Install and load package**
+```{r packages, warnings=FALSE, message=FALSE}
+library(eRm)
+library(reshape)
+library(dplyr)
+library(ggplot2)
+library(gtable)
+library(grid)
+
+```
+
+
+<br>
+
+## **Normal plot (percentile)**
+
+This gives you a plot with the ith percentile ranking at the bottom. 
+
+```{r normal distribution, message = FALSE, fig.width=7, fig.height=7}
+lb=20
+ub=140
+lb1=40
+ub1=120
+lb2=60
+ub2=100
+lb3=79.5
+ub3=80.5
+mean = 80
+sd = 20
+limits = c(mean - 4 * sd, mean + 4 * sd)
+engTheta <- 0.5
+semTheta <- engSem <-0.5
+dnorm <- engScore <- 70
+dnorm= engScore #The location of the person's score on the y-axis.
+
+normal_prob_area_plot <- function(dnorm=0.5,semTheta=0.5, lb=20, ub=140, lb1=40, ub1=120,lb2=60 ,ub2=100,
+                                  lb3=79.5,ub3=80.5,mean = 80, sd = 20,
+                                  limits = c(mean - 4 * sd, mean + 4 * sd)) {
+
+  dnorm <- engTheta*sd+mean
+  engScore <- dnorm
+  semScore <- semTheta*20
+  (x <- seq(limits[1], limits[2], length.out = 100))
+
+  xmin <- max(lb, limits[1])
+  xmax <- min(ub, limits[2])
+  x1min <- max(lb1, limits[1])
+  x1max <- min(ub1, limits[2])
+  x2min <- max(lb2, limits[1])
+  x2max <- min(ub2, limits[2])
+  x3min <- max(lb3, limits[1])
+  x3max <- min(ub3, limits[2])
+
+  areax <- seq(xmin, xmax, length.out = 100)
+  areax1 <- seq(x1min, x1max, length.out = 100)
+  areax2 <- seq(x2min, x2max, length.out = 100)
+  areax3 <- seq(x3min, x3max, length.out = 100)
+
+  area <- data.frame(x = areax, ymin = 0, ymax = dnorm(areax, mean = mean, sd = sd))
+  area1 <- data.frame(x = areax1, ymin = 0, ymax = dnorm(areax1, mean = mean, sd = sd))
+  area2 <- data.frame(x = areax2, ymin = 0, ymax = dnorm(areax2, mean = mean, sd = sd))
+  area3 <- data.frame(x = areax3, ymin = 0, ymax = dnorm(areax2, mean = mean, sd = sd))
+
+  #adding two x- axis
+  dnorm(engScore,mean,sd)
+  perc <- quantile(x,seq(from = 0,to = 1,by = 1/14)) # quantile range based on x,by = 1/14, because mean is 60, sd=20. cut into 14 parts. -4 to 4.
+  labels <- names(perc)
+  m <- gregexpr('[0-9]+',labels)
+  labels <-regmatches(labels,m)
+  labels <- do.call(rbind,labels)
+  (labels <- paste0(round(as.numeric(paste0(labels[,1],".",labels[,2]))),"%"))
+  (perc <- round(perc,1))
+  (l <- paste(perc,labels,sep = "\n"))
+
+  f <- ecdf(x) # convert the percentile ranking
+  f(engScore) # find the percentile score within the ranking
+
+      (ggplot()
+    + geom_line(data.frame(x = x, y = dnorm(x, mean = mean, sd = sd)),
+                mapping = aes(x = x, y = y))
+    + geom_ribbon(data = area, mapping = aes(x = x, ymin = ymin, ymax = ymax),fill="#F70025")
+    + geom_ribbon(data = area1, mapping = aes(x = x, ymin = ymin, ymax = ymax),fill="#F25C00")
+    + geom_ribbon(data = area2, mapping = aes(x = x, ymin = ymin, ymax = ymax),fill="#F9A603")
+    + geom_ribbon(data = area3, mapping = aes(x = x, ymin = ymin, ymax = ymax),fill="black")
+  +  geom_point( data=data.frame(x=dnorm,y=dnorm(dnorm, mean,sd)), aes(x,y), color="blue", size=3) #person's theta
+        + geom_errorbarh(aes(xmax = (dnorm+semScore), xmin = (dnorm-semScore), x=dnorm,y=dnorm(dnorm, mean,sd)),height = .001,color="blue",size=1)
+    + scale_x_continuous(limits = limits)
+  + xlab("Standardized Score / Percentile Rank") + ylab("Probability Density")  +   scale_x_continuous(breaks=perc, labels= l) +
+   theme( plot.title = element_text(lineheight=1 ,size = rel(2), color="white"),
+           axis.title.x = element_text(size=12, color="black"),
+           axis.title.y = element_text(size=12, color="black"),
+           axis.text.x = element_text(colour="black", size="10"),
+           axis.text.y = element_text(colour="black", size="10"),
+           #axis.text.y = element_blank(),
+         	axis.ticks.x = element_line(colour="black"),
+          # axis.ticks.y =element_blank(),
+           plot.background = element_rect(fill = "white", size=3),
+           panel.background = element_rect(fill = "white"),
+           panel.border = element_rect(fill=NA,color="black", size=.5, linetype="solid"),
+           panel.grid.major = element_blank(), panel.grid.minor = element_blank()))
+
+
+}
+
+normal_prob_area_plot(dnorm=engTheta,semTheta=engSem)
+
+
+```
+
+
+<br>
+
+
+## **Normal plot (standardized)**
+
+This gives you a plot with the z score.  
+
+```{r z score, fig.width=8, fig.height=7}
+#adjusting to mean =80 and sd = 20
+engTheta <--4 # zscore
+engScore <- (engTheta*20) + 80 # standardizd score with mean = 80, sd = 20
+mean =80; sd = 20
+limits = c(mean - 4 * sd, mean + 4 * sd)
+x <- seq(limits[1], limits[2], length.out = 100)
+f <- ecdf(x) # convert the percentile ranking
+percentile <- f(engScore) # find the percentile score within the ranking
+
+lb=-3
+ub=3
+lb1=-2
+ub1=2
+lb2=-1
+ub2=1
+lb3=-0.1
+ub3=0.1
+mean = 0
+sd = 1
+engTheta <- -1
+semTheta=-0.5
+limits = c(mean - 4 * sd, mean + 4 * sd) # creating a range vector
+dnorm = engTheta # to get position on y -axis
+#pnorm(engScore, mean = 80, sd =20) # to get person's score
+f <- ecdf(x)
+
+# plot is based on mean = 0 and sd= 1
+normal_prob_area_plotZ <- function(dnorm= engTheta, semTheta= semTheta, lb=-3, ub=3, lb1=-2, ub1=2,lb2=-1 ,ub2=1,
+                                  lb3=-0.05,ub3=0.05,mean = 0, sd = 1,
+                                  limits = c(mean - 4 * sd, mean + 4 * sd)) {
+  x <- seq(limits[1], limits[2], length.out = 100)
+
+  xmin <- max(lb, limits[1])
+  xmax <- min(ub, limits[2])
+  x1min <- max(lb1, limits[1])
+  x1max <- min(ub1, limits[2])
+  x2min <- max(lb2, limits[1])
+  x2max <- min(ub2, limits[2])
+  x3min <- max(lb3, limits[1])
+  x3max <- min(ub3, limits[2])
+
+  areax <- seq(xmin, xmax, length.out = 100)
+  areax1 <- seq(x1min, x1max, length.out = 100)
+  areax2 <- seq(x2min, x2max, length.out = 100)
+  areax3 <- seq(x3min, x3max, length.out = 100)
+
+  area <- data.frame(x = areax, ymin = 0, ymax = dnorm(areax, mean = mean, sd = sd))
+  area1 <- data.frame(x = areax1, ymin = 0, ymax = dnorm(areax1, mean = mean, sd = sd))
+  area2 <- data.frame(x = areax2, ymin = 0, ymax = dnorm(areax2, mean = mean, sd = sd))
+  area3 <- data.frame(x = areax3, ymin = 0, ymax = dnorm(areax2, mean = mean, sd = sd))
+
+  (ggplot()
+  + geom_line(data.frame(x = x, y = dnorm(x, mean = mean, sd = sd)),
+              mapping = aes(x = x, y = y))
+    + geom_line(data.frame(x = x, y = dnorm(x, mean = mean, sd = sd)), mapping = aes(x = x, y = y))
+    + geom_ribbon(data = area, mapping = aes(x = x, ymin = ymin, ymax = ymax),fill="#07575b")
+    + geom_ribbon(data = area1, mapping = aes(x = x, ymin = ymin, ymax = ymax),fill="#66A5AD")
+    + geom_ribbon(data = area2, mapping = aes(x = x, ymin = ymin, ymax = ymax),fill="#C4DFE6")
+    + geom_ribbon(data = area3, mapping = aes(x = x, ymin = ymin, ymax = ymax),fill="black")
+    +  geom_point( data=data.frame(x=dnorm,y=dnorm(dnorm, mean,sd)), aes(x,y), color="red", size=2) #person's theta
+    + geom_errorbarh(aes(xmax = dnorm + semTheta, xmin = dnorm - semTheta, x=dnorm,y=dnorm(dnorm, mean,sd)),height = .01,color="red",size=1)
+    + scale_x_continuous(limits = limits)
+    + xlab("Z-score") + ylab("Probability Density")  +
+      theme( plot.title = element_text(lineheight=1 ,size = rel(2), color="white"),
+             axis.title.x = element_text(size=10, color="black"),
+             axis.title.y = element_text(size=10, color="black"),
+             axis.text.x = element_text(colour="black", size="10"),
+             axis.text.y = element_text(colour="black", size="10"),
+             #axis.text.y = element_blank(),
+             axis.ticks.x = element_line(colour="black"),
+             # axis.ticks.y =element_blank(),
+             plot.background = element_rect(fill = "white", size=3),
+             panel.background = element_rect(fill = "white"),
+             panel.border = element_rect(fill=NA,color="black", size=.5, linetype="solid"),
+             panel.grid.major = element_blank(), panel.grid.minor = element_blank()))
+
+
+}
+normal_prob_area_plotZ(2,semTheta=semTheta)
+
+```
+
+<br>
+
+## **On-the-fly Normal plot**
+
+
+```{r on the fly plot}
+############## Percentile ###################
+
+a <-  rnorm(100)
+
+onTheFlyPlot <- function(dataset, quantiles){
+dens <- density(a)
+scoreDensity <- data.frame(x=dens$x,  y=dens$y) # convert to data frame
+
+theta <- length(a)
+theta.last.person <-  a[theta] #summed score of last person
+findInterval(scoreDensity$x, theta.last.person)
+scoreDensity$percentile <- factor(findInterval(scoreDensity$x, theta.last.person))
+
+# Person's Percentile
+f <- ecdf(a) # create culminate distribution (vector) based on values before converting to density
+percentile <- f(theta.last.person) # returns the specific person percentile.
+
+ #quantile blocks to insert for x axis coordinates.
+  probs <- c(0.01, 0.25, 0.5, 0.75,0.99)
+ # quantiles <- quantile(finalCATscores$theta, prob=probs) # based on data frame before converting to density
+  quantiles <- quantile(a, prob=probs)
+
+your_percentile <- round(f(theta.last.person)*100, 2) # specific value of the last person in percentile
+
+############## Percentile ###################
+#tec <- tempfile(paste0("image",i), fileext = ".png")
+
+p <- ggplot(scoreDensity, aes(x,y)) + geom_line()  + geom_ribbon(aes(ymin=0, ymax=y, fill=percentile)) +
+   scale_fill_manual(values=c( "#64FFDA","#FFCC80")) +  scale_x_continuous(breaks=quantiles) + xlab("Percentile") + ylab("Probability Density") +
+  theme( plot.title = element_text(lineheight=1 ,size = rel(2), color="white"),
+          axis.title.x = element_text(size=12, color="black"),
+         axis.title.y = element_text(size=12, color="black"),
+          axis.text.x = element_text(colour="black", size="12"),
+          axis.text.y = element_text(colour="black", size="12"),
+          #axis.text.y = element_blank(),
+        	axis.ticks.x = element_line(colour="black"),
+         # axis.ticks.y =element_blank(),
+          plot.background = element_rect(fill = "white", size=3),
+          panel.background = element_rect(fill = "white"),
+          panel.border = element_rect(fill=NA,color="black", size=.5, linetype="solid"),
+         # panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+          legend.position="none")
+return(p)
+}
+onTheFlyPlot(dataset = scoreDenstiy, quantiles = quantiles)
+
+
+```
+
+
+## **Test Information plot**
+
+```{r test info, fig.width=8, fig.height=8}
+
+fit <- PCM(pcmdat)
+
+tI<- test_info(fit, theta=seq(-4,4,0.01)) %>% as.data.frame
+se<- 1/(sqrt(tI))
+tI<- cbind.data.frame(tI,seq(-6,6,length.out=801), se)
+colnames(tI) <- c("information", "xAxis","se")
+p1 <- ggplot(tI, aes(x=xAxis, y=information, colour="black")) + geom_line()  + theme_bw() +
+  scale_colour_identity(name="", guide="legend", labels=c("Information")) +
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+        panel.background = element_blank(), axis.line = element_blank(),
+        axis.text=element_text(size=14),
+        axis.title=element_text(size=14),
+        legend.text=element_text(size=14),
+        legend.title=element_text(size=14),
+        plot.title = element_text(hjust = 0.5, size=16, face="bold"),
+        legend.position="bottom") +
+  labs(x="\nTheta", y = "Information\n") +
+  scale_x_continuous(breaks=c(-6,-4,-2,0,2,4,6)) +ggtitle("Test Information Curve\n")
+
+
+p2 <- ggplot(tI, aes(x=xAxis, y=se, colour="red"))  + geom_line(linetype = "dashed") + theme_bw() +
+  scale_colour_identity(name="", guide="legend", labels=c("SE")) +
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+        panel.background = element_blank(), axis.line = element_blank(),
+        axis.text=element_text(size=13),
+        axis.title=element_text(size=13),
+        axis.text.y = element_text(colour = "red"),
+        legend.text=element_text(size=13),
+        legend.title=element_text(size=13),
+        legend.position="bottom")+
+  scale_x_continuous(breaks=c(-6,-4,-2,0,2,4,6))
+
+
+
+# extract gtable
+g1 <- ggplot_gtable(ggplot_build(p1))
+g2 <- ggplot_gtable(ggplot_build(p2))
+
+# overlap the panel of 2nd plot on that of 1st plot
+pp <- c(subset(g1$layout, name == "panel", se = t:r))
+g <- gtable_add_grob(g1, g2$grobs[[which(g2$layout$name == "panel")]], pp$t,
+                     pp$l, pp$b, pp$l)
+
+# axis tweaks
+ia <- which(g$layout$name == "ylab")
+ia <- which(g2$layout$name == "axis-l")
+ga <- g2$grobs[[ia]]
+ax <- ga$children[[2]]
+ax$widths <- rev(ax$widths)
+ax$grobs <- rev(ax$grobs)
+ax$grobs[[1]]$x <- ax$grobs[[1]]$x - unit(1, "npc") + unit(0.08, "cm")
+g <- gtable_add_cols(g, g2$widths[g2$layout[ia, ]$l], length(g$widths) - 1)
+g <- gtable_add_grob(g, ax, pp$t, length(g$widths) - 1, pp$b)
+
+# extract legend
+leg1 <- g1$grobs[[which(g1$layout$name == "guide-box")]]
+leg2 <- g2$grobs[[which(g2$layout$name == "guide-box")]]
+
+g$grobs[[which(g$layout$name == "guide-box")]] <-
+  gtable:::cbind_gtable(leg1, leg2, "first")
+
+# draw it
+grid.draw(g)
+
+```
