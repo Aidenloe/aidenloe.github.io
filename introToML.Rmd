@@ -28,7 +28,7 @@ But I will try to be as in-depth as possible.
 
 More to come soon! 
 
-<img src="images/bigdatamap.png" alt="Drawing" style="width: 850px; height:800px"/>
+<img src="images/bigdatamap.png" alt="Drawing" style="width: 650px; height:600px"/>
 <center>[source](http://www.xmind.net/m/LKF2)</center>
 
 

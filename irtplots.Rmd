@@ -287,11 +287,13 @@ You will need the `eRm`,`grid`,`gtable` package.
 
 ```{r test info, fig.width=8, fig.height=8}
 
-fit <- PCM(pcmdat)
+fit <- PCM(pcmdat) # running irt model (partial credit model) 
 
+# test_info() is used to get the information
+# then it is pipped through as a data.frame
 tI<- test_info(fit, theta=seq(-4,4,0.01)) %>% as.data.frame
-se<- 1/(sqrt(tI))
-tI<- cbind.data.frame(tI,seq(-6,6,length.out=801), se)
+se<- 1/(sqrt(tI)) #get the standard error
+tI<- cbind.data.frame(tI,seq(-6,6,length.out=801), se) #make sure they are the same length
 colnames(tI) <- c("information", "xAxis","se")
 p1 <- ggplot(tI, aes(x=xAxis, y=information, colour="black")) + geom_line()  + theme_bw() +
   scale_colour_identity(name="", guide="legend", labels=c("Information")) +

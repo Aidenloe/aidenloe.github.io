@@ -4,7 +4,7 @@
 
 <head>
 
-<meta charset="utf-8">
+<meta charset="utf-8" />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
 
@@ -596,11 +596,13 @@ onTheFlyPlot(dataset = scoreDenstiy, quantiles = quantiles)</code></pre>
 <h2><strong>Test Information plot</strong></h2>
 <p>This helps to create a test information plot that is of publishable quality.</p>
 <p>You will need the <code>eRm</code>,<code>grid</code>,<code>gtable</code> package.</p>
-<pre class="r"><code>fit &lt;- PCM(pcmdat)
+<pre class="r"><code>fit &lt;- PCM(pcmdat) # running irt model (partial credit model) 
 
+# test_info() is used to get the information
+# then it is pipped through as a data.frame
 tI&lt;- test_info(fit, theta=seq(-4,4,0.01)) %&gt;% as.data.frame
-se&lt;- 1/(sqrt(tI))
-tI&lt;- cbind.data.frame(tI,seq(-6,6,length.out=801), se)
+se&lt;- 1/(sqrt(tI)) #get the standard error
+tI&lt;- cbind.data.frame(tI,seq(-6,6,length.out=801), se) #make sure they are the same length
 colnames(tI) &lt;- c(&quot;information&quot;, &quot;xAxis&quot;,&quot;se&quot;)
 p1 &lt;- ggplot(tI, aes(x=xAxis, y=information, colour=&quot;black&quot;)) + geom_line()  + theme_bw() +
   scale_colour_identity(name=&quot;&quot;, guide=&quot;legend&quot;, labels=c(&quot;Information&quot;)) +
@@ -687,7 +689,7 @@ $(document).ready(function () {
   (function () {
     var script = document.createElement("script");
     script.type = "text/javascript";
-    script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
     document.getElementsByTagName("head")[0].appendChild(script);
   })();
 </script>
