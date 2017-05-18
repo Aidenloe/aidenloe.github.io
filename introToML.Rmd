@@ -18,7 +18,7 @@ knitr::opts_chunk$set(echo = TRUE)
 Coming soon!
 
 <img src="images/bigdatamap.png" alt="Drawing" style="width: 850px; height:800px"/>
-[source](http://www.xmind.net/m/LKF2)
+<center>[source](http://www.xmind.net/m/LKF2)</center>
 
 
 
