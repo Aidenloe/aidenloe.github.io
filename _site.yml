@@ -15,6 +15,13 @@ navbar:
           href: introToR.html
         - text: "Data Visualisation"
           href: dataVisual.html
+    - text: "ML 4 Psychologists"
+      href: ML.html      
+      menu:
+        - text: "What is ML?"
+        - text: "Intro to ML"
+          href: introToML.html
+
  
 output:
   html_document:
