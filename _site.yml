@@ -7,7 +7,7 @@ navbar:
       href: index.html
     - text: "About"
       href: about.html
-    - text: "R 4 Psychologists"
+    - text: "R 4 Social Scientists"
       href: r4psychologists.html
       menu:
         - text: "What is R?"
@@ -15,13 +15,13 @@ navbar:
           href: introToR.html
         - text: "Data Visualisation"
           href: dataVisual.html
-    - text: "ML 4 Psychologists"
+    - text: "ML 4 Social Scientists"
       href: ML.html      
       menu:
         - text: "What is ML?"
         - text: "Intro to ML"
           href: introToML.html
-    - text: "IRT 4 Psychologists"
+    - text: "IRT 4 Social Scientists"
       href: irt.html
       menu:
         - text: "What is IRT?"

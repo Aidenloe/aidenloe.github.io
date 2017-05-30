@@ -19,11 +19,11 @@ I think the best way of learning is by trying to solve a problem. So many of the
 
 Currently, there are only 3 areas that I intend to cover: 
 
-1. [R for Psychologists](http://aidenloe.github.io/introToR.html)
+1. [R for Social Scientists](http://aidenloe.github.io/introToR.html)
 
-2. [ML for Psychologists](http://aidenloe.github.io/introToML.html)
+2. [ML for Social Scientists](http://aidenloe.github.io/introToML.html)
 
-3. [IRT for Psychologists](http://aidenloe.github.io/introToIRT.html)
+3. [IRT for Social Scientists](http://aidenloe.github.io/introToIRT.html)
 
 
 
