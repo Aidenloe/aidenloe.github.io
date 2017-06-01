@@ -1,0 +1,84 @@
+---
+title: "CAT simulation"
+author: "aiden"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output:
+  html_document:
+    toc: true
+    toc_depth: 3
+    toc_float: 
+      collapsed: false
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Welcome
+
+This page will give you a general idea of how to simulate a CAT using the `catR` package. 
+
+The developers has made it really easy for us to run simulations. 
+
+I am still building the content for this page. So please bear with it.
+
+However, with the limited information you can still run the code and try it yourself. 
+
+## Load catR package
+
+```{r load package, message= FALSE}
+require(catR)
+```
+
+## Run CAT simulation
+```{r intro to CAT}
+### Load 'polyIQ' item bank
+bank <- read.table("https://www.dropbox.com/s/ml920oyi1z2npid/polyIQ.txt?raw=1",header = TRUE)
+bank <- as.matrix(bank)
+head(bank)
+
+### CAT design:
+#creation of logic for polytomous is exactly the same for dichtomous items.
+## two starting items
+startList <- list(nrItems = 2, theta=0)
+
+## next item selection by 'MFI', EAP ad-interim proficiency estimation
+testList <- list(method = "EAP", itemSelect = "MFI")
+
+## stop after 10 items
+stopList <- list(rule = "length", thr = 10)
+
+## final proficiency estimation using maximum likelihood
+finalList <- list(method = "BM")
+
+### generation of a CAT response pattern
+res <- randomCAT(trueTheta = 0, itemBank = bank, model="PCM",
+                 start = startList, test = testList, stop = stopList, final = finalList)
+
+## display of the output
+res
+
+```
+
+## Plot Simulation
+```{r Plot CAT, echo=FALSE}
+## graphical display of the output
+plot(res)
+plot(res,ci=TRUE)
+
+```
+
+
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-98916204-1', 'auto');
+  ga('send', 'pageview');
+
+</script>

@@ -29,6 +29,15 @@ navbar:
           href: introToIRT.html
         - text: "Plotting to IRT"
           href: irtplots.html
+    - text: "CAT 4 Social Scientists"
+      href: CAT.html
+      menu:
+        - text: "What is CAT?"
+        - text: "Intro to CAT"
+          href: introToCAT.html
+        - text: "CAT simulation"
+          href: catSimulation.html
+          
           
 
  
