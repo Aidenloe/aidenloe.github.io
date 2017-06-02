@@ -25,6 +25,22 @@ It works well with concerto.
 Developed by awesome people. 
 
 
+## Concept 
+
+Let's use student as participants to put things in context. 
+
+The idea of a CAT test is to distribute questions based on the ability of the student. This means that unfortunately, student won't be able to see the next item until they have completed the current item. Hence, it makes it difficult for CAT to be used in pencil and paper tests. 
+
+THe logic goes like that. 
+
+- If the student gets the current item right, then the next item becomes more difficult. But if the student gets it wrong, then the next item becomes easier. Once the test system gets an accurate idea of the student ability. The test stops. Usually, implementing such a system will make the test shorter than a standardised test. 
+
+<img src="images/cat_process.png" alt="Drawing" style="width: 500px;"/>
+
+
+
+
+
 
 
 
