@@ -373,15 +373,31 @@ div.tocify {
 <p>We will utilise <code>catR</code> package.</p>
 <p>It works well with concerto.</p>
 <p>Developed by awesome people.</p>
-<div id="concept" class="section level2">
-<h2>Concept</h2>
+</div>
+<div id="concept" class="section level1">
+<h1><strong>Concept</strong></h1>
 <p>Let’s use student as participants to put things in context.</p>
 <p>The idea of a CAT test is to distribute questions based on the ability of the student. This means that unfortunately, student won’t be able to see the next item until they have completed the current item. Hence, it makes it difficult for CAT to be used in pencil and paper tests.</p>
 <p>THe logic goes like that.</p>
 <ul>
-<li>If the student gets the current item right, then the next item becomes more difficult. But if the student gets it wrong, then the next item becomes easier. Once the test system gets an accurate idea of the student ability. The test stops. Usually, implementing such a system will make the test shorter than a standardised test.</li>
+<li>If the student gets the current item right, then the next item becomes more difficult. But if the student gets it wrong, then the next item becomes easier. Once the test system gets an accurate idea of the student ability. The test stops. Usually, implementing such a system will make the test shorter than a standardised test. <br/></li>
 </ul>
 <p><img src="images/cat_process.png" alt="Drawing" style="width: 500px;"/></p>
+<p><br/> While the general concept of a CAT is rather straightforward. The algorithms employed are rather sophisticated. Therefore, we need break down the concept and look at several component of the CAT principle separately and ask ourselves the following questions:</p>
+<ol style="list-style-type: decimal">
+<li><p>How are the items selected?</p></li>
+<li><p>How is the final ability estimate determined?</p></li>
+<li><p>What are the stopping rules available?</p></li>
+</ol>
+<p>Let’s tackle these questions one at a time.</p>
+<div id="item-selection" class="section level2">
+<h2><strong>Item selection</strong></h2>
+</div>
+<div id="ability-estimate" class="section level2">
+<h2><strong>Ability estimate</strong></h2>
+</div>
+<div id="stopping-rules" class="section level2">
+<h2><strong>Stopping rules</strong></h2>
 <script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
