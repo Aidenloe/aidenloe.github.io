@@ -90,7 +90,7 @@ plot(res)
 plot(res,ci=TRUE)
 
 ```
-
+Now we come to plotting and interpreting the plots!
 
 
 
