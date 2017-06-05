@@ -362,7 +362,7 @@ div.tocify {
 
 <h1 class="title toc-ignore">CAT simulation</h1>
 <h4 class="author"><em>aiden</em></h4>
-<h4 class="date"><em>01 June, 2017</em></h4>
+<h4 class="date"><em>05 June, 2017</em></h4>
 
 </div>
 
@@ -379,6 +379,7 @@ div.tocify {
 </div>
 <div id="run-cat-simulation" class="section level2">
 <h2>Run CAT simulation</h2>
+<p>We will be using a polytomous dataset to run our simulation. There are several models that we can use - Graded Response Model (GRM), Modified Graded Response Model (MGRM), Partial Credit Model (PCM), Generalised Partial Credit Model (GPCM), Rating Scale Model (RSM), and Nominal Response Model (NRM). The ones that are more widely used are the GRM, GPCM, PCM. In our example will be using the PCM model.</p>
 <pre class="r"><code>### Load &#39;polyIQ&#39; item bank
 bank &lt;- read.table(&quot;https://www.dropbox.com/s/ml920oyi1z2npid/polyIQ.txt?raw=1&quot;,header = TRUE)
 bank &lt;- as.matrix(bank)
@@ -441,18 +442,18 @@ res</code></pre>
 ##    No control for content balancing 
 ## 
 ##  Adaptive test details: 
-##                                                                     
-## Nr           1        2        3        4        5        6        7
-## Item        21        7       17       13       22       23       19
-## Resp.        0        1        2        3        0        0        3
-## Est.  (-0.711)   -0.755   -0.527   -0.217   -0.386   -0.531   -0.348
-## SE     (0.745)    0.601    0.485    0.413    0.377    0.356    0.318
-##                                 
-## Nr           8        9       10
-## Item        20       18       12
-## Resp.        2        2        3
-## Est.    -0.306    -0.29   -0.206
-## SE       0.298    0.283    0.271
+##                                                                      
+## Nr          1       2       3       4       5       6       7       8
+## Item       21      22      23      13      19      20       7      17
+## Resp.       2       2       2       3       2       2       3       2
+## Est.  (0.248)   0.284   0.264   0.394   0.338   0.295   0.369   0.328
+## SE    (0.667)   0.524   0.448   0.413   0.377   0.349   0.335   0.316
+##                      
+## Nr          9      10
+## Item       18      12
+## Resp.       2       2
+## Est.    0.289   0.254
+## SE        0.3   0.287
 ## 
 ##  Satisfied stopping rule: 
 ##    Length of test 
@@ -461,10 +462,19 @@ res</code></pre>
 ##    Length of adaptive test: 10 items 
 ##    Final ability estimator: Bayes modal (MAP) estimator 
 ##    Final prior distribution: N(0,1) prior 
-##    Final ability estimate (SE): -0.207 (0.266) 
-##    95% confidence interval: [-0.728,0.314] 
+##    Final ability estimate (SE): 0.235 (0.282) 
+##    95% confidence interval: [-0.318,0.789] 
 ## 
 ##  Output was not captured!</code></pre>
+<pre class="r"><code>require(catR)</code></pre>
+<p>Let’s have a look at the output and discuss a little about what we see.</p>
+<p>The output first tells you which model you have used simulating the CAT. In our case, it is the Partial Credit Model (PCM).</p>
+<p>Then it talks a little bit about the starting parameters. Here we can see that the item with the maximum information at the ability = 0 was used for the first item. We did not control for content balancing. You have to explicitly state that you want to control for content balancing.</p>
+<p>Next the output talks about the adaptive parameters. The MFI was employed for item selection and the EAP was used for the ability estimate. Note that more often than not, the Bayes Modal, which is frequently described as the MAP, often have very similar results with the EAP.</p>
+<p>The Stopping rule section tells us that the criterion is based on the length of items, which in this case we have fixed it to a maximum of 10.</p>
+<p>The Randomesque method is used when you want to select a range of items that is considered as the next items that is best suited for the estimated ability. Within the range of items, say 5, the algorithm will randomly draw out 1. This often used to spread out the exposure and maintain item security. In our case, we did not enforce this method, so the algorithm will always select the next most optimal item for the estimated ability.</p>
+<p>Now we have reached the Adaptive test details. This gives us the information of which 10 items were selected for the simulation. Nr is the index of the item. Item is the question that was given out. For example, item 21 is given in the first instance. The theta estimate (Est.) and the standard error (SE) is also provided for each item. That is the beauty of modern psychometric approaches. Everything is investigated at a item level rather than a scale. level.</p>
+<p>Finally, what we have is the final result of the ability estimate.</p>
 </div>
 <div id="plot-simulation" class="section level2">
 <h2>Plot Simulation</h2>
@@ -472,6 +482,7 @@ res</code></pre>
 <pre><code>## The plot was not captured!</code></pre>
 <p><img src="catSimulation_files/figure-html/Plot%20CAT-2.png" width="672" /></p>
 <pre><code>## The plot was not captured!</code></pre>
+<p>Now we come to plotting and interpreting the plots!</p>
 <script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),

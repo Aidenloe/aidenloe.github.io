@@ -78,7 +78,7 @@ The Stopping rule section tells us that the criterion is based on the length of 
 
 The Randomesque method is used when you want to select a range of items that is considered as the next items that is best suited for the estimated ability. Within the range of items, say 5, the algorithm will randomly draw out 1. This often used to spread out the exposure and maintain item security. In our case, we did not enforce this method, so the algorithm will always select the next most optimal item for the estimated ability. 
 
-Not we have reached the Adaptive test details. This gives us the information of which 10 items were selected for the simulation. Nr is the index of the item. Item is the question that was given out. For example, item 21 it given in the first instance. The theta estimate (Est.) and the standard error (SE) is also provided for each item. That is the beauty of modern psychometric approaches. Everything is investigated at a item level rather than a scale. level.
+Now we have reached the Adaptive test details. This gives us the information of which 10 items were selected for the simulation. Nr is the index of the item. Item is the question that was given out. For example, item 21 is given in the first instance. The theta estimate (Est.) and the standard error (SE) is also provided for each item. That is the beauty of modern psychometric approaches. Everything is investigated at a item level rather than a scale. level.
 
 Finally, what we have is the final result of the ability estimate. 
 
