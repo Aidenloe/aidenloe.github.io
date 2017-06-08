@@ -365,13 +365,13 @@ div.tocify {
 
 <h1 class="title toc-ignore">Web Scrapping</h1>
 <h4 class="author"><em>aiden</em></h4>
-<h4 class="date"><em>08 June, 2017</em></h4>
+<h4 class="date"><em>09 June, 2017</em></h4>
 
 </div>
 
 
-<div id="web-scrapping-part-one" class="section level1">
-<h1><strong>Web Scrapping (Part One)</strong></h1>
+<div id="web-scrapping-part-1" class="section level1">
+<h1><strong>Web Scrapping (Part 1)</strong></h1>
 <p>Clearly, there are legal and ethical implications when conducting web scrapping.</p>
 <p>Here, I am merely showing you how it is done based on open content.</p>
 <p>There are many things you can do with web scrapping though. Check out the <a href="https://en.wikipedia.org/wiki/Web_scraping">wiki</a> on it.</p>
@@ -518,8 +518,8 @@ df &lt;- na.omit(df) #remove NAs. </code></pre>
 <p><img src="webscrapping_files/figure-html/Plot%20URL%20data-1.png" width="672" /></p>
 </div>
 </div>
-<div id="web-scrapping-part-two" class="section level1">
-<h1><strong>Web Scrapping (Part Two)</strong></h1>
+<div id="web-scrapping-part-2" class="section level1">
+<h1><strong>Web Scrapping (Part 2)</strong></h1>
 <p>Scrapping viewership is one area of web scrapping, but perhaps you might be interested in doing sentiment analysis on content.</p>
 <p>So we want to extract the contents of the web pages rather than number of times someone viewed the web page.</p>
 <div id="scrape-content-off-websites-wiki" class="section level2">
@@ -623,6 +623,73 @@ ldply(url,BBCscrapper1)</code></pre>
 <pre><code>##                                                        title        date
 ## 1      Japanese fugitive on the run for 45 years is arrested 7 June 2017
 ## 2 Taliban territory: Life in Afghanistan under the militants 8 June 2017</code></pre>
+</div>
+</div>
+<div id="web-scrapping-part-3" class="section level1">
+<h1><strong>Web Scrapping (Part 3)</strong></h1>
+<p>This example below is taken from code kindly written by David stillwell.</p>
+<p>Some editing has been made to the original code.</p>
+<div id="scrape-from-wiki-tables" class="section level2">
+<h2><strong>Scrape from Wiki tables</strong></h2>
+<p>You have learned how to scrape viewership on wikipedia and content on web pages.</p>
+<p>This section is about scrapping data tables online.</p>
+<pre class="r"><code># Install the packages that you don&#39;t have first. 
+library(&quot;RCurl&quot;) # Good package for getting things from URLs, including https
+library(&quot;XML&quot;) # Has a good function for parsing HTML data
+library(&quot;rvest&quot;) #another package that is good for web scraping. We use it in the Wikipedia example
+
+#####################
+### Get a table of data from Wikipedia
+## all of this happens because of the read_html function in the rvest package
+# First, grab the page source
+us_states = read_html(&quot;https://en.wikipedia.org/wiki/List_of_U.S._states_and_territories_by_population&quot;) %&gt;% # piping
+  # then extract the first node with class of wikitable
+  html_node(&quot;.wikitable&quot;) %&gt;% 
+  # then convert the HTML table into a data frame
+  html_table()</code></pre>
+</div>
+<div id="scrape-from-online-tables" class="section level2">
+<h2><strong>Scrape from online tables</strong></h2>
+<p>If we can have two data tables that have at least one column with the same name, then we can merge them together.</p>
+<p>The main idea is to link the data together to run simple analysis.</p>
+<p>In this case we can get data about <a href="http://apps.saferoutesinfo.org/legislation_funding/state_apportionment.cfm">funding</a> given to various US states to support building infrastructure to improve students’ ability to walk and bike to school.</p>
+<pre class="r"><code>######################
+url &lt;- &quot;http://apps.saferoutesinfo.org/legislation_funding/state_apportionment.cfm&quot;
+funding&lt;-htmlParse(url) #get the data
+# find the table on the page and read it into a list object
+funding&lt;- readHTMLTable(funding,stringsAsFactors = FALSE)
+funding.df &lt;- do.call(&quot;rbind&quot;, funding) #flatten data
+# Contain empty spaces previously.
+colnames(funding.df)[1]&lt;- c(&quot;State&quot;) # shorten colname to just State. 
+
+## Now let&#39;s do some analysis
+## What&#39;s does the correlation between state funding and state population look like?
+## This involves some non trivial data cleaning
+
+# Match up the tables by State/Territory names
+# so we have two data frames, x and y, and we&#39;re setting the columns we want to do the matching on by setting by.x and by.y
+mydata = merge(us_states, funding.df, by.x=&quot;State or territory&quot;, by.y=&quot;State&quot;)
+# it looks pretty good, but note that we&#39;re down to 50 US States, because the others didn&#39;t match up by name
+# e.g. &quot;District of Columbia&quot; in the us_states data, doesn&#39;t match &quot;Dist. of Col.&quot; in the funding data
+
+#Replace the total spend column name with a name that&#39;s easier to use.
+colnames(mydata)[18] = &quot;total_spend&quot;
+
+# Notice that the population estimate has lots of commas in (e.g. &quot;4,863,300&quot;). We need to remove them so that R can treat it as a number.
+mydata[,&quot;Population estimate, July 1, 2016[4]&quot;] = gsub(&quot;,&quot;, &quot;&quot;, mydata[,&quot;Population estimate, July 1, 2016[4]&quot;]) #this removes all commas
+mydata[,&quot;Population estimate, July 1, 2016[4]&quot;] = as.numeric(mydata[,&quot;Population estimate, July 1, 2016[4]&quot;]) #this converts it to a number data type
+
+# Now we have to do the same thing with the funding totals, which are in a format like this: $17,309,568
+mydata[,&quot;total_spend&quot;] = gsub(&quot;,&quot;, &quot;&quot;, mydata[,&quot;total_spend&quot;]) #this removes all commas
+mydata[,&quot;total_spend&quot;] = gsub(&quot;\\$&quot;, &quot;&quot;, mydata[,&quot;total_spend&quot;]) #this removes all dollar signs. We have a \\ because the dollar sign is a special character.
+mydata[,&quot;total_spend&quot;] = as.numeric(mydata[,&quot;total_spend&quot;]) #this converts it to a number data type
+
+# Now we can do the plotting
+options(scipen=9999) #stop it showing scientific notation
+plot(mydata[,&quot;Population estimate, July 1, 2016[4]&quot;], mydata[,&quot;total_spend&quot;])</code></pre>
+<p><img src="webscrapping_files/figure-html/Scrape%20Table%20(non-wiki)-1.png" width="672" /></p>
+<pre class="r"><code>cor(mydata[,&quot;Population estimate, July 1, 2016[4]&quot;], mydata[,&quot;total_spend&quot;]) # 0.9924265 - big correlation!</code></pre>
+<pre><code>## [1] 0.9924265</code></pre>
 </div>
 </div>
 

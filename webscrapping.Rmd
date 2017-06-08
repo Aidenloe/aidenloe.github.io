@@ -14,7 +14,7 @@ output:
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-# **Web Scrapping (Part One)**
+# **Web Scrapping (Part 1)**
 
 Clearly, there are legal and ethical implications when conducting web scrapping. 
 
@@ -200,7 +200,7 @@ ggplot(df,aes(x =date, y =views))+   # data frame as first argument, followed by
   labs(title=topic)
 ```
 
-# **Web Scrapping (Part Two)**
+# **Web Scrapping (Part 2)**
 
 Scrapping viewership is one area of web scrapping, but perhaps you might be interested in doing sentiment analysis on content. 
 
@@ -320,5 +320,84 @@ url<- c("http://www.bbc.co.uk/news/world-asia-40188215", "http://www.bbc.co.uk/n
 ## ldply: For each element of a list, apply function then combine results into a data frame
 #put into a dataframe
 ldply(url,BBCscrapper1)
+
+```
+
+
+
+# **Web Scrapping (Part 3)**
+This example below is taken from code kindly written by David stillwell. 
+
+Some editing has been made to the original code. 
+
+## **Scrape from Wiki tables**
+
+You have learned how to scrape viewership on wikipedia and content on web pages. 
+
+This section is about scrapping data tables online. 
+
+```{r Scrape Table (Wiki), message=FALSE}
+# Install the packages that you don't have first. 
+library("RCurl") # Good package for getting things from URLs, including https
+library("XML") # Has a good function for parsing HTML data
+library("rvest") #another package that is good for web scraping. We use it in the Wikipedia example
+
+#####################
+### Get a table of data from Wikipedia
+## all of this happens because of the read_html function in the rvest package
+# First, grab the page source
+us_states = read_html("https://en.wikipedia.org/wiki/List_of_U.S._states_and_territories_by_population") %>% # piping
+  # then extract the first node with class of wikitable
+  html_node(".wikitable") %>% 
+  # then convert the HTML table into a data frame
+  html_table()
+
+```
+
+## **Scrape from online tables**
+
+If we can have two data tables that have at least one column with the same name, then we can merge them together. 
+
+The main idea is to link the data together to run simple analysis.
+
+In this case we can get data about [funding](http://apps.saferoutesinfo.org/legislation_funding/state_apportionment.cfm) given to various US states to support building infrastructure to improve students' ability to walk and bike to school. 
+
+```{r Scrape Table (non-wiki)}
+
+######################
+url <- "http://apps.saferoutesinfo.org/legislation_funding/state_apportionment.cfm"
+funding<-htmlParse(url) #get the data
+# find the table on the page and read it into a list object
+funding<- readHTMLTable(funding,stringsAsFactors = FALSE)
+funding.df <- do.call("rbind", funding) #flatten data
+# Contain empty spaces previously.
+colnames(funding.df)[1]<- c("State") # shorten colname to just State. 
+
+## Now let's do some analysis
+## What's does the correlation between state funding and state population look like?
+## This involves some non trivial data cleaning
+
+# Match up the tables by State/Territory names
+# so we have two data frames, x and y, and we're setting the columns we want to do the matching on by setting by.x and by.y
+mydata = merge(us_states, funding.df, by.x="State or territory", by.y="State")
+# it looks pretty good, but note that we're down to 50 US States, because the others didn't match up by name
+# e.g. "District of Columbia" in the us_states data, doesn't match "Dist. of Col." in the funding data
+
+#Replace the total spend column name with a name that's easier to use.
+colnames(mydata)[18] = "total_spend"
+
+# Notice that the population estimate has lots of commas in (e.g. "4,863,300"). We need to remove them so that R can treat it as a number.
+mydata[,"Population estimate, July 1, 2016[4]"] = gsub(",", "", mydata[,"Population estimate, July 1, 2016[4]"]) #this removes all commas
+mydata[,"Population estimate, July 1, 2016[4]"] = as.numeric(mydata[,"Population estimate, July 1, 2016[4]"]) #this converts it to a number data type
+
+# Now we have to do the same thing with the funding totals, which are in a format like this: $17,309,568
+mydata[,"total_spend"] = gsub(",", "", mydata[,"total_spend"]) #this removes all commas
+mydata[,"total_spend"] = gsub("\\$", "", mydata[,"total_spend"]) #this removes all dollar signs. We have a \\ because the dollar sign is a special character.
+mydata[,"total_spend"] = as.numeric(mydata[,"total_spend"]) #this converts it to a number data type
+
+# Now we can do the plotting
+options(scipen=9999) #stop it showing scientific notation
+plot(mydata[,"Population estimate, July 1, 2016[4]"], mydata[,"total_spend"])
+cor(mydata[,"Population estimate, July 1, 2016[4]"], mydata[,"total_spend"]) # 0.9924265 - big correlation!
 
 ```
