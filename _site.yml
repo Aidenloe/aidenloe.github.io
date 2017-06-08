@@ -21,6 +21,8 @@ navbar:
         - text: "What is ML?"
         - text: "Intro to ML"
           href: introToML.html
+        - text: "Web Scrapping"
+          href: webscrapping.html
     - text: "IRT 4 Social Scientists"
       href: irt.html
       menu:

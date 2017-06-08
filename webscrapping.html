@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+<meta name="author" content="aiden" />
+
+
+<title>Web Scrapping</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-1.1/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-1.1/highlight.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs && document.readyState && document.readyState === "complete") {
+   window.setTimeout(function() {
+      hljs.initHighlighting();
+   }, 0);
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 51px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+
+.section h2 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h3 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h4 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h5 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h6 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
+
+<!-- code folding -->
+
+
+
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = false;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+  padding-left: 25px;
+  text-indent: 0;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+.tocify-subheader {
+  display: inline;
+}
+.tocify-subheader .tocify-item {
+  font-size: 0.95em;
+}
+
+</style>
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Aiden Loe</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li>
+  <a href="about.html">About</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    R 4 Social Scientists
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li class="dropdown-header">What is R?</li>
+    <li>
+      <a href="introToR.html">Intro to R</a>
+    </li>
+    <li>
+      <a href="dataVisual.html">Data Visualisation</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    ML 4 Social Scientists
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li class="dropdown-header">What is ML?</li>
+    <li>
+      <a href="introToML.html">Intro to ML</a>
+    </li>
+    <li>
+      <a href="webscrapping.html">Web Scrapping</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    IRT 4 Social Scientists
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li class="dropdown-header">What is IRT?</li>
+    <li>
+      <a href="introToIRT.html">Intro to IRT</a>
+    </li>
+    <li>
+      <a href="irtplots.html">Plotting to IRT</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    CAT 4 Social Scientists
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li class="dropdown-header">What is CAT?</li>
+    <li>
+      <a href="introToCAT.html">Intro to CAT</a>
+    </li>
+    <li>
+      <a href="catSimulation.html">CAT simulation</a>
+    </li>
+  </ul>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Web Scrapping</h1>
+<h4 class="author"><em>aiden</em></h4>
+<h4 class="date"><em>08 June, 2017</em></h4>
+
+</div>
+
+
+<div id="web-scrapping-one" class="section level1">
+<h1><strong>Web Scrapping One</strong></h1>
+<p>Clearly, there are legal and ethical implications when conducting web scrapping.</p>
+<p>Here, I am merely showing you how it is done based on open content.</p>
+<p>There are many things you can do with web scrapping though. Check out the <a href="https://en.wikipedia.org/wiki/Web_scraping">wiki</a> on it.</p>
+<p>Here are some <a href="https://www.quora.com/What-are-examples-of-how-real-businesses-use-web-scraping">examples</a> of companies.</p>
+<p><em>A note of caution is that, if you want to scrape data, make sure that you are doing it</em> <strong>legally</strong>.</p>
+<div id="scrape-single-web-pages" class="section level2">
+<h2><strong>Scrape Single web pages</strong></h2>
+<p>We are using wikipedia as an example for web scrapping.</p>
+<p>We want to find out how many people are viewing a specific topic for a pariticular month.</p>
+<p>The code below will scrape viewership for a specific month of our choice.</p>
+<p>In this example, we will check out how popular the topic ‘web_scraping’ is on wikipedia.</p>
+<pre class="r"><code>################# Scrapping viewership on one webpage ################
+var=201402
+url=paste0(&quot;http://stats.grok.se/json/en/&quot;,var,&quot;/web_scraping&quot;)
+raw.data &lt;- readLines(url, warn=&quot;F&quot;)  # igore warning, data is scrapped
+
+################### read json data in R ##############
+#### Install the rjson package if you don&#39;t have it already
+require(rjson) # load rjson
+
+rd &lt;- fromJSON(raw.data) # convert to a list object in R
+rd.views &lt;- rd$daily_views # use only the daily_views
+rd.views &lt;- unlist(rd.views) # flatten the list
+df &lt;- as.data.frame(rd.views) # save into df
+
+df$date &lt;-  as.Date(rownames(df)) # save as dates
+colnames(df) &lt;- c(&quot;views&quot;,&quot;date&quot;) # create colnames
+rownames(df) &lt;- 1:nrow(df) # create row names as index</code></pre>
+</div>
+<div id="plot-viewership-by-a-month" class="section level2">
+<h2><strong>Plot viewership by a month</strong></h2>
+<p>Once you the data in a neat format. We can start plotting it.</p>
+<p>Here you want to visualise the number of viewerships using ggplot2.</p>
+<p>We observe a sudden spike somewhere in the middle of feb 2014. I wonder why…</p>
+<pre class="r"><code>#### Install these packages if you don&#39;t have them
+require(ggplot2) 
+require(lubridate)
+
+ggplot(df,aes(x =date, y =views))+   # data frame as first argument, followed by the aesthetics, x and y variables.  
+  geom_line()+   # visulisation
+  geom_smooth(method=&quot;loess&quot;)+ # smoothing function (try changing the argument to &#39;lm&#39; or &#39;gam&#39;)
+  theme_bw(base_size=10) # sets the thumb size to be it legible. </code></pre>
+<p><img src="webscrapping_files/figure-html/plot%20data-1.png" width="672" /></p>
+</div>
+<div id="scrape-data-by-months" class="section level2">
+<h2><strong>Scrape data by months</strong></h2>
+<p>Sometimes it is more fun to find out viewership based on a certain number of months.</p>
+<p>Hence, using ifelse statements and for loop, one can easily scrape the viewership based on the number of months.</p>
+<p>Because the weblink for the months &lt; 10 has a 0 digit before the values (i.e., 01, 02, 03…), we need to think of a way to add a 0 before the single digit. In this case we created an ifelse statement to help us with that. Again, this is just one way of doing it. Another way is to first loop through 0-9, then another loop from 10-12. Finally, you can just cbind them together and remove NAs.</p>
+<pre class="r"><code>## Looping through 12 months
+date =NULL 
+dates=NULL 
+  for (month in 1:12){
+    if(month &lt; 10){
+      date[month] = paste0(2014,0,month) #add a 0 before the numeric value
+    }else{
+      dates[month] = paste0(2014,month)
+    }
+  }
+# Store the data in &#39;all.dates&#39; variable ##
+  dates &lt;- na.omit(dates) # remove NAs
+  all.dates &lt;- c(date, dates) # concatenate them together
+  all.dates &lt;- as.numeric(all.dates) # convert data class to numeric</code></pre>
+</div>
+<div id="scrape-data-by-years" class="section level2">
+<h2><strong>Scrape data by years</strong></h2>
+<p>I am sure you can start seeing a pattern now.</p>
+<p>By introducing a double for loop, the years could also be extracted out as well.</p>
+<p>If you want, you can also extend this to create a triple for loop. The final outer loop could be the language for example.</p>
+<pre class="r"><code>## Looping through XXX Years and 12 months 
+date =NULL 
+dates=NULL 
+years &lt;- NULL
+for (year in 2012:2014){
+  for (month in 1:12){
+    if(month &lt; 10){
+    date[month] = paste0(year,0,month)
+    }else{
+    dates[month] = paste0(year,month)
+    }
+  }
+  ####### Store the data in &#39;all.dates&#39; variable ###
+  dates &lt;- na.omit(dates) # remove NAs
+  all.dates &lt;- c(date, dates) # concatenate them together
+  all.dates &lt;- as.numeric(all.dates) # convert data class to numeric
+  years &lt;- c(all.dates,years) #combind months according to years
+}</code></pre>
+</div>
+<div id="scrape-data-by-years-based-on-url" class="section level2">
+<h2><strong>Scrape data by years based on URL</strong></h2>
+<p>Based on what we learned above, we can easily swap it to include the relevant links.</p>
+<p>Here we will scrap data based on the topic ‘web_scrapping’ between 2013 and 2014.</p>
+<pre class="r"><code>## Looping through Years and 12 months based on URL
+topic &lt;- &quot;web_scraping&quot;
+start.year &lt;- 2013
+end.year &lt;- 2014
+
+### fetch data ###
+date =NULL 
+dates=NULL 
+years &lt;- NULL
+for (year in start.year:end.year){
+  for (month in 1:12){
+    if(month &lt; 10){
+      date[month] = paste0(&quot;http://stats.grok.se/json/en/&quot;,year,0,month,&quot;/&quot;,topic,&quot;&quot;) #add a zero before the numeric value
+    }else{
+      dates[month] =paste0(&quot;http://stats.grok.se/json/en/&quot;,year,month,&quot;/&quot;,topic,&quot;&quot;)
+    }
+  }
+  ####### Store the data in &#39;years&#39; variable ###
+  dates &lt;- na.omit(dates) # remove NAs
+  all.dates &lt;- c(date, dates) # concatenate months
+  years &lt;- c(all.dates,years) # concatenate years
+}
+
+raw.data &lt;- NULL
+for(i in 1:length(years)){
+raw.data[i] &lt;- readLines(years[i], warn=&quot;F&quot;)  # igore warning
+}
+
+#### Organise Data ###
+rd &lt;- NULL
+rd.views &lt;- NULL
+for(i in 1:length(raw.data)){
+rd[[i]] &lt;- fromJSON(raw.data[i]) # convert to a list object in R
+rd.views[[i]]&lt;- rd[[i]]$daily_views
+}
+
+rd.views.2 &lt;- unlist(rd.views)
+df &lt;- as.data.frame(rd.views.2)
+df$date &lt;- as.Date(names(rd.views.2)) # save as dates
+colnames(df) &lt;- c(&quot;views&quot;,&quot;date&quot;) # create colnames
+rownames(df) &lt;- 1:nrow(df) # create row names as index
+df &lt;- na.omit(df) #remove NAs. </code></pre>
+</div>
+<div id="plot-viewership-by-years" class="section level2">
+<h2><strong>Plot viewership by years</strong></h2>
+<p>Once the data is organised properly, we can plot it.</p>
+<pre class="r"><code>ggplot(df,aes(x =date, y =views))+   # data frame as first argument, followed by the aesthetics, x and y variables.  
+  geom_line()+   # visulisation
+  geom_smooth(method=&quot;loess&quot;)+ # smoothing function (try changing the argument to &#39;lm&#39; or &#39;gam&#39;)
+  theme_bw(base_size=10)+ # sets the thumb size to be it legible. 
+  labs(title=topic)</code></pre>
+<p><img src="webscrapping_files/figure-html/Plot%20URL%20data-1.png" width="672" /></p>
+</div>
+</div>
+<div id="web-scrapping-two" class="section level1">
+<h1><strong>Web Scrapping Two</strong></h1>
+<div id="scrape-content-off-websites-wiki" class="section level2">
+<h2><strong>Scrape content off websites (Wiki)</strong></h2>
+<p>We will be using the <code>RCurl</code> and <code>XML</code> package to help us with the scrapping.</p>
+<p>Let’s use the Eurovision_Song_Contest as an example.</p>
+<p>The <code>XML</code> package has plenty functions that can allow us to scrape the data.</p>
+<p>Usually we are extracting information based on the tags of the web pages.</p>
+<pre class="r"><code>##### SCRAPPING CONTENT OFF WEBSITES ######
+require(RCurl)
+require(XML)
+# XPath is a language for querying XML 
+# //Select anywhere in the document
+# /Select from root
+# @select attributes. Used in [] brackets
+
+#### Wikipedia Example ####
+url &lt;- &quot;https://en.wikipedia.org/wiki/Eurovision_Song_Contest&quot;
+txt = getURL(url) # get the URL html code
+
+# parsing html code into readable format
+PARSED &lt;- htmlParse(txt)
+
+# Parsing code using tags
+xpathSApply(PARSED, &quot;//h1&quot;)
+
+# strops code and return content of the tag
+xpathSApply(PARSED, &quot;//h1&quot;, xmlValue) # h1 tag
+xpathSApply(PARSED, &quot;//h3&quot;, xmlValue) # h3 tag
+xpathSApply(PARSED, &quot;//a[@href]&quot;) # a tag with href attribute
+
+
+# Go to url 
+# Highlight references
+# right click, inspect element
+# Search for tags
+xpathSApply(PARSED, &quot;//span[@class=&#39;reference-text&#39;]&quot;,xmlValue) # parse notes and citations
+xpathSApply(PARSED, &quot;//cite[@class=&#39;citation news&#39;]&quot;,xmlValue) # parse citation news
+xpathSApply(PARSED, &quot;//span[@class=&#39;mw-headline&#39;]&quot;,xmlValue) # parse headlines
+xpathSApply(PARSED, &quot;//p&quot;,xmlValue) # parsing contents in p tag
+xpathSApply(PARSED, &quot;//cite[@class=&#39;citation news&#39;]/a/@href&quot;) # parse links under citation. xmlValue not needed. 
+xpathSApply(PARSED, &quot;//p/a/@href&quot;) # parse href links under all p tags
+xpathSApply(PARSED, &quot;//p/a/@*&quot;) # parse all atributes under all p tags
+
+# Partial matches - subtle variations within or between pages. 
+xpathSApply(PARSED, &quot;//cite[starts-with(@class, &#39;citation news&#39;)]&quot;,xmlValue) # parse citataion news that starts with..
+xpathSApply(PARSED, &quot;//cite[contains(@class, &#39;citation news&#39;)]&quot;,xmlValue) # parse citataion news that contains.
+
+# Parsing tree like structure
+parsed&lt;-   htmlTreeParse(txt, asText = TRUE)</code></pre>
+</div>
+<div id="scrape-content-off-website-bbc" class="section level2">
+<h2><strong>Scrape content off website (BBC)</strong></h2>
+<p>When you know the structure of the data.</p>
+<p>All you need to do is to find the correct function to scrape.</p>
+<pre class="r"><code>##### BBC Example ####
+url &lt;- &quot;http://www.bbc.co.uk/news/uk-england-london-40196565&quot;
+url &lt;- &quot;http://www.bbc.co.uk/news/world-asia-40188215&quot;
+txt = getURL(url) # get the URL html code
+
+# parsing html code into readable format
+PARSED &lt;- htmlParse(txt)
+xpathSApply(PARSED, &quot;//h1&quot;, xmlValue) # h1 tag
+xpathSApply(PARSED, &quot;//p&quot;, xmlValue) # p tag
+xpathSApply(PARSED, &quot;//p[@class=&#39;story-body__introduction&#39;]&quot;, xmlValue) # p tag body
+xpathSApply(PARSED, &quot;//div[@class=&#39;date date--v2&#39;]&quot;,xmlValue) # date, only the first is enough
+xpathSApply(PARSED, &quot;//meta[@name=&#39;OriginalPublicationDate&#39;]/@content&quot;) # sometimes there is meta data. </code></pre>
+</div>
+<div id="create-simple-bbc-scrapper" class="section level2">
+<h2><strong>Create simple BBC scrapper</strong></h2>
+<p>Sometimes, creating a function will make your life better and make your script look simpler.</p>
+<pre class="r"><code>##### Create simple BBC scrapper #####
+# scrape title, date and content
+BBCscrapper1&lt;- function(url){
+  txt = getURL(url) # get the URL html code
+  PARSED &lt;- htmlParse(txt) # Parse code into readable format
+  title &lt;- xpathSApply(PARSED, &quot;//h1&quot;, xmlValue) # h1 tag
+  paragraph &lt;- xpathSApply(PARSED, &quot;//p&quot;, xmlValue) # p tag
+  date &lt;- xpathSApply(PARSED, &quot;//div[@class=&#39;date date--v2&#39;]&quot;,xmlValue) # date, only the first is enough
+  date &lt;- date[1]
+  return(cbind(title,date))
+  #return(as.matrix(c(title,date)))
+}
+
+
+# Use function that was just created. 
+BBCscrapper1(&quot;http://www.bbc.co.uk/news/world-asia-40188215&quot;)</code></pre>
+<pre><code>##      title                                                   date         
+## [1,] &quot;Japanese fugitive on the run for 45 years is arrested&quot; &quot;7 June 2017&quot;</code></pre>
+</div>
+<div id="keeping-it-neat" class="section level2">
+<h2><strong>Keeping it neat</strong></h2>
+<p>Using the <code>plyr</code> package helps to arrange the data in an organised way.</p>
+<pre class="r"><code>## Putting the title and date into a dataframe
+require(plyr)
+#url
+url&lt;- c(&quot;http://www.bbc.co.uk/news/world-asia-40188215&quot;, &quot;http://www.bbc.co.uk/news/world-asia-40171379&quot;)
+## ldply: For each element of a list, apply function then combine results into a data frame
+#put into a dataframe
+ldply(url,BBCscrapper1)</code></pre>
+<pre><code>##                                                        title        date
+## 1      Japanese fugitive on the run for 45 years is arrested 7 June 2017
+## 2 Taliban territory: Life in Afghanistan under the militants 8 June 2017</code></pre>
+</div>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

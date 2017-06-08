@@ -1,0 +1,319 @@
+---
+title: "Web Scrapping"
+author: "aiden"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output:
+  html_document:
+    toc: true
+    toc_depth: 3
+    toc_float: 
+      collapsed: false
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# **Web Scrapping One**
+
+Clearly, there are legal and ethical implications when conducting web scrapping. 
+
+Here, I am merely showing you how it is done based on open content. 
+
+There are many things you can do with web scrapping though. Check out the [wiki](https://en.wikipedia.org/wiki/Web_scraping) on it. 
+
+Here are some [examples](https://www.quora.com/What-are-examples-of-how-real-businesses-use-web-scraping) of companies. 
+
+*A note of caution is that, if you want to scrape data, make sure that you are doing it* **legally**.
+
+
+
+## **Scrape Single web pages**
+
+We are using wikipedia as an example for web scrapping. 
+
+We want to find out how many people are viewing a specific topic for a pariticular month. 
+
+The code below will scrape viewership for a specific month of our choice. 
+
+In this example, we will check out how popular the topic 'web_scraping' is on wikipedia. 
+
+```{r Scrape webpage, message=FALSE}
+
+################# Scrapping viewership on one webpage ################
+var=201402
+url=paste0("http://stats.grok.se/json/en/",var,"/web_scraping")
+raw.data <- readLines(url, warn="F")  # igore warning, data is scrapped
+
+################### read json data in R ##############
+#### Install the rjson package if you don't have it already
+require(rjson) # load rjson
+
+rd <- fromJSON(raw.data) # convert to a list object in R
+rd.views <- rd$daily_views # use only the daily_views
+rd.views <- unlist(rd.views) # flatten the list
+df <- as.data.frame(rd.views) # save into df
+
+df$date <-  as.Date(rownames(df)) # save as dates
+colnames(df) <- c("views","date") # create colnames
+rownames(df) <- 1:nrow(df) # create row names as index
+```
+
+## **Plot viewership by a month**
+
+Once you the data in a neat format. We can start plotting it.  
+
+Here you want to visualise the number of viewerships using ggplot2.
+
+We observe a sudden spike somewhere in the middle of feb 2014. I wonder why... 
+
+```{r plot data, message=FALSE, warning=FALSE}
+#### Install these packages if you don't have them
+require(ggplot2) 
+require(lubridate)
+
+ggplot(df,aes(x =date, y =views))+   # data frame as first argument, followed by the aesthetics, x and y variables.  
+  geom_line()+   # visulisation
+  geom_smooth(method="loess")+ # smoothing function (try changing the argument to 'lm' or 'gam')
+  theme_bw(base_size=10) # sets the thumb size to be it legible. 
+
+```
+
+## **Scrape data by months**
+
+Sometimes it is more fun to find out viewership based on a certain number of months. 
+
+Hence, using ifelse statements and for loop, one can easily scrape the viewership based on the number of months. 
+
+Because the weblink for the months < 10 has a 0 digit before the values (i.e., 01, 02, 03...), we need to think of a way to add a 0 before the single digit. In this case we created an ifelse statement to help us with that. Again, this is just one way of doing it. Another way is to first loop through 0-9, then another loop from 10-12. Finally, you can just cbind them together and remove NAs. 
+
+```{r Scrape by months}
+## Looping through 12 months
+date =NULL 
+dates=NULL 
+  for (month in 1:12){
+    if(month < 10){
+      date[month] = paste0(2014,0,month) #add a 0 before the numeric value
+    }else{
+      dates[month] = paste0(2014,month)
+    }
+  }
+# Store the data in 'all.dates' variable ##
+  dates <- na.omit(dates) # remove NAs
+  all.dates <- c(date, dates) # concatenate them together
+  all.dates <- as.numeric(all.dates) # convert data class to numeric
+
+```  
+
+
+## **Scrape data by years**
+
+I am sure you can start seeing a pattern now. 
+
+By introducing a double for loop, the years could also be extracted out as well.
+
+If you want, you can also extend this to create a triple for loop. The final outer loop could be the language for example. 
+
+
+```{r Scrape by years}  
+## Looping through XXX Years and 12 months 
+date =NULL 
+dates=NULL 
+years <- NULL
+for (year in 2012:2014){
+  for (month in 1:12){
+    if(month < 10){
+    date[month] = paste0(year,0,month)
+    }else{
+    dates[month] = paste0(year,month)
+    }
+  }
+  ####### Store the data in 'all.dates' variable ###
+  dates <- na.omit(dates) # remove NAs
+  all.dates <- c(date, dates) # concatenate them together
+  all.dates <- as.numeric(all.dates) # convert data class to numeric
+  years <- c(all.dates,years) #combind months according to years
+}
+```
+
+
+## **Scrape data by years based on URL**
+
+Based on what we learned above, we can easily swap it to include the relevant links. 
+
+Here we will scrap data based on the topic 'web_scrapping' between 2013 and 2014. 
+```{r Scrape by years based on URL}
+## Looping through Years and 12 months based on URL
+topic <- "web_scraping"
+start.year <- 2013
+end.year <- 2014
+
+### fetch data ###
+date =NULL 
+dates=NULL 
+years <- NULL
+for (year in start.year:end.year){
+  for (month in 1:12){
+    if(month < 10){
+      date[month] = paste0("http://stats.grok.se/json/en/",year,0,month,"/",topic,"") #add a zero before the numeric value
+    }else{
+      dates[month] =paste0("http://stats.grok.se/json/en/",year,month,"/",topic,"")
+    }
+  }
+  ####### Store the data in 'years' variable ###
+  dates <- na.omit(dates) # remove NAs
+  all.dates <- c(date, dates) # concatenate months
+  years <- c(all.dates,years) # concatenate years
+}
+
+raw.data <- NULL
+for(i in 1:length(years)){
+raw.data[i] <- readLines(years[i], warn="F")  # igore warning
+}
+
+#### Organise Data ###
+rd <- NULL
+rd.views <- NULL
+for(i in 1:length(raw.data)){
+rd[[i]] <- fromJSON(raw.data[i]) # convert to a list object in R
+rd.views[[i]]<- rd[[i]]$daily_views
+}
+
+rd.views.2 <- unlist(rd.views)
+df <- as.data.frame(rd.views.2)
+df$date <- as.Date(names(rd.views.2)) # save as dates
+colnames(df) <- c("views","date") # create colnames
+rownames(df) <- 1:nrow(df) # create row names as index
+df <- na.omit(df) #remove NAs. 
+
+```
+
+## **Plot viewership by years**
+
+Once the data is organised properly, we can plot it. 
+
+```{r Plot URL data,warning=FALSE}
+ggplot(df,aes(x =date, y =views))+   # data frame as first argument, followed by the aesthetics, x and y variables.  
+  geom_line()+   # visulisation
+  geom_smooth(method="loess")+ # smoothing function (try changing the argument to 'lm' or 'gam')
+  theme_bw(base_size=10)+ # sets the thumb size to be it legible. 
+  labs(title=topic)
+```
+
+# **Web Scrapping Two**
+## **Scrape content off websites (Wiki)**
+
+We will be using the `RCurl` and `XML` package to help us with the scrapping. 
+
+Let's use the Eurovision_Song_Contest as an example. 
+
+The `XML` package has plenty functions that can allow us to scrape the data. 
+
+Usually we are extracting information based on the tags of the web pages. 
+
+
+```{r Scrape Content (wiki), message=FALSE, results='hide', warning=FALSE}
+##### SCRAPPING CONTENT OFF WEBSITES ######
+require(RCurl)
+require(XML)
+# XPath is a language for querying XML 
+# //Select anywhere in the document
+# /Select from root
+# @select attributes. Used in [] brackets
+
+#### Wikipedia Example ####
+url <- "https://en.wikipedia.org/wiki/Eurovision_Song_Contest"
+txt = getURL(url) # get the URL html code
+
+# parsing html code into readable format
+PARSED <- htmlParse(txt)
+
+# Parsing code using tags
+xpathSApply(PARSED, "//h1")
+
+# strops code and return content of the tag
+xpathSApply(PARSED, "//h1", xmlValue) # h1 tag
+xpathSApply(PARSED, "//h3", xmlValue) # h3 tag
+xpathSApply(PARSED, "//a[@href]") # a tag with href attribute
+
+
+# Go to url 
+# Highlight references
+# right click, inspect element
+# Search for tags
+xpathSApply(PARSED, "//span[@class='reference-text']",xmlValue) # parse notes and citations
+xpathSApply(PARSED, "//cite[@class='citation news']",xmlValue) # parse citation news
+xpathSApply(PARSED, "//span[@class='mw-headline']",xmlValue) # parse headlines
+xpathSApply(PARSED, "//p",xmlValue) # parsing contents in p tag
+xpathSApply(PARSED, "//cite[@class='citation news']/a/@href") # parse links under citation. xmlValue not needed. 
+xpathSApply(PARSED, "//p/a/@href") # parse href links under all p tags
+xpathSApply(PARSED, "//p/a/@*") # parse all atributes under all p tags
+
+# Partial matches - subtle variations within or between pages. 
+xpathSApply(PARSED, "//cite[starts-with(@class, 'citation news')]",xmlValue) # parse citataion news that starts with..
+xpathSApply(PARSED, "//cite[contains(@class, 'citation news')]",xmlValue) # parse citataion news that contains.
+
+# Parsing tree like structure
+parsed<-   htmlTreeParse(txt, asText = TRUE)
+
+```
+
+## **Scrape content off website (BBC)**
+
+When you know the structure of the data. 
+
+All you need to do is to find the correct function to scrape. 
+
+```{r Scrape Content (BBC), message=FALSE, results='hide', warning=FALSE}
+
+
+##### BBC Example ####
+url <- "http://www.bbc.co.uk/news/uk-england-london-40196565"
+url <- "http://www.bbc.co.uk/news/world-asia-40188215"
+txt = getURL(url) # get the URL html code
+
+# parsing html code into readable format
+PARSED <- htmlParse(txt)
+xpathSApply(PARSED, "//h1", xmlValue) # h1 tag
+xpathSApply(PARSED, "//p", xmlValue) # p tag
+xpathSApply(PARSED, "//p[@class='story-body__introduction']", xmlValue) # p tag body
+xpathSApply(PARSED, "//div[@class='date date--v2']",xmlValue) # date, only the first is enough
+xpathSApply(PARSED, "//meta[@name='OriginalPublicationDate']/@content") # sometimes there is meta data. 
+```
+
+## **Create simple BBC scrapper**
+
+Sometimes, creating a function will make your life better and make your script look simpler.  
+
+```{r Plot BBC scrapper}
+##### Create simple BBC scrapper #####
+# scrape title, date and content
+BBCscrapper1<- function(url){
+  txt = getURL(url) # get the URL html code
+  PARSED <- htmlParse(txt) # Parse code into readable format
+  title <- xpathSApply(PARSED, "//h1", xmlValue) # h1 tag
+  paragraph <- xpathSApply(PARSED, "//p", xmlValue) # p tag
+  date <- xpathSApply(PARSED, "//div[@class='date date--v2']",xmlValue) # date, only the first is enough
+  date <- date[1]
+  return(cbind(title,date))
+  #return(as.matrix(c(title,date)))
+}
+
+
+# Use function that was just created. 
+BBCscrapper1("http://www.bbc.co.uk/news/world-asia-40188215")
+```
+
+## **Keeping it neat**
+
+Using the `plyr` package helps to arrange the data in an organised way. 
+```{r Keeping it neat, message=FALSE}
+## Putting the title and date into a dataframe
+require(plyr)
+#url
+url<- c("http://www.bbc.co.uk/news/world-asia-40188215", "http://www.bbc.co.uk/news/world-asia-40171379")
+## ldply: For each element of a list, apply function then combine results into a data frame
+#put into a dataframe
+ldply(url,BBCscrapper1)
+
+```
