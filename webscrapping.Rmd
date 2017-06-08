@@ -14,7 +14,7 @@ output:
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-# **Web Scrapping One**
+# **Web Scrapping (Part One)**
 
 Clearly, there are legal and ethical implications when conducting web scrapping. 
 
@@ -200,7 +200,12 @@ ggplot(df,aes(x =date, y =views))+   # data frame as first argument, followed by
   labs(title=topic)
 ```
 
-# **Web Scrapping Two**
+# **Web Scrapping (Part Two)**
+
+Scrapping viewership is one area of web scrapping, but perhaps you might be interested in doing sentiment analysis on content. 
+
+So we want to extract the contents of the web pages rather than number of times someone viewed the web page. 
+
 ## **Scrape content off websites (Wiki)**
 
 We will be using the `RCurl` and `XML` package to help us with the scrapping. 
