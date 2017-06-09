@@ -1,0 +1,222 @@
+---
+title: "Data mining"
+author: "Aiden"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output:
+  html_document:
+    toc: true
+    toc_depth: 3
+    toc_float: 
+      collapsed: false
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# **Data Mining (Twitter)**
+
+Data mining is slightly different from web scrapping. It concerns itself with the data that is scraped, but it invovles the process of discovering patterns in large data sets. 
+
+We are going to extract twitter data through their API. 
+
+First of all, you need to create a twitter app before you can have access to the data through their API. 
+
+We start off with loading the relevant packages.
+
+```{r Packages,, message=FALSE}
+library("twitteR")
+library("ggplot2")
+library("slam") 
+library("wordcloud") # depends on slam to work
+library("stringr")
+```
+
+## **Important keys**
+The four main things you will need are:
+
++ consumer_key
++ consumer secret
++ access_token
++ access_secret
+
+```{r access keys, echo=FALSE, message=FALSE}
+consumer_key = '7cvNGBgXex6LVNaONCRvR37kU'
+consumer_secret = 'Kv2sH5HsSKau743LQ0oei2jHDb7FXSInW7TGT75ZrwriUSjeLu'
+access_token = '523172873-PHBjDyiZS5eq3yGzWXCLq6UsqBItdVbt6yafS3vX'
+access_secret = 'HjIq8YtNweO8LdraVq2PcVjxQqyNqUfcsxjpljRUJVvAJ'
+```
+
+```{r Set up API, message=FALSE}
+## Set up the Twitter API session
+options(httr_oauth_cache=F) #set oauth cacheing to false so that it doesn't bring up a prompt.
+setup_twitter_oauth(consumer_key=consumer_key, consumer_secret=consumer_secret, access_token=access_token, access_secret=access_secret)
+```
+
+## **Get data**
+
+```{r Get data}
+## Get data for a specific Twitter username
+tweet_user = getUser('elonmusk') #will get user info from the @david_stillwell account
+
+## Explore our new data
+ls(tweet_user) #see the elements in the new list variable
+#how long the account has been a Twitter user for
+tweet_user$created 
+#user's description
+tweet_user$description 
+#how many followers the account has
+tweet_user$followersCount 
+
+
+```
+
+## **Harvest data**
+
+Here we want to extract at most up to 3200 tweets. This is the limit anyway so you can't cross it. 
+
+However, more often than not, you will not get the full 3200 tweets. It will always be less than that. 
+
+We want to convert it into a data frame so we can use the data easily in R. 
+
+```{r Harvest data, message = FALSE}
+library("twitteR")
+## harvest tweets from user (usually return fewer)
+tweets.1 = userTimeline('elonmusk', n=3200, includeRts=FALSE)  # no re-tweets. 
+tweets = twListToDF(tweets.1) #put the Tweets in a data frame
+names(tweets) #view tweets
+nrow(tweets) #rows of tweets
+
+```
+
+## **Reorganise data**
+
+Here we want to reorganise data to use the columns we are interested in. 
+
+* source = application the tweet came from (i.e. iphone or android)
+
+* text = the tweet
+
+* created = time of which the tweet was created
+
+```{r reorganise data}
+## reorganise data
+library("tidyr")
+library("dplyr")
+tweets <- tweets %>% 
+  select(id, statusSource, text, created) %>% ## select these 4 columns
+  extract(statusSource, "source", "Twitter for (.*?)<") %>% #strip html code and rename
+  filter(source %in% c("iPhone")) # select only rows with iphone
+names(tweets)
+
+```
+
+## **Tweets most frequently**
+
+Let's find out at what point of time he tweets the most. 
+
+We will use the data frame that we just cleaned. 
+
+It only contains:
+
+* source = application the tweet came from (i.e. iphone or android)
+
+* text = the tweet
+
+* created = time of which the tweet was created
+
+
+```{r Tweets most frequently, message= FALSE}
+## Investigate when he tweets the most (time of the day)
+library("lubridate")
+library("scales")
+tweets %>%
+  count(source, hour = hour(with_tz(created, "EST"))) %>%  #count observations by source.
+  mutate(percent = n / sum(n)) %>% #add a new column into the data frame
+  
+  # plot it
+  ggplot(aes(hour, percent, color = source)) + 
+  geom_line() +
+  scale_y_continuous(labels = percent_format()) +
+  labs(x = "Hour of day (EST)",
+       y = "% of tweets",
+       color = "")
+
+```
+
+## **Average char per tweet**
+
+## What is the average number of characters per tweet?
+
+```{r Average char per tweet}
+#apply the nchar function (number of characters) to the text column of every row of the dataset
+chars_per_tweet = sapply(tweets$text, nchar) 
+summary(chars_per_tweet) #report average number of characters per tweet
+hist(chars_per_tweet, breaks=30) #this is the default R histogram plot
+```
+
+## **Average word per tweet**
+
+## What is the average number of words per tweet?
+
+```{r Average word per tweet}
+## What is the average number of words per tweet?
+word_list = strsplit(tweets$text, " ") #split the tweets into separate words by using spaces
+words_per_tweet = sapply(word_list, length) #count the number of word elements in each tweet
+summary(words_per_tweet) #report average number of words per tweet
+
+# the following uses ggplot2 to do the plot, which is much prettier.
+words_per_tweet_df = as.data.frame(words_per_tweet) #ggplot requires the data to be in a data frame
+ggplot(words_per_tweet_df, aes(x=words_per_tweet, group=words_per_tweet)) + 
+  geom_bar(fill="blue") + 
+  scale_x_continuous(limits=c(0,30))
+
+```
+
+
+## **Average hashtags per tweet**
+
+Clearly he does not hash much in his tweets. 
+
+```{r Average hash per tweet}
+## how many hashtags per tweet?
+hash_per_tweet = sapply (word_list, function(x) length(grep("#",x))) #grep is a function that searches for a certain character or set of characters, in this case the #
+table(hash_per_tweet) #counts
+summary(hash_per_tweet) #summary showing mean hashtags
+
+
+```
+
+## **Top Hash**
+
+What are the top 10 most commonly used hashtags?
+```{r Top 10 most common hash}
+# get the hashtags. This function looks for anything that starts with a # and is followed by text
+user_hashtags <- str_extract_all(tweets$text, "#\\S+") 
+user_hashtags  = unlist(user_hashtags) #put tags in vector
+
+user_hashtags_freq <- table(user_hashtags) #calculate hashtag frequencies
+user_hashtags_freq_order <- sort(user_hashtags_freq, decreasing=TRUE) #order the frequencies from most to least
+head(user_hashtags_freq_order,10) #report the 10 most common hashtags
+
+```
+
+
+## **Word Cloud**
+
+Usually, you would have to remove important stopwords before creating a word cloud. 
+
+Here we are just using some stopwords. 
+
+```{r Word Cloud, warning=FALSE}
+
+#counts unique words from each tweet (so if you use the same word twice in a tweet it'll only be counted once)
+uniq_words_per_tweet = sapply (word_list, function(x) unique(x)) 
+uniq_words = unlist(uniq_words_per_tweet) #they're in a list, so convert to a huge vector
+length(uniq_words) #shows how many total words we've collected from this user
+uniq_words<- uniq_words[!uniq_words %in% c("a", "in", "to", "is", "for", "but", "and", "on", "the", "of")] # remove some stopwords.
+uniq_words_freq = table(uniq_words) #number of times that each word is displayed
+
+wordcloud(names(uniq_words_freq), min.freq=3, uniq_words_freq, random.order=FALSE, colors= "#1B9E77") #Produces the word cloud
+title("words in Tweets",cex.main=1.5, col.main="gray51") #gives the word cloud a title
+```
