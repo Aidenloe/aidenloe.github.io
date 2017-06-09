@@ -417,7 +417,7 @@ tweet_user$description </code></pre>
 <pre><code>## [1] &quot;Tesla, SpaceX, OpenAI &amp; Neuralink&quot;</code></pre>
 <pre class="r"><code>#how many followers the account has
 tweet_user$followersCount </code></pre>
-<pre><code>## [1] 9177673</code></pre>
+<pre><code>## [1] 9178067</code></pre>
 </div>
 <div id="harvest-data" class="section level2">
 <h2><strong>Harvest data</strong></h2>
@@ -446,19 +446,8 @@ names(tweets) #view tweets</code></pre>
 </ul>
 <pre class="r"><code>## reorganise data
 library(&quot;tidyr&quot;)
-library(&quot;dplyr&quot;)</code></pre>
-<pre><code>## 
-## Attaching package: &#39;dplyr&#39;</code></pre>
-<pre><code>## The following objects are masked from &#39;package:twitteR&#39;:
-## 
-##     id, location</code></pre>
-<pre><code>## The following objects are masked from &#39;package:stats&#39;:
-## 
-##     filter, lag</code></pre>
-<pre><code>## The following objects are masked from &#39;package:base&#39;:
-## 
-##     intersect, setdiff, setequal, union</code></pre>
-<pre class="r"><code>tweets &lt;- tweets %&gt;% 
+library(&quot;dplyr&quot;)
+tweets &lt;- tweets %&gt;% 
   select(id, statusSource, text, created) %&gt;% ## select these 4 columns
   extract(statusSource, &quot;source&quot;, &quot;Twitter for (.*?)&lt;&quot;) %&gt;% #strip html code and rename
   filter(source %in% c(&quot;iPhone&quot;)) # select only rows with iphone
@@ -557,9 +546,9 @@ length(uniq_words) #shows how many total words we&#39;ve collected from this use
 <pre class="r"><code>uniq_words&lt;- uniq_words[!uniq_words %in% c(&quot;a&quot;, &quot;in&quot;, &quot;to&quot;, &quot;is&quot;, &quot;for&quot;, &quot;but&quot;, &quot;and&quot;, &quot;on&quot;, &quot;the&quot;, &quot;of&quot;)] # remove some stopwords.
 uniq_words_freq = table(uniq_words) #number of times that each word is displayed
 
-wordcloud(names(uniq_words_freq), min.freq=3, uniq_words_freq, random.order=FALSE, colors= &quot;#1B9E77&quot;) #Produces the word cloud
-title(&quot;words in Tweets&quot;,cex.main=1.5, col.main=&quot;gray51&quot;) #gives the word cloud a title</code></pre>
-<p><img src="datamining_files/figure-html/Word%20Cloud-1.png" width="672" /></p>
+wordcloud(names(uniq_words_freq),scale=c(8,1.5), min.freq=3, uniq_words_freq, random.order=FALSE, colors= &quot;#1B9E77&quot;) #Produces the word cloud
+title(&quot;words in Tweets&quot;,cex.main=3, col.main=&quot;gray51&quot;) #gives the word cloud a title</code></pre>
+<p><img src="datamining_files/figure-html/Word%20Cloud-1.png" width="1440" /></p>
 </div>
 </div>
 
