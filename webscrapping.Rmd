@@ -423,7 +423,7 @@ ggplot() +
   geom_polygon(data=Total, aes(x=long, y=lat, group = group, fill=Total$total_spend),colour="white") + 
   scale_fill_continuous(low = "thistle2", high = "darkred", guide="colorbar") + 
   theme_bw()  + 
-  labs(fill = "Funding for School" ,title = "Funding for School in year 2016", x="", y="") + 
+  labs(fill = "Funding for School" ,title = "Funding for School between 2005 to 2012", x="", y="") + 
   scale_y_continuous(breaks=c()) +
   scale_x_continuous(breaks=c()) +
   theme(panel.border =  element_blank(),
