@@ -401,3 +401,13 @@ plot(mydata[,"Population estimate, July 1, 2016[4]"], mydata[,"total_spend"])
 cor(mydata[,"Population estimate, July 1, 2016[4]"], mydata[,"total_spend"]) # 0.9924265 - big correlation!
 
 ```
+
+# **Web Scrapping (Part 4)**
+## **Scrape from PDF**
+
+Coming soon..
+
+# **Web Scrapping (Part 5)**
+## **Scrape from discussion forums**
+
+Coming soon..
