@@ -50,7 +50,10 @@ access_secret = 'HjIq8YtNweO8LdraVq2PcVjxQqyNqUfcsxjpljRUJVvAJ'
 ```{r Set up API, message=FALSE}
 ## Set up the Twitter API session
 options(httr_oauth_cache=F) #set oauth cacheing to false so that it doesn't bring up a prompt.
-setup_twitter_oauth(consumer_key=consumer_key, consumer_secret=consumer_secret, access_token=access_token, access_secret=access_secret)
+setup_twitter_oauth(consumer_key=consumer_key, 
+                    consumer_secret=consumer_secret, 
+                    access_token=access_token, 
+                    access_secret=access_secret)
 ```
 
 ## **Get data**

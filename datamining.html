@@ -392,7 +392,10 @@ library(&quot;stringr&quot;)</code></pre>
 </ul>
 <pre class="r"><code>## Set up the Twitter API session
 options(httr_oauth_cache=F) #set oauth cacheing to false so that it doesn&#39;t bring up a prompt.
-setup_twitter_oauth(consumer_key=consumer_key, consumer_secret=consumer_secret, access_token=access_token, access_secret=access_secret)</code></pre>
+setup_twitter_oauth(consumer_key=consumer_key, 
+                    consumer_secret=consumer_secret, 
+                    access_token=access_token, 
+                    access_secret=access_secret)</code></pre>
 <pre><code>## [1] &quot;Using direct authentication&quot;</code></pre>
 </div>
 <div id="get-data" class="section level2">
@@ -417,7 +420,7 @@ tweet_user$description </code></pre>
 <pre><code>## [1] &quot;Tesla, SpaceX, OpenAI &amp; Neuralink&quot;</code></pre>
 <pre class="r"><code>#how many followers the account has
 tweet_user$followersCount </code></pre>
-<pre><code>## [1] 9178778</code></pre>
+<pre><code>## [1] 9178855</code></pre>
 </div>
 <div id="harvest-data" class="section level2">
 <h2><strong>Harvest data</strong></h2>
