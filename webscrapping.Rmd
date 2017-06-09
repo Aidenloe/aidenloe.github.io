@@ -430,12 +430,8 @@ ggplot() +
         text = element_text(size=20))
 ```
 
+
 # **Web Scrapping (Part 4)**
-## **Scrape from PDF**
-
-Coming soon..
-
-# **Web Scrapping (Part 5)**
 ## **Scrape from discussion forums**
 
 Coming soon..
