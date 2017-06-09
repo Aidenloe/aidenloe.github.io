@@ -373,10 +373,6 @@ funding.df <- do.call("rbind", funding) #flatten data
 # Contain empty spaces previously.
 colnames(funding.df)[1]<- c("State") # shorten colname to just State. 
 
-## Now let's do some analysis
-## What's does the correlation between state funding and state population look like?
-## This involves some non trivial data cleaning
-
 # Match up the tables by State/Territory names
 # so we have two data frames, x and y, and we're setting the columns we want to do the matching on by setting by.x and by.y
 mydata = merge(us_states, funding.df, by.x="State or territory", by.y="State")
@@ -386,8 +382,8 @@ mydata = merge(us_states, funding.df, by.x="State or territory", by.y="State")
 #Replace the total spend column name with a name that's easier to use.
 colnames(mydata)[18] = "total_spend"
 
-# Notice that the population estimate has lots of commas in (e.g. "4,863,300"). We need to remove them so that R can treat it as a number.
-mydata[,"Population estimate, July 1, 2016[4]"] = gsub(",", "", mydata[,"Population estimate, July 1, 2016[4]"]) #this removes all commas
+#  We need to remove commas so that R can treat it as a number.
+mydata[,"Population estimate, July 1, 2016[4]"] = gsub(",", "", mydata[,"Population estimate, July 1, 2016[4]"]) 
 mydata[,"Population estimate, July 1, 2016[4]"] = as.numeric(mydata[,"Population estimate, July 1, 2016[4]"]) #this converts it to a number data type
 
 # Now we have to do the same thing with the funding totals, which are in a format like this: $17,309,568
@@ -398,6 +394,8 @@ mydata[,"total_spend"] = as.numeric(mydata[,"total_spend"]) #this converts it to
 # Now we can do the plotting
 options(scipen=9999) #stop it showing scientific notation
 plot(mydata[,"Population estimate, July 1, 2016[4]"], mydata[,"total_spend"])
+
+## What's does the correlation between state funding and state population look like?
 cor(mydata[,"Population estimate, July 1, 2016[4]"], mydata[,"total_spend"]) # 0.9924265 - big correlation!
 
 ```
