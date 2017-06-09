@@ -137,7 +137,7 @@ for (year in 2012:2014){
 ```
 
 
-## **Scrape data by years based on URL**
+## **Scrape data by years (URL)**
 
 Based on what we learned above, we can easily swap it to include the relevant links. 
 
@@ -398,6 +398,36 @@ plot(mydata[,"Population estimate, July 1, 2016[4]"], mydata[,"total_spend"])
 ## What's does the correlation between state funding and state population look like?
 cor(mydata[,"Population estimate, July 1, 2016[4]"], mydata[,"total_spend"]) # 0.9924265 - big correlation!
 
+```
+
+## **Plot funding data on map**
+
+Perhaps it might be more interesting to see how the data is like on a map. 
+
+We can utilise `map_data` function in the `ggplot` package to help us with that. 
+
+Again, with a bit of data manipulation, we can merge the data table that contains the longitude and latitude information together with the funding data across different states.
+
+```{r Plot on Map, message=FALSE, fig.width=18, fig.height=11}
+
+require(ggplot2)
+all_states <- map_data("state") # states
+colnames(mydata)[1] <- "state" # rename to states
+mydata$state <- tolower(mydata$state) #set all to lower case
+Total <- merge(all_states, mydata, by.x="region", by.y = 'state') # merge data
+# we have data for delaware but not lat, long data in the maps
+i <- which(!unique(all_states$region) %in% mydata$state) 
+
+# Plot data
+ggplot() + 
+  geom_polygon(data=Total, aes(x=long, y=lat, group = group, fill=Total$total_spend),colour="white") + 
+  scale_fill_continuous(low = "thistle2", high = "darkred", guide="colorbar") + 
+  theme_bw()  + 
+  labs(fill = "Funding for School" ,title = "Funding for School in year 2016", x="", y="") + 
+  scale_y_continuous(breaks=c()) +
+  scale_x_continuous(breaks=c()) +
+  theme(panel.border =  element_blank(),
+        text = element_text(size=20))
 ```
 
 # **Web Scrapping (Part 4)**

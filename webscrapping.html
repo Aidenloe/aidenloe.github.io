@@ -460,8 +460,8 @@ for (year in 2012:2014){
   years &lt;- c(all.dates,years) #combind months according to years
 }</code></pre>
 </div>
-<div id="scrape-data-by-years-based-on-url" class="section level2">
-<h2><strong>Scrape data by years based on URL</strong></h2>
+<div id="scrape-data-by-years-url" class="section level2">
+<h2><strong>Scrape data by years (URL)</strong></h2>
 <p>Based on what we learned above, we can easily swap it to include the relevant links.</p>
 <p>Here we will scrap data based on the topic ‘web_scrapping’ between 2013 and 2014.</p>
 <pre class="r"><code>## Looping through Years and 12 months based on URL
@@ -662,10 +662,6 @@ funding.df &lt;- do.call(&quot;rbind&quot;, funding) #flatten data
 # Contain empty spaces previously.
 colnames(funding.df)[1]&lt;- c(&quot;State&quot;) # shorten colname to just State. 
 
-## Now let&#39;s do some analysis
-## What&#39;s does the correlation between state funding and state population look like?
-## This involves some non trivial data cleaning
-
 # Match up the tables by State/Territory names
 # so we have two data frames, x and y, and we&#39;re setting the columns we want to do the matching on by setting by.x and by.y
 mydata = merge(us_states, funding.df, by.x=&quot;State or territory&quot;, by.y=&quot;State&quot;)
@@ -675,8 +671,8 @@ mydata = merge(us_states, funding.df, by.x=&quot;State or territory&quot;, by.y=
 #Replace the total spend column name with a name that&#39;s easier to use.
 colnames(mydata)[18] = &quot;total_spend&quot;
 
-# Notice that the population estimate has lots of commas in (e.g. &quot;4,863,300&quot;). We need to remove them so that R can treat it as a number.
-mydata[,&quot;Population estimate, July 1, 2016[4]&quot;] = gsub(&quot;,&quot;, &quot;&quot;, mydata[,&quot;Population estimate, July 1, 2016[4]&quot;]) #this removes all commas
+#  We need to remove commas so that R can treat it as a number.
+mydata[,&quot;Population estimate, July 1, 2016[4]&quot;] = gsub(&quot;,&quot;, &quot;&quot;, mydata[,&quot;Population estimate, July 1, 2016[4]&quot;]) 
 mydata[,&quot;Population estimate, July 1, 2016[4]&quot;] = as.numeric(mydata[,&quot;Population estimate, July 1, 2016[4]&quot;]) #this converts it to a number data type
 
 # Now we have to do the same thing with the funding totals, which are in a format like this: $17,309,568
@@ -688,8 +684,34 @@ mydata[,&quot;total_spend&quot;] = as.numeric(mydata[,&quot;total_spend&quot;]) 
 options(scipen=9999) #stop it showing scientific notation
 plot(mydata[,&quot;Population estimate, July 1, 2016[4]&quot;], mydata[,&quot;total_spend&quot;])</code></pre>
 <p><img src="webscrapping_files/figure-html/Scrape%20Table%20(non-wiki)-1.png" width="672" /></p>
-<pre class="r"><code>cor(mydata[,&quot;Population estimate, July 1, 2016[4]&quot;], mydata[,&quot;total_spend&quot;]) # 0.9924265 - big correlation!</code></pre>
+<pre class="r"><code>## What&#39;s does the correlation between state funding and state population look like?
+cor(mydata[,&quot;Population estimate, July 1, 2016[4]&quot;], mydata[,&quot;total_spend&quot;]) # 0.9924265 - big correlation!</code></pre>
 <pre><code>## [1] 0.9924265</code></pre>
+</div>
+<div id="plot-funding-data-on-map" class="section level2">
+<h2><strong>Plot funding data on map</strong></h2>
+<p>Perhaps it might be more interesting to see how the data is like on a map.</p>
+<p>We can utilise <code>map_data</code> function in the <code>ggplot</code> package to help us with that.</p>
+<p>Again, with a bit of data manipulation, we can merge the data table that contains the longitude and latitude information together with the funding data across different states.</p>
+<pre class="r"><code>require(ggplot2)
+all_states &lt;- map_data(&quot;state&quot;) # states
+colnames(mydata)[1] &lt;- &quot;state&quot; # rename to states
+mydata$state &lt;- tolower(mydata$state) #set all to lower case
+Total &lt;- merge(all_states, mydata, by.x=&quot;region&quot;, by.y = &#39;state&#39;) # merge data
+# we have data for delaware but not lat, long data in the maps
+i &lt;- which(!unique(all_states$region) %in% mydata$state) 
+
+# Plot data
+ggplot() + 
+  geom_polygon(data=Total, aes(x=long, y=lat, group = group, fill=Total$total_spend),colour=&quot;white&quot;) + 
+  scale_fill_continuous(low = &quot;thistle2&quot;, high = &quot;darkred&quot;, guide=&quot;colorbar&quot;) + 
+  theme_bw()  + 
+  labs(fill = &quot;Funding for School&quot; ,title = &quot;Funding for School in year 2016&quot;, x=&quot;&quot;, y=&quot;&quot;) + 
+  scale_y_continuous(breaks=c()) +
+  scale_x_continuous(breaks=c()) +
+  theme(panel.border =  element_blank(),
+        text = element_text(size=20))</code></pre>
+<p><img src="webscrapping_files/figure-html/Plot%20on%20Map-1.png" width="1728" /></p>
 </div>
 </div>
 <div id="web-scrapping-part-4" class="section level1">
