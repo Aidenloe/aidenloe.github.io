@@ -206,7 +206,7 @@ Scrapping viewership is one area of web scrapping, but perhaps you might be inte
 
 So we want to extract the contents of the web pages rather than number of times someone viewed the web page. 
 
-## **Scrape content off websites (Wiki)**
+## **Scrape content (Wiki)**
 
 We will be using the `RCurl` and `XML` package to help us with the scrapping. 
 
@@ -263,7 +263,7 @@ parsed<-   htmlTreeParse(txt, asText = TRUE)
 
 ```
 
-## **Scrape content off website (BBC)**
+## **Scrape content (BBC)**
 
 When you know the structure of the data. 
 

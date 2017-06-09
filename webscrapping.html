@@ -522,8 +522,8 @@ df &lt;- na.omit(df) #remove NAs. </code></pre>
 <h1><strong>Web Scrapping (Part 2)</strong></h1>
 <p>Scrapping viewership is one area of web scrapping, but perhaps you might be interested in doing sentiment analysis on content.</p>
 <p>So we want to extract the contents of the web pages rather than number of times someone viewed the web page.</p>
-<div id="scrape-content-off-websites-wiki" class="section level2">
-<h2><strong>Scrape content off websites (Wiki)</strong></h2>
+<div id="scrape-content-wiki" class="section level2">
+<h2><strong>Scrape content (Wiki)</strong></h2>
 <p>We will be using the <code>RCurl</code> and <code>XML</code> package to help us with the scrapping.</p>
 <p>Let’s use the Eurovision_Song_Contest as an example.</p>
 <p>The <code>XML</code> package has plenty functions that can allow us to scrape the data.</p>
@@ -571,8 +571,8 @@ xpathSApply(PARSED, &quot;//cite[contains(@class, &#39;citation news&#39;)]&quot
 # Parsing tree like structure
 parsed&lt;-   htmlTreeParse(txt, asText = TRUE)</code></pre>
 </div>
-<div id="scrape-content-off-website-bbc" class="section level2">
-<h2><strong>Scrape content off website (BBC)</strong></h2>
+<div id="scrape-content-bbc" class="section level2">
+<h2><strong>Scrape content (BBC)</strong></h2>
 <p>When you know the structure of the data.</p>
 <p>All you need to do is to find the correct function to scrape.</p>
 <pre class="r"><code>##### BBC Example ####
