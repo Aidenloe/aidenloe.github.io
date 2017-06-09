@@ -146,7 +146,7 @@ tweets %>%
 
 ## **Average char per tweet**
 
-## What is the average number of characters per tweet?
+What is the average number of characters per tweet?
 
 ```{r Average char per tweet}
 #apply the nchar function (number of characters) to the text column of every row of the dataset
@@ -157,7 +157,7 @@ hist(chars_per_tweet, breaks=30) #this is the default R histogram plot
 
 ## **Average word per tweet**
 
-## What is the average number of words per tweet?
+What is the average number of words per tweet?
 
 ```{r Average word per tweet}
 ## What is the average number of words per tweet?

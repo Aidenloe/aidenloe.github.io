@@ -282,9 +282,6 @@ div.tocify {
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
-  <a href="index.html">Home</a>
-</li>
-<li>
   <a href="about.html">About</a>
 </li>
 <li class="dropdown">
@@ -420,7 +417,7 @@ tweet_user$description </code></pre>
 <pre><code>## [1] &quot;Tesla, SpaceX, OpenAI &amp; Neuralink&quot;</code></pre>
 <pre class="r"><code>#how many followers the account has
 tweet_user$followersCount </code></pre>
-<pre><code>## [1] 9177319</code></pre>
+<pre><code>## [1] 9177673</code></pre>
 </div>
 <div id="harvest-data" class="section level2">
 <h2><strong>Harvest data</strong></h2>
@@ -496,9 +493,7 @@ tweets %&gt;%
 </div>
 <div id="average-char-per-tweet" class="section level2">
 <h2><strong>Average char per tweet</strong></h2>
-</div>
-<div id="what-is-the-average-number-of-characters-per-tweet" class="section level2">
-<h2>What is the average number of characters per tweet?</h2>
+<p>What is the average number of characters per tweet?</p>
 <pre class="r"><code>#apply the nchar function (number of characters) to the text column of every row of the dataset
 chars_per_tweet = sapply(tweets$text, nchar) 
 summary(chars_per_tweet) #report average number of characters per tweet</code></pre>
@@ -509,9 +504,7 @@ summary(chars_per_tweet) #report average number of characters per tweet</code></
 </div>
 <div id="average-word-per-tweet" class="section level2">
 <h2><strong>Average word per tweet</strong></h2>
-</div>
-<div id="what-is-the-average-number-of-words-per-tweet" class="section level2">
-<h2>What is the average number of words per tweet?</h2>
+<p>What is the average number of words per tweet?</p>
 <pre class="r"><code>## What is the average number of words per tweet?
 word_list = strsplit(tweets$text, &quot; &quot;) #split the tweets into separate words by using spaces
 words_per_tweet = sapply(word_list, length) #count the number of word elements in each tweet

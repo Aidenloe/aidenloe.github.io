@@ -3,8 +3,8 @@ output_dir: "."
 navbar:
   title: "Aiden Loe"
   left:
-    - text: "Home"
-      href: index.html
+    #- text: "Home"
+    #  href: index.html
     - text: "About"
       href: about.html
     - text: "R 4 Social Scientists"
