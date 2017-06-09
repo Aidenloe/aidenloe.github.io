@@ -121,7 +121,7 @@ It only contains:
 
 * source = application the tweet came from (i.e. iphone or android)
 
-* text = the tweet
+* text = the tweets
 
 * created = time of which the tweet was created
 
