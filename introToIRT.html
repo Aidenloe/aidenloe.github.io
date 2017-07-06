@@ -381,8 +381,22 @@ div.tocify {
 <p>This section covers the area of item and test information. The test information is calculated based on the summation of all the item information. So what you ideally want is to have high item information. It is not possible in some instances such as the Rasch model, where the item information is fixed to 0.25 under the logistic distribution because the discrimination for all items are fixed at 1, where the difficulty of the item will be at the point of 0.5, giving equal likelihood for the test taker to get an item right or wrong.</p>
 <p><br/></p>
 <div id="pl-item-information-function" class="section level3">
+<h3><strong>1PL Item Information function</strong></h3>
+<p>Now, bear in mind that a D constant is added to these formulaes to allow for the logistic distribution to approximate to a normal distribution. If you wish to base your calculations on a logistic distribution instead, remove the constant <span class="math inline">\(D\)</span> in the formulas.</p>
+<p>Under a 1PL (Rasch) model, the item information is defined as:</p>
+<br/>
+<center>
+<span class="math inline">\(\large{I_i(\theta) = D^2P_i(\theta)Q_i(\theta)}\)</span>
+</center>
+<p><br/></p>
+<p><span class="math inline">\(P_i(\theta) = 1/(1+ EXP(-D*a_i(\theta - b_i)))\)</span>,</p>
+<p><span class="math inline">\(Q_i(\theta) = 1- P_i(\theta)\)</span></p>
+<p><span class="math inline">\(\theta\)</span> is the ability level of interest.</p>
+<p><span class="math inline">\(D\)</span> is the constant of 1.702 <br/></p>
+<p><br/></p>
+</div>
+<div id="pl-item-information-function-1" class="section level3">
 <h3><strong>2PL Item Information function</strong></h3>
-<p>Now, bear in mind that a D constant is added to these formulaes to allow for the logistic distribution to approximate to a normal distribution. If you wish to based your calculations on a logistic Distribution instead, remove the constant <span class="math inline">\(D\)</span> in the formulas.</p>
 <p>Under a 2PL model, the item information function is defined as:</p>
 <br/>
 <center>
@@ -390,56 +404,57 @@ div.tocify {
 </center>
 <p><br/></p>
 <p>where <span class="math inline">\(a_i\)</span> is the discrimination parameter for item <span class="math inline">\(i\)</span>.</p>
-<p><span class="math inline">\(P_i(\theta) = 1/(1+ EXP(D*-a_i(\theta - b_i)))\)</span>,</p>
-<p><span class="math inline">\(Q_i(\theta) = 1- P_i(\theta)\)</span></p>
-<p><span class="math inline">\(\theta\)</span> is the ability level of interest.</p>
-<p><span class="math inline">\(D\)</span> is the constant of 1.702 <br/></p>
-<p><br/></p>
-</div>
-<div id="pl-item-information-function-1" class="section level3">
-<h3><strong>1PL Item Information function</strong></h3>
-<p>Under a 1PL (Rasch) model, the item information is defined as:</p>
-<br/>
-<center>
-<span class="math inline">\(\large{I_i(\theta) = D^2P_i(\theta)Q_i(\theta)}\)</span>
-</center>
-<p><br/></p>
-<p>You can see that it is exactly the same as a 2PL model when the value of the discrimination (<span class="math inline">\(a\)</span> parameter) is set to 1.</p>
+<p>You can see that the 1PL is exactly the same as a 2PL model when the value of the discrimination (<span class="math inline">\(a\)</span> parameter) is set to 1.</p>
 <p><br/></p>
 </div>
 <div id="pl-item-information-function-2" class="section level3">
 <h3><strong>3PL Item Information function</strong></h3>
-<p>Under a 2PL model, the item information function is defined as:</p>
+<p>Under a 3PL model, the item information function is defined as:</p>
 <br/>
 <center>
-<span class="math inline">\(\large{I_{i\theta} = \frac{D^2a_i^2D_{i\theta}[P_{i\theta}-c_i]^2}{P_{i\theta(1-c_i)^2}}}\)</span>
+<span class="math inline">\(\large{I_{i\theta} = \frac{D^2a_i^2Q_{i\theta}[P_{i\theta}-c_i]^2}{P_{i\theta}(1-c_i)^2}}\)</span>
 </center>
 <p><br/></p>
-<p>You can observe that the formula is a little bit more complex, but it really only introduces one new <strong><span class="math inline">\(c\)</span> parameter</strong> in the equation. The <span class="math inline">\(c\)</span> parameter is also the <strong>guessing parameter</strong> which is typically fixed to 0 in both the 1PL and the 2PL model. <br/></p>
+<p>where <span class="math inline">\(c_i\)</span> is the guessing parameter for item <span class="math inline">\(i\)</span>.</p>
+<p>You can observe that the formula is a little bit more complex, but it really only introduces one new <strong><span class="math inline">\(c\)</span> parameter</strong> in the equation. The <span class="math inline">\(c\)</span> parameter aka <strong>guessing parameter</strong> is typically fixed to 0 in both the 1PL and the 2PL model. <br/></p>
 <br/>
 <center>
-Let’s attempt an example to calculate item and test information based on the <span style="color:red"> Rasch model</span> in R.
+Let’s attempt an example to calculate item and test information based on the <span style="color:red"> 1PL (Rasch) model</span> in R.
 </center>
 <p><br/></p>
-<pre class="r"><code># Given that the difficulty parameter for an item is -1.5
+<center>
+<em>The created function can also be used for 2PL, 3PL and for results under the logistic or approximate normal distribution.</em>
+</center>
+<p><br/></p>
+<pre class="r"><code># difficulty parameter for an item is -1.5
 b &lt;- -1.5
 
+# discrimination parameter
+a &lt;- 1
+
+# guessing parameter
+c &lt;- 0
+
+
 # Create item information function for a Rasch model 
-i_info &lt;- function(b,a=1,θ=seq(-4,4,length.out=1000)){
+i_info &lt;- function(b, a=1,c=0, D=T, θ=seq(-4,4,length.out=1000)){
+
+if(D == T) {D &lt;- 1.702} else {D &lt;- 1}
+ 
 P &lt;- NULL 
 Q &lt;- NULL
-D &lt;- 1.702
 Ii &lt;- NULL
+
 for(i in 1:1000){
-  P[i] &lt;- 1/(1+ exp (D*-a *(θ[i] - b)))
+  P[i] &lt;- 1/(1+ exp (D*-a*(θ[i] - b)))
   Q[i]= 1-P[i]
-  Ii[i] =D^2*P[i]* Q[i] # (1PL)
+  Ii[i] =(D^2*Q[i]*(P[i]-c)^2)/(P[i]*((1-c)^2)) # (3PL)
    }
 return(Ii)
 }
 
 # Get a single item information  based on a rasch model
-itemInfo&lt;- i_info(b = b, a = 1, θ=seq(-4,4,length.out=1000))
+itemInfo&lt;- i_info(b = b, a = 1,c=0, θ=seq(-4,4,length.out=1000))
 
 itemInfo[1:5]</code></pre>
 <pre><code>## [1] 0.03997190 0.04050487 0.04104474 0.04159158 0.04214549</code></pre>
@@ -463,6 +478,7 @@ c &lt;- item_info(b)
 # Inspect first 5 item information values for second item 
 c[[2]][1:5]</code></pre>
 <pre><code>## [1] 0.001365363 0.001384081 0.001403057 0.001422292 0.001441790</code></pre>
+<p><br/></p>
 </div>
 <div id="test-information" class="section level3">
 <h3><strong>Test information</strong></h3>
@@ -482,6 +498,7 @@ test_info &lt;- rowSums(d)
 head(test_info)</code></pre>
 <pre><code>## [1] 0.04133726 0.04188895 0.04244780 0.04301387 0.04358728 0.04416809</code></pre>
 <p>Now you essential have the test information that ranges from the <span class="math inline">\(\theta\)</span> value of -4 to 4.</p>
+<p><br/></p>
 </div>
 <div id="standard-error" class="section level3">
 <h3><strong>Standard Error </strong></h3>
@@ -497,6 +514,7 @@ se&lt;- 1/(sqrt(test_info))
 
 head(se)</code></pre>
 <pre><code>## [1] 4.918460 4.885964 4.853694 4.821650 4.789830 4.758233</code></pre>
+<p><br/></p>
 </div>
 <div id="plot" class="section level3">
 <h3><strong>Plot</strong></h3>
@@ -506,11 +524,12 @@ head(se)</code></pre>
 <p><br/></p>
 <div id="acknowledgement" class="section level4">
 <h4>Acknowledgement</h4>
-<p>Would like to thank Diego Blum for working through the item and test information function with me.</p>
+<p>Would like to thank <a href="http://www.uni-muenster.de/PsyIFP/AEHolling/de/blum/personen/">Diego Blum</a> for working through the item and test information function with me.</p>
 </div>
 <div id="citations" class="section level4">
 <h4>Citations</h4>
 <ul>
+<li><p>Martínez Arias, M.R., Hernández Lloreda, M.V., &amp; Hernández Lloreda, M.J. (2006). <em>Psicometría.</em> Madrid: Alianza.</p></li>
 <li><p>Muñiz, J., Fidalgo, A.M., García-Cueto, E., Martínez, R., &amp; Moreno, R. (2005). <em>Análisis de los ítems.</em> Madrid: La Muralla.</p></li>
 <li><p><a href="http://echo.edres.org:8080/irt/baker/chapter6.pdf" class="uri">http://echo.edres.org:8080/irt/baker/chapter6.pdf</a></p></li>
 </ul>

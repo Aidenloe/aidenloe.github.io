@@ -23,17 +23,16 @@ This section covers the area of item and test information. The test information 
 
 <br/>
 
-### **2PL Item Information function**
-Now, bear in mind that a D constant is added to these formulaes to allow for the logistic distribution to approximate to a normal distribution. If you wish to based your calculations on a logistic Distribution instead, remove the constant $D$ in the formulas. 
+### **1PL Item Information function**
 
-Under a 2PL model, the item information function is defined as: 
+Now, bear in mind that a D constant is added to these formulaes to allow for the logistic distribution to approximate to a normal distribution. If you wish to base your calculations on a logistic distribution instead, remove the constant $D$ in the formulas. 
+
+Under a 1PL (Rasch) model, the item information is defined as: 
 
 <br/>
-<center>$\large{I_i(\theta) =D^2a_i^2P_i(\theta) Q_i(\theta)}$</center> <br/>
+<center>$\large{I_i(\theta) = D^2P_i(\theta)Q_i(\theta)}$</center> <br/>
 
-where $a_i$ is the discrimination parameter for item $i$.
-
-$P_i(\theta) = 1/(1+ EXP(D*-a_i(\theta - b_i)))$, 
+$P_i(\theta) = 1/(1+ EXP(-D*a_i(\theta - b_i)))$, 
 
 $Q_i(\theta) = 1- P_i(\theta)$ 
 
@@ -43,52 +42,66 @@ $D$ is the constant of 1.702 <br/>
 
 <br/>
 
-### **1PL Item Information function**
+### **2PL Item Information function**
 
-Under a 1PL (Rasch) model, the item information is defined as: 
+Under a 2PL model, the item information function is defined as: 
 
 <br/>
-<center>$\large{I_i(\theta) = D^2P_i(\theta)Q_i(\theta)}$</center> <br/>
+<center>$\large{I_i(\theta) =D^2a_i^2P_i(\theta) Q_i(\theta)}$</center> <br/>
 
-You can see that it is exactly the same as a 2PL model when the value of the discrimination ($a$ parameter) is set to 1.
+where $a_i$ is the discrimination parameter for item $i$.
+
+You can see that the 1PL is exactly the same as a 2PL model when the value of the discrimination ($a$ parameter) is set to 1.
 
 <br/>
 
 ### **3PL Item Information function**
 
-Under a 2PL model, the item information function is defined as: 
+Under a 3PL model, the item information function is defined as: 
 
 <br/>
-<center>$\large{I_{i\theta} = \frac{D^2a_i^2D_{i\theta}[P_{i\theta}-c_i]^2}{P_{i\theta(1-c_i)^2}}}$</center><br/>
+<center>$\large{I_{i\theta} = \frac{D^2a_i^2Q_{i\theta}[P_{i\theta}-c_i]^2}{P_{i\theta}(1-c_i)^2}}$</center><br/>
 
-You can observe that the formula is a little bit more complex, but it really only introduces one new **$c$ parameter** in the equation. The $c$ parameter is also the **guessing parameter** which is typically fixed to 0 in both the 1PL and the 2PL model. <br/>
+where $c_i$ is the guessing parameter for item $i$.
+
+You can observe that the formula is a little bit more complex, but it really only introduces one new **$c$ parameter** in the equation. The $c$ parameter aka **guessing parameter** is typically fixed to 0 in both the 1PL and the 2PL model. <br/>
 
 
 <br/>
-<center>Let's attempt an example to calculate item and test information based on the <span style="color:red"> Rasch model</span> in R. </center> <br/>
+<center>Let's attempt an example to calculate item and test information based on the <span style="color:red"> 1PL (Rasch) model</span> in R. </center> <br/>
 
+<center> *The created function can also be used for 2PL, 3PL and for results under the logistic or approximate normal distribution.* </center> <br/>
 
 ```{r single item information function}
 
-# Given that the difficulty parameter for an item is -1.5
+# difficulty parameter for an item is -1.5
 b <- -1.5
 
+# discrimination parameter
+a <- 1
+
+# guessing parameter
+c <- 0
+
 # Create item information function for a Rasch model 
-i_info <- function(b,a=1,θ=seq(-4,4,length.out=1000)){
+i_info <- function(b, a=1,c=0, D=T, θ=seq(-4,4,length.out=1000)){
+
+if(D == T) {D <- 1.702} else {D <- 1}
+ 
 P <- NULL 
 Q <- NULL
-D <- 1.702
 Ii <- NULL
+
 for(i in 1:1000){
-  P[i] <- 1/(1+ exp (D*-a *(θ[i] - b)))
+  P[i] <- 1/(1+ exp (D*-a*(θ[i] - b)))
   Q[i]= 1-P[i]
-  Ii[i] =D^2*P[i]* Q[i] # (1PL)
+  Ii[i] =(D^2*Q[i]*(P[i]-c)^2)/(P[i]*((1-c)^2)) # (3PL)
    }
 return(Ii)
 }
 
 # Get a single item information  based on a rasch model
-itemInfo<- i_info(b = b, a = 1, θ=seq(-4,4,length.out=1000))
+itemInfo<- i_info(b = b, a = 1,c=0, θ=seq(-4,4,length.out=1000))
 
 itemInfo[1:5]
 ```
@@ -117,7 +130,7 @@ c <- item_info(b)
 # Inspect first 5 item information values for second item 
 c[[2]][1:5]
 ```
-
+<br/>
 
 ### **Test information**
 
@@ -141,6 +154,8 @@ head(test_info)
 
 Now you essential have the test information that ranges from the $\theta$ value of -4 to 4. 
 
+<br/>
+
 ### **Standard Error **
 
 To translate the amount of information into a standard error of estimation, you only need to take the reciprocal of the square root of the amount of test information. You will notice that the SE values are extremely high. This is expected since we are only using two items to calculate test information. As the number of items increases, more test information is provided, the resulting SE will becoming smaller and smaller. 
@@ -157,6 +172,7 @@ se<- 1/(sqrt(test_info))
 head(se)
 ```
 
+<br/>
 
 ### **Plot**
 
@@ -237,9 +253,11 @@ A test information peaks at some point along the ability $\theta$ scale with une
 
 #### Acknowledgement
 
-Would like to thank Diego Blum for working through the item and test information function with me.
+Would like to thank [Diego Blum](http://www.uni-muenster.de/PsyIFP/AEHolling/de/blum/personen/) for working through the item and test information function with me.
 
 #### Citations
+
++ Martínez Arias, M.R., Hernández Lloreda, M.V., & Hernández Lloreda, M.J. (2006). *Psicometría.* Madrid: Alianza.
 
 + Muñiz, J., Fidalgo, A.M., García-Cueto, E., Martínez, R., & Moreno, R. (2005). *Análisis de los ítems.* Madrid: La Muralla.
 
