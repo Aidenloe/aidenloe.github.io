@@ -435,8 +435,7 @@ a &lt;- 1
 # guessing parameter
 c &lt;- 0
 
-
-# Create item information function for a Rasch model 
+# Create item information function
 i_info &lt;- function(b, a=1,c=0, D=T, θ=seq(-4,4,length.out=1000)){
 
 if(D == T) {D &lt;- 1.702} else {D &lt;- 1}
@@ -446,7 +445,7 @@ Q &lt;- NULL
 Ii &lt;- NULL
 
 for(i in 1:1000){
-  P[i] &lt;- 1/(1+ exp (D*-a*(θ[i] - b)))
+  P[i] &lt;- 1/(1+ exp (-D*a*(θ[i] - b)))
   Q[i]= 1-P[i]
   Ii[i] =(D^2*Q[i]*(P[i]-c)^2)/(P[i]*((1-c)^2)) # (3PL)
    }

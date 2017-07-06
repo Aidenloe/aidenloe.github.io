@@ -83,7 +83,7 @@ a <- 1
 # guessing parameter
 c <- 0
 
-# Create item information function for a Rasch model 
+# Create item information function
 i_info <- function(b, a=1,c=0, D=T, θ=seq(-4,4,length.out=1000)){
 
 if(D == T) {D <- 1.702} else {D <- 1}
@@ -93,7 +93,7 @@ Q <- NULL
 Ii <- NULL
 
 for(i in 1:1000){
-  P[i] <- 1/(1+ exp (D*-a*(θ[i] - b)))
+  P[i] <- 1/(1+ exp (-D*a*(θ[i] - b)))
   Q[i]= 1-P[i]
   Ii[i] =(D^2*Q[i]*(P[i]-c)^2)/(P[i]*((1-c)^2)) # (3PL)
    }

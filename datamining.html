@@ -423,7 +423,7 @@ tweet_user$description </code></pre>
 <pre><code>## [1] &quot;Tesla, SpaceX, OpenAI &amp; Neuralink&quot;</code></pre>
 <pre class="r"><code>#how many followers the account has
 tweet_user$followersCount </code></pre>
-<pre><code>## [1] 9789190</code></pre>
+<pre><code>## [1] 9789449</code></pre>
 </div>
 <div id="harvest-data" class="section level2">
 <h2><strong>Harvest data</strong></h2>
@@ -713,37 +713,37 @@ with(all.scores,(t.test(score[telecom==&quot;@ThreeUKSupport&quot;],score[teleco
 ##  Welch Two Sample t-test
 ## 
 ## data:  score[telecom == &quot;@ThreeUKSupport&quot;] and score[telecom == &quot;@VodafoneUKhelp&quot;]
-## t = 3.2252, df = 989.42, p-value = 0.0013
+## t = 2.9815, df = 987.82, p-value = 0.002939
 ## alternative hypothesis: true difference in means is not equal to 0
 ## 95 percent confidence interval:
-##  0.08144422 0.33455578
+##  0.06562753 0.31837247
 ## sample estimates:
 ## mean of x mean of y 
-##     0.030    -0.178</code></pre>
+##     0.018    -0.174</code></pre>
 <pre class="r"><code>with(all.scores,(t.test(score[telecom==&quot;@ThreeUKSupport&quot;],score[telecom==&quot;@BTcare&quot;])))</code></pre>
 <pre><code>## 
 ##  Welch Two Sample t-test
 ## 
 ## data:  score[telecom == &quot;@ThreeUKSupport&quot;] and score[telecom == &quot;@BTcare&quot;]
-## t = 2.8872, df = 996.52, p-value = 0.003971
+## t = 2.816, df = 997.5, p-value = 0.004958
 ## alternative hypothesis: true difference in means is not equal to 0
 ## 95 percent confidence interval:
-##  0.05573715 0.29226285
+##  0.05153492 0.28846508
 ## sample estimates:
 ## mean of x mean of y 
-##     0.030    -0.144</code></pre>
+##     0.018    -0.152</code></pre>
 <pre class="r"><code>with(all.scores,(t.test(score[telecom==&quot;@VodafoneUKhelp&quot;],score[telecom==&quot;@BTcare&quot;])))     </code></pre>
 <pre><code>## 
 ##  Welch Two Sample t-test
 ## 
 ## data:  score[telecom == &quot;@VodafoneUKhelp&quot;] and score[telecom == &quot;@BTcare&quot;]
-## t = -0.5363, df = 981.12, p-value = 0.5919
+## t = -0.34504, df = 982.97, p-value = 0.7301
 ## alternative hypothesis: true difference in means is not equal to 0
 ## 95 percent confidence interval:
-##  -0.1584096  0.0904096
+##  -0.1471219  0.1031219
 ## sample estimates:
 ## mean of x mean of y 
-##    -0.178    -0.144</code></pre>
+##    -0.174    -0.152</code></pre>
 </div>
 </div>
 
