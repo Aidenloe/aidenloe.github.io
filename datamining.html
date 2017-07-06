@@ -334,6 +334,9 @@ div.tocify {
       <a href="introToIRT.html">Intro to IRT</a>
     </li>
     <li>
+      <a href="testinfo.html">Test Information</a>
+    </li>
+    <li>
       <a href="irtplots.html">Plotting to IRT</a>
     </li>
   </ul>
@@ -423,7 +426,7 @@ tweet_user$description </code></pre>
 <pre><code>## [1] &quot;Tesla, SpaceX, OpenAI &amp; Neuralink&quot;</code></pre>
 <pre class="r"><code>#how many followers the account has
 tweet_user$followersCount </code></pre>
-<pre><code>## [1] 9789732</code></pre>
+<pre><code>## [1] 9790680</code></pre>
 </div>
 <div id="harvest-data" class="section level2">
 <h2><strong>Harvest data</strong></h2>
@@ -713,37 +716,37 @@ with(all.scores,(t.test(score[telecom==&quot;@ThreeUKSupport&quot;],score[teleco
 ##  Welch Two Sample t-test
 ## 
 ## data:  score[telecom == &quot;@ThreeUKSupport&quot;] and score[telecom == &quot;@VodafoneUKhelp&quot;]
-## t = 3.0152, df = 986.07, p-value = 0.002633
+## t = 2.9064, df = 986.04, p-value = 0.003738
 ## alternative hypothesis: true difference in means is not equal to 0
 ## 95 percent confidence interval:
-##  0.0677415 0.3202585
+##  0.0617148 0.3182852
 ## sample estimates:
 ## mean of x mean of y 
-##     0.028    -0.166</code></pre>
+##     0.034    -0.156</code></pre>
 <pre class="r"><code>with(all.scores,(t.test(score[telecom==&quot;@ThreeUKSupport&quot;],score[telecom==&quot;@BTcare&quot;])))</code></pre>
 <pre><code>## 
 ##  Welch Two Sample t-test
 ## 
 ## data:  score[telecom == &quot;@ThreeUKSupport&quot;] and score[telecom == &quot;@BTcare&quot;]
-## t = 2.8492, df = 997.88, p-value = 0.004473
+## t = 3.0013, df = 996.83, p-value = 0.002755
 ## alternative hypothesis: true difference in means is not equal to 0
 ## 95 percent confidence interval:
-##  0.05353797 0.29046203
+##  0.0630029 0.3009971
 ## sample estimates:
 ## mean of x mean of y 
-##     0.028    -0.144</code></pre>
+##     0.034    -0.148</code></pre>
 <pre class="r"><code>with(all.scores,(t.test(score[telecom==&quot;@VodafoneUKhelp&quot;],score[telecom==&quot;@BTcare&quot;])))     </code></pre>
 <pre><code>## 
 ##  Welch Two Sample t-test
 ## 
 ## data:  score[telecom == &quot;@VodafoneUKhelp&quot;] and score[telecom == &quot;@BTcare&quot;]
-## t = -0.3436, df = 983.64, p-value = 0.7312
+## t = -0.12422, df = 977.79, p-value = 0.9012
 ## alternative hypothesis: true difference in means is not equal to 0
 ## 95 percent confidence interval:
-##  -0.1476476  0.1036476
+##  -0.1343851  0.1183851
 ## sample estimates:
 ## mean of x mean of y 
-##    -0.166    -0.144</code></pre>
+##    -0.156    -0.148</code></pre>
 </div>
 </div>
 

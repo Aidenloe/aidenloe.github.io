@@ -33,6 +33,8 @@ navbar:
         - text: "What is IRT?"
         - text: "Intro to IRT"
           href: introToIRT.html
+        - text: "Test Information"
+          href: testinfo.html
         - text: "Plotting to IRT"
           href: irtplots.html
     - text: "CAT 4 Social Scientists"
