@@ -1,6 +1,6 @@
 ---
 title: "Web Scrapping"
-author: "Aiden"
+author: "Aiden Loe"
 date: "`r format(Sys.time(), '%d %B, %Y')`"
 output:
   html_document:

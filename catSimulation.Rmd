@@ -1,6 +1,6 @@
 ---
 title: "CAT simulation"
-author: "aiden"
+author: "Aiden Loe"
 date: "`r format(Sys.time(), '%d %B, %Y')`"
 output:
   html_document:

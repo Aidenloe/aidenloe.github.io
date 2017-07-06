@@ -4,7 +4,7 @@
 
 <head>
 
-<meta charset="utf-8" />
+<meta charset="utf-8">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
 
@@ -20,6 +20,9 @@
 <script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
 <link href="site_libs/highlightjs-1.1/textmate.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-1.1/highlight.js"></script>
@@ -163,6 +166,107 @@ $(document).ready(function () {
 
 
 
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = false;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+  padding-left: 25px;
+  text-indent: 0;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+.tocify-subheader {
+  display: inline;
+}
+.tocify-subheader .tocify-item {
+  font-size: 0.95em;
+}
+
+</style>
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
 
 
 <div class="navbar navbar-default  navbar-fixed-top" role="navigation">
@@ -264,7 +368,7 @@ $(document).ready(function () {
 
 <h1 class="title toc-ignore">Intro to IRT</h1>
 <h4 class="author"><em>Aiden Loe</em></h4>
-<h4 class="date"><em>13 June, 2017</em></h4>
+<h4 class="date"><em>06 July, 2017</em></h4>
 
 </div>
 
@@ -272,9 +376,152 @@ $(document).ready(function () {
 <div id="coming-soon" class="section level2">
 <h2><strong>Coming Soon</strong></h2>
 </div>
+<div id="item-and-test-information" class="section level2">
+<h2><strong>Item and Test information</strong></h2>
+<p>This section covers the area of item and test information. The test information is calculated based on the summation of all the item information. So what you ideally want is to have high item information. It is not possible in some instances such as the Rasch model, where the item information is fixed to 0.25 under the logistic distribution because the discrimination for all items are fixed at 1, where the difficulty of the item will be at the point of 0.5, giving equal likelihood for the test taker to get an item right or wrong.</p>
+<p><br/></p>
+<div id="pl-item-information-function" class="section level3">
+<h3><strong>2PL Item Information function</strong></h3>
+<p>Now, bear in mind that a D constant is added to these formulaes to allow for the logistic distribution to approximate to a normal distribution. If you wish to based your calculations on a logistic Distribution instead, remove the constant <span class="math inline">\(D\)</span> in the formulas.</p>
+<p>Under a 2PL model, the item information function is defined as:</p>
+<br/>
+<center>
+<span class="math inline">\(\large{I_i(\theta) =D^2a_i^2P_i(\theta) Q_i(\theta)}\)</span>
+</center>
+<p><br/></p>
+<p>where <span class="math inline">\(a_i\)</span> is the discrimination parameter for item <span class="math inline">\(i\)</span>.</p>
+<p><span class="math inline">\(P_i(\theta) = 1/(1+ EXP(D*-a_i(\theta - b_i)))\)</span>,</p>
+<p><span class="math inline">\(Q_i(\theta) = 1- P_i(\theta)\)</span></p>
+<p><span class="math inline">\(\theta\)</span> is the ability level of interest.</p>
+<p><span class="math inline">\(D\)</span> is the constant of 1.702 <br/></p>
+<p><br/></p>
+</div>
+<div id="pl-item-information-function-1" class="section level3">
+<h3><strong>1PL Item Information function</strong></h3>
+<p>Under a 1PL (Rasch) model, the item information is defined as:</p>
+<br/>
+<center>
+<span class="math inline">\(\large{I_i(\theta) = D^2P_i(\theta)Q_i(\theta)}\)</span>
+</center>
+<p><br/></p>
+<p>You can see that it is exactly the same as a 2PL model when the value of the discrimination (<span class="math inline">\(a\)</span> parameter) is set to 1.</p>
+<p><br/></p>
+</div>
+<div id="pl-item-information-function-2" class="section level3">
+<h3><strong>3PL Item Information function</strong></h3>
+<p>Under a 2PL model, the item information function is defined as:</p>
+<br/>
+<center>
+<span class="math inline">\(\large{I_{i\theta} = \frac{D^2a_i^2D_{i\theta}[P_{i\theta}-c_i]^2}{P_{i\theta(1-c_i)^2}}}\)</span>
+</center>
+<p><br/></p>
+<p>You can observe that the formula is a little bit more complex, but it really only introduces one new <strong><span class="math inline">\(c\)</span> parameter</strong> in the equation. The <span class="math inline">\(c\)</span> parameter is also the <strong>guessing parameter</strong> which is typically fixed to 0 in both the 1PL and the 2PL model. <br/></p>
+<br/>
+<center>
+Let’s attempt an example to calculate item and test information based on the <span style="color:red"> Rasch model</span> in R.
+</center>
+<p><br/></p>
+<pre class="r"><code># Given that the difficulty parameter for an item is -1.5
+b &lt;- -1.5
+
+# Create item information function for a Rasch model 
+i_info &lt;- function(b,a=1,θ=seq(-4,4,length.out=1000)){
+P &lt;- NULL 
+Q &lt;- NULL
+D &lt;- 1.702
+Ii &lt;- NULL
+for(i in 1:1000){
+  P[i] &lt;- 1/(1+ exp (D*-a *(θ[i] - b)))
+  Q[i]= 1-P[i]
+  Ii[i] =D^2*P[i]* Q[i] # (1PL)
+   }
+return(Ii)
+}
+
+# Get a single item information  based on a rasch model
+itemInfo&lt;- i_info(b = b, a = 1, θ=seq(-4,4,length.out=1000))
+
+itemInfo[1:5]</code></pre>
+<pre><code>## [1] 0.03997190 0.04050487 0.04104474 0.04159158 0.04214549</code></pre>
+<p>Now we have the item information for a single item along the theta range of -4 to 4.</p>
+<p>We want to calculate the item information for all items.</p>
+<pre class="r"><code># Given that the difficulty parameter for two items are -1.5, 0.5
+b &lt;- c(-1.5,0.5)
+
+# Function to get all item information
+item_info &lt;- function(b){
+item &lt;- NULL
+  for(i in 1:length(b)){
+  item[[i]] &lt;- i_info(b[i])
+  }
+return(item)
+}
+
+# Get all item information
+c &lt;- item_info(b)
+
+# Inspect first 5 item information values for second item 
+c[[2]][1:5]</code></pre>
+<pre><code>## [1] 0.001365363 0.001384081 0.001403057 0.001422292 0.001441790</code></pre>
+</div>
+<div id="test-information" class="section level3">
+<h3><strong>Test information</strong></h3>
+<p>Now that we have our item information. We can calculate test information. Because the item information calculation is indepedent from each other, the test information is calculated by summing all the item information together.</p>
+<p>The formula looks like this:</p>
+<br/>
+<center>
+<span class="math inline">\(\large{IT_\theta = \sum_{i=1}^{n}I_{i\theta}}\)</span>
+</center>
+<p><br/></p>
+<p>This is how it looks like in R once you have your item information:</p>
+<pre class="r"><code># combind the item information column wise
+d &lt;- do.call(&#39;cbind&#39;,c)
+
+# Then calculate the test information
+test_info &lt;- rowSums(d)
+head(test_info)</code></pre>
+<pre><code>## [1] 0.04133726 0.04188895 0.04244780 0.04301387 0.04358728 0.04416809</code></pre>
+<p>Now you essential have the test information that ranges from the <span class="math inline">\(\theta\)</span> value of -4 to 4.</p>
+</div>
+<div id="standard-error" class="section level3">
+<h3><strong>Standard Error </strong></h3>
+<p>To translate the amount of information into a standard error of estimation, you only need to take the reciprocal of the square root of the amount of test information. You will notice that the SE values are extremely high. This is expected since we are only using two items to calculate test information. As the number of items increases, more test information is provided, the resulting SE will becoming smaller and smaller.</p>
+<p>So it looks like this:</p>
+<br/>
+<center>
+<span class="math inline">\(\large{SE(\theta) = \frac{1}{\sqrt{I(\theta)}}}\)</span>
+</center>
+<p><br/></p>
+<pre class="r"><code>#get the standard error
+se&lt;- 1/(sqrt(test_info)) 
+
+head(se)</code></pre>
+<pre><code>## [1] 4.918460 4.885964 4.853694 4.821650 4.789830 4.758233</code></pre>
+</div>
+<div id="plot" class="section level3">
+<h3><strong>Plot</strong></h3>
+<p>Given that you have all the test information and the SE. You can plot it nicely. The R code can be taken <a href="https://aidenloe.github.io/irtplots.html#test_information_plot">here</a>.</p>
+<p><br/> <img src="introToIRT_files/figure-html/plot-1.png" width="768" /></p>
+<p>A test information peaks at some point along the ability <span class="math inline">\(\theta\)</span> scale with unequal precision (see plot). Such a test would be best for estimating the ability of test takers whose abilities fall near the peak of the test information function. Thus, a test would be desirable if the test takers’ abilities falls in the given range that has greater precision.</p>
+<p><br/></p>
+<div id="acknowledgement" class="section level4">
+<h4>Acknowledgement</h4>
+<p>Would like to thank Diego Blum for working through the item and test information function with me.</p>
+</div>
+<div id="citations" class="section level4">
+<h4>Citations</h4>
+<ul>
+<li><p>Muñiz, J., Fidalgo, A.M., García-Cueto, E., Martínez, R., &amp; Moreno, R. (2005). <em>Análisis de los ítems.</em> Madrid: La Muralla.</p></li>
+<li><p><a href="http://echo.edres.org:8080/irt/baker/chapter6.pdf" class="uri">http://echo.edres.org:8080/irt/baker/chapter6.pdf</a></p></li>
+</ul>
+</div>
+</div>
+</div>
 
 
 
+</div>
+</div>
 
 </div>
 
@@ -296,7 +543,7 @@ $(document).ready(function () {
   (function () {
     var script = document.createElement("script");
     script.type = "text/javascript";
-    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
     document.getElementsByTagName("head")[0].appendChild(script);
   })();
 </script>

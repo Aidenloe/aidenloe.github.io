@@ -2,7 +2,12 @@
 title: "Intro to IRT"
 author: "Aiden Loe"
 date: "`r format(Sys.time(), '%d %B, %Y')`"
-output: html_document
+output:
+  html_document:
+    toc: true
+    toc_depth: 3
+    toc_float: 
+      collapsed: false
 ---
 
 ```{r setup, include=FALSE}
@@ -10,3 +15,232 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 ## **Coming Soon**
+
+
+## **Item and Test information**
+
+This section covers the area of item and test information. The test information is calculated based on the summation of all the item information. So what you ideally want is to have high item information. It is not possible in some instances such as the Rasch model, where the item information is fixed to 0.25 under the logistic distribution because the discrimination for all items are fixed at 1, where the difficulty of the item will be at the point of 0.5, giving equal likelihood for the test taker to get an item right or wrong.
+
+<br/>
+
+### **2PL Item Information function**
+Now, bear in mind that a D constant is added to these formulaes to allow for the logistic distribution to approximate to a normal distribution. If you wish to based your calculations on a logistic Distribution instead, remove the constant $D$ in the formulas. 
+
+Under a 2PL model, the item information function is defined as: 
+
+<br/>
+<center>$\large{I_i(\theta) =D^2a_i^2P_i(\theta) Q_i(\theta)}$</center> <br/>
+
+where $a_i$ is the discrimination parameter for item $i$.
+
+$P_i(\theta) = 1/(1+ EXP(D*-a_i(\theta - b_i)))$, 
+
+$Q_i(\theta) = 1- P_i(\theta)$ 
+
+$\theta$ is the ability level of interest. 
+
+$D$ is the constant of 1.702 <br/>
+
+<br/>
+
+### **1PL Item Information function**
+
+Under a 1PL (Rasch) model, the item information is defined as: 
+
+<br/>
+<center>$\large{I_i(\theta) = D^2P_i(\theta)Q_i(\theta)}$</center> <br/>
+
+You can see that it is exactly the same as a 2PL model when the value of the discrimination ($a$ parameter) is set to 1.
+
+<br/>
+
+### **3PL Item Information function**
+
+Under a 2PL model, the item information function is defined as: 
+
+<br/>
+<center>$\large{I_{i\theta} = \frac{D^2a_i^2D_{i\theta}[P_{i\theta}-c_i]^2}{P_{i\theta(1-c_i)^2}}}$</center><br/>
+
+You can observe that the formula is a little bit more complex, but it really only introduces one new **$c$ parameter** in the equation. The $c$ parameter is also the **guessing parameter** which is typically fixed to 0 in both the 1PL and the 2PL model. <br/>
+
+
+<br/>
+<center>Let's attempt an example to calculate item and test information based on the <span style="color:red"> Rasch model</span> in R. </center> <br/>
+
+
+```{r single item information function}
+
+# Given that the difficulty parameter for an item is -1.5
+b <- -1.5
+
+# Create item information function for a Rasch model 
+i_info <- function(b,a=1,θ=seq(-4,4,length.out=1000)){
+P <- NULL 
+Q <- NULL
+D <- 1.702
+Ii <- NULL
+for(i in 1:1000){
+  P[i] <- 1/(1+ exp (D*-a *(θ[i] - b)))
+  Q[i]= 1-P[i]
+  Ii[i] =D^2*P[i]* Q[i] # (1PL)
+   }
+return(Ii)
+}
+
+# Get a single item information  based on a rasch model
+itemInfo<- i_info(b = b, a = 1, θ=seq(-4,4,length.out=1000))
+
+itemInfo[1:5]
+```
+
+Now we have the item information for a single item along the theta range of -4 to 4. 
+
+We want to calculate the item information for all items. 
+
+```{r all item information function}
+
+# Given that the difficulty parameter for two items are -1.5, 0.5
+b <- c(-1.5,0.5)
+
+# Function to get all item information
+item_info <- function(b){
+item <- NULL
+  for(i in 1:length(b)){
+  item[[i]] <- i_info(b[i])
+  }
+return(item)
+}
+
+# Get all item information
+c <- item_info(b)
+
+# Inspect first 5 item information values for second item 
+c[[2]][1:5]
+```
+
+
+### **Test information**
+
+Now that we have our item information. We can calculate test information. Because the item information calculation is indepedent from each other, the test information is calculated by summing all the item information together. 
+
+The formula looks like this: 
+
+<br/>
+<center>$\large{IT_\theta = \sum_{i=1}^{n}I_{i\theta}}$</center> <br/>
+
+This is how it looks like in R once you have your item information: 
+
+```{r Test information}
+# combind the item information column wise
+d <- do.call('cbind',c)
+
+# Then calculate the test information
+test_info <- rowSums(d)
+head(test_info)
+```
+
+Now you essential have the test information that ranges from the $\theta$ value of -4 to 4. 
+
+### **Standard Error **
+
+To translate the amount of information into a standard error of estimation, you only need to take the reciprocal of the square root of the amount of test information. You will notice that the SE values are extremely high. This is expected since we are only using two items to calculate test information. As the number of items increases, more test information is provided, the resulting SE will becoming smaller and smaller. 
+
+So it looks like this: 
+
+<br/>
+<center>$\large{SE(\theta) = \frac{1}{\sqrt{I(\theta)}}}$</center><br/>
+
+```{r Standard Error}
+#get the standard error
+se<- 1/(sqrt(test_info)) 
+
+head(se)
+```
+
+
+### **Plot**
+
+Given that you have all the test information and the SE. You can plot it nicely. The R code can be taken [here](https://aidenloe.github.io/irtplots.html#test_information_plot). 
+
+<br/>
+```{r plot, echo=FALSE, message=FALSE,fig.width=8, fig.height=8}
+require(ggplot2)
+require(gtable)
+require(grid)
+
+tI<- cbind.data.frame(test_info,seq(-4,4,length.out=1000), se) #make sure they are the same length
+colnames(tI) <- c("information", "xAxis","se")
+p1 <- ggplot(tI, aes(x=xAxis, y=information, colour="black")) + geom_line()  + theme_bw() +
+  scale_colour_identity(name="", guide="legend", labels=c("Information")) +
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+        panel.background = element_blank(), axis.line = element_blank(),
+        axis.text=element_text(size=14),
+        axis.title=element_text(size=14),
+        legend.text=element_text(size=14),
+        legend.title=element_text(size=14),
+        plot.title = element_text(hjust = 0.5, size=16, face="bold"),
+        legend.position="bottom") +
+  labs(x="\nTheta", y = "Information\n") +
+  scale_x_continuous(breaks=c(-6,-4,-2,0,2,4,6)) +ggtitle("Test Information Curve\n")
+
+
+p2 <- ggplot(tI, aes(x=xAxis, y=se, colour="red"))  + geom_line(linetype = "dashed") + theme_bw() +
+  scale_colour_identity(name="", guide="legend", labels=c("SE")) +
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+        panel.background = element_blank(), axis.line = element_blank(),
+        axis.text=element_text(size=13),
+        axis.title=element_text(size=13),
+        axis.text.y = element_text(colour = "red"),
+        legend.text=element_text(size=13),
+        legend.title=element_text(size=13),
+        legend.position="bottom")+
+  scale_x_continuous(breaks=c(-6,-4,-2,0,2,4,6))
+
+
+
+# extract gtable
+g1 <- ggplot_gtable(ggplot_build(p1))
+g2 <- ggplot_gtable(ggplot_build(p2))
+
+# overlap the panel of 2nd plot on that of 1st plot
+pp <- c(subset(g1$layout, name == "panel", se = t:r))
+g <- gtable_add_grob(g1, g2$grobs[[which(g2$layout$name == "panel")]], pp$t,
+                     pp$l, pp$b, pp$l)
+
+# axis tweaks
+ia <- which(g$layout$name == "ylab")
+ia <- which(g2$layout$name == "axis-l")
+ga <- g2$grobs[[ia]]
+ax <- ga$children[[2]]
+ax$widths <- rev(ax$widths)
+ax$grobs <- rev(ax$grobs)
+ax$grobs[[1]]$x <- ax$grobs[[1]]$x - unit(1, "npc") + unit(0.08, "cm")
+g <- gtable_add_cols(g, g2$widths[g2$layout[ia, ]$l], length(g$widths) - 1)
+g <- gtable_add_grob(g, ax, pp$t, length(g$widths) - 1, pp$b)
+
+# extract legend
+leg1 <- g1$grobs[[which(g1$layout$name == "guide-box")]]
+leg2 <- g2$grobs[[which(g2$layout$name == "guide-box")]]
+
+g$grobs[[which(g$layout$name == "guide-box")]] <-
+  gtable:::cbind_gtable(leg1, leg2, "first")
+
+# draw it
+grid.draw(g)
+
+```
+
+A test information peaks at some point along the ability $\theta$ scale with unequal precision (see plot). Such a test would be best for estimating the ability of test takers whose abilities fall near the peak of the test information function. Thus, a test would be desirable if the test takers' abilities falls in the given range that has greater precision. 
+
+
+<br/>
+
+#### Acknowledgement
+
+Would like to thank Diego Blum for working through the item and test information function with me.
+
+#### Citations
+
++ Muñiz, J., Fidalgo, A.M., García-Cueto, E., Martínez, R., & Moreno, R. (2005). *Análisis de los ítems.* Madrid: La Muralla.
+
++ http://echo.edres.org:8080/irt/baker/chapter6.pdf

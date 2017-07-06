@@ -4,12 +4,12 @@
 
 <head>
 
-<meta charset="utf-8" />
+<meta charset="utf-8">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
 
 
-<meta name="author" content="Aiden" />
+<meta name="author" content="Aiden Loe" />
 
 
 <title>Data mining</title>
@@ -367,8 +367,8 @@ div.tocify {
 
 
 <h1 class="title toc-ignore">Data mining</h1>
-<h4 class="author"><em>Aiden</em></h4>
-<h4 class="date"><em>13 June, 2017</em></h4>
+<h4 class="author"><em>Aiden Loe</em></h4>
+<h4 class="date"><em>06 July, 2017</em></h4>
 
 </div>
 
@@ -423,7 +423,7 @@ tweet_user$description </code></pre>
 <pre><code>## [1] &quot;Tesla, SpaceX, OpenAI &amp; Neuralink&quot;</code></pre>
 <pre class="r"><code>#how many followers the account has
 tweet_user$followersCount </code></pre>
-<pre><code>## [1] 9245279</code></pre>
+<pre><code>## [1] 9788093</code></pre>
 </div>
 <div id="harvest-data" class="section level2">
 <h2><strong>Harvest data</strong></h2>
@@ -440,7 +440,7 @@ names(tweets) #view tweets</code></pre>
 ##  [9] &quot;replyToUID&quot;    &quot;statusSource&quot;  &quot;screenName&quot;    &quot;retweetCount&quot; 
 ## [13] &quot;isRetweet&quot;     &quot;retweeted&quot;     &quot;longitude&quot;     &quot;latitude&quot;</code></pre>
 <pre class="r"><code>nrow(tweets) #rows of tweets</code></pre>
-<pre><code>## [1] 336</code></pre>
+<pre><code>## [1] 369</code></pre>
 </div>
 <div id="reorganise-data" class="section level2">
 <h2><strong>Reorganise data</strong></h2>
@@ -493,7 +493,7 @@ tweets %&gt;%
 chars_per_tweet = sapply(tweets$text, nchar) 
 summary(chars_per_tweet) #report average number of characters per tweet</code></pre>
 <pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-##    4.00   36.00   72.00   77.54  121.00  146.00</code></pre>
+##   11.00   36.00   75.00   79.75  125.50  148.00</code></pre>
 <pre class="r"><code>hist(chars_per_tweet, breaks=30) #this is the default R histogram plot</code></pre>
 <p><img src="datamining_files/figure-html/Average%20char%20per%20tweet-1.png" width="672" /></p>
 </div>
@@ -505,7 +505,7 @@ word_list = strsplit(tweets$text, &quot; &quot;) #split the tweets into separate
 words_per_tweet = sapply(word_list, length) #count the number of word elements in each tweet
 summary(words_per_tweet) #report average number of words per tweet</code></pre>
 <pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-##    1.00    5.00   12.00   12.09   18.00   30.00</code></pre>
+##    1.00    5.00   12.00   12.34   18.00   30.00</code></pre>
 <pre class="r"><code># the following uses ggplot2 to do the plot, which is much prettier.
 words_per_tweet_df = as.data.frame(words_per_tweet) #ggplot requires the data to be in a data frame
 ggplot(words_per_tweet_df, aes(x=words_per_tweet, group=words_per_tweet)) + 
@@ -521,10 +521,10 @@ hash_per_tweet = sapply (word_list, function(x) length(grep(&quot;#&quot;,x))) #
 table(hash_per_tweet) #counts</code></pre>
 <pre><code>## hash_per_tweet
 ##   0   1   2 
-## 323   1   1</code></pre>
+## 357   1   1</code></pre>
 <pre class="r"><code>summary(hash_per_tweet) #summary showing mean hashtags</code></pre>
 <pre><code>##     Min.  1st Qu.   Median     Mean  3rd Qu.     Max. 
-## 0.000000 0.000000 0.000000 0.009231 0.000000 2.000000</code></pre>
+## 0.000000 0.000000 0.000000 0.008357 0.000000 2.000000</code></pre>
 </div>
 <div id="top-hash" class="section level2">
 <h2><strong>Top Hash</strong></h2>
@@ -548,7 +548,7 @@ head(user_hashtags_freq_order,10) #report the 10 most common hashtags</code></pr
 uniq_words_per_tweet = sapply (word_list, function(x) unique(x)) 
 uniq_words = unlist(uniq_words_per_tweet) #they&#39;re in a list, so convert to a huge vector
 length(uniq_words) #shows how many total words we&#39;ve collected from this user</code></pre>
-<pre><code>## [1] 3821</code></pre>
+<pre><code>## [1] 4299</code></pre>
 <pre class="r"><code>uniq_words&lt;- uniq_words[!uniq_words %in% c(&quot;a&quot;, &quot;in&quot;, &quot;to&quot;, &quot;is&quot;, &quot;for&quot;, &quot;but&quot;, &quot;and&quot;, &quot;on&quot;, &quot;the&quot;, &quot;of&quot;)] # remove some stopwords.
 uniq_words_freq = table(uniq_words) #number of times that each word is displayed
 
@@ -713,37 +713,37 @@ with(all.scores,(t.test(score[telecom==&quot;@ThreeUKSupport&quot;],score[teleco
 ##  Welch Two Sample t-test
 ## 
 ## data:  score[telecom == &quot;@ThreeUKSupport&quot;] and score[telecom == &quot;@VodafoneUKhelp&quot;]
-## t = -0.21329, df = 991.69, p-value = 0.8311
+## t = 2.7046, df = 988.17, p-value = 0.006956
 ## alternative hypothesis: true difference in means is not equal to 0
 ## 95 percent confidence interval:
-##  -0.1428049  0.1148049
+##  0.04775161 0.30024839
 ## sample estimates:
 ## mean of x mean of y 
-##    -0.202    -0.188</code></pre>
+##     0.018    -0.156</code></pre>
 <pre class="r"><code>with(all.scores,(t.test(score[telecom==&quot;@ThreeUKSupport&quot;],score[telecom==&quot;@BTcare&quot;])))</code></pre>
 <pre><code>## 
 ##  Welch Two Sample t-test
 ## 
 ## data:  score[telecom == &quot;@ThreeUKSupport&quot;] and score[telecom == &quot;@BTcare&quot;]
-## t = -0.93298, df = 997.33, p-value = 0.3511
+## t = 2.641, df = 997.77, p-value = 0.008396
 ## alternative hypothesis: true difference in means is not equal to 0
 ## 95 percent confidence interval:
-##  -0.17999176  0.06399176
+##  0.04111424 0.27888576
 ## sample estimates:
 ## mean of x mean of y 
-##    -0.202    -0.144</code></pre>
+##     0.018    -0.142</code></pre>
 <pre class="r"><code>with(all.scores,(t.test(score[telecom==&quot;@VodafoneUKhelp&quot;],score[telecom==&quot;@BTcare&quot;])))     </code></pre>
 <pre><code>## 
 ##  Welch Two Sample t-test
 ## 
 ## data:  score[telecom == &quot;@VodafoneUKhelp&quot;] and score[telecom == &quot;@BTcare&quot;]
-## t = -0.67827, df = 987.03, p-value = 0.4978
+## t = -0.21909, df = 985.03, p-value = 0.8266
 ## alternative hypothesis: true difference in means is not equal to 0
 ## 95 percent confidence interval:
-##  -0.17130108  0.08330108
+##  -0.1393951  0.1113951
 ## sample estimates:
 ## mean of x mean of y 
-##    -0.188    -0.144</code></pre>
+##    -0.156    -0.142</code></pre>
 </div>
 </div>
 
@@ -772,7 +772,7 @@ $(document).ready(function () {
   (function () {
     var script = document.createElement("script");
     script.type = "text/javascript";
-    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
     document.getElementsByTagName("head")[0].appendChild(script);
   })();
 </script>
