@@ -501,7 +501,7 @@ head(test_info)</code></pre>
 </div>
 <div id="standard-error" class="section level3">
 <h3><strong>Standard Error </strong></h3>
-<p>To translate the amount of information into a standard error of estimation, you only need to take the reciprocal of the square root of the amount of test information. You will notice that the SE values are extremely high. This is expected since we are only using two items to calculate test information. As the number of items increases, more test information is provided, the resulting SE will becoming smaller and smaller.</p>
+<p>To translate the amount of information into a standard error of estimation, you only need to take the reciprocal of the square root of the amount of test information.</p>
 <p>So it looks like this:</p>
 <br/>
 <center>
@@ -519,6 +519,7 @@ head(se)</code></pre>
 <h3><strong>Plot</strong></h3>
 <p>Given that you have all the test information and the SE. You can plot it nicely. The R code can be taken <a href="https://aidenloe.github.io/irtplots.html#test_information_plot">here</a>.</p>
 <p><br/> <img src="introToIRT_files/figure-html/plot-1.png" width="768" /></p>
+<p>You will notice that the SE values on the right y-axis are extremely high. In fact, they are higher than the test information values on the left y-axis (how strange!). This is expected since we are only using two items to calculate test information. As the number of items increase, more test information is provided, and the resulting SE will becoming smaller and smaller. In most (if not all) published papers, the left-axis values (test information) will always be higher than the right-axis values (SE).</p>
 <p>A test information peaks at some point along the ability <span class="math inline">\(\theta\)</span> scale with unequal precision (see plot). Such a test would be best for estimating the ability of test takers whose abilities fall near the peak of the test information function. Thus, a test would be desirable if the test takers’ abilities falls in the given range that has greater precision.</p>
 <p><br/></p>
 <div id="acknowledgement" class="section level4">

@@ -158,7 +158,7 @@ Now you essential have the test information that ranges from the $\theta$ value 
 
 ### **Standard Error **
 
-To translate the amount of information into a standard error of estimation, you only need to take the reciprocal of the square root of the amount of test information. You will notice that the SE values are extremely high. This is expected since we are only using two items to calculate test information. As the number of items increases, more test information is provided, the resulting SE will becoming smaller and smaller. 
+To translate the amount of information into a standard error of estimation, you only need to take the reciprocal of the square root of the amount of test information. 
 
 So it looks like this: 
 
@@ -245,6 +245,8 @@ g$grobs[[which(g$layout$name == "guide-box")]] <-
 grid.draw(g)
 
 ```
+
+You will notice that the SE values on the right y-axis are extremely high. In fact, they are higher than the test information values on the left y-axis (how strange!). This is expected since we are only using two items to calculate test information. As the number of items increase, more test information is provided, and the resulting SE will becoming smaller and smaller. In most (if not all) published papers, the left-axis values (test information) will always be higher than the right-axis values (SE).
 
 A test information peaks at some point along the ability $\theta$ scale with unequal precision (see plot). Such a test would be best for estimating the ability of test takers whose abilities fall near the peak of the test information function. Thus, a test would be desirable if the test takers' abilities falls in the given range that has greater precision. 
 
