@@ -371,13 +371,35 @@ div.tocify {
 
 <h1 class="title toc-ignore">Intro to IRT</h1>
 <h4 class="author"><em>Aiden Loe</em></h4>
-<h4 class="date"><em>06 July, 2017</em></h4>
+<h4 class="date"><em>23 November, 2017</em></h4>
 
 </div>
 
 
 <div id="coming-soon" class="section level2">
 <h2><strong>Coming Soon</strong></h2>
+<p>To convert a discrimination parameter into a value that is similar to a standardised factor loading.</p>
+<p>The formula is :</p>
+<br/>
+<center>
+<span class="math inline">\(\large{f = \frac{\alpha}{\sqrt{(1+\alpha{^2})}}}\)</span>
+</center>
+<p><br/></p>
+<p>Bear in mind that <span class="math inline">\(\alpha = \frac{\alpha}{1.702}\)</span> because you are scaling the logistic metric to a normal ogive.</p>
+<p>For example, if <span class="math inline">\(\alpha = 0.5\)</span> which is <span class="math inline">\(0.5/1.702 = 0.293772\)</span>, <br/></p>
+<p>Then the standardised loading is:</p>
+<br/>
+<center>
+<span class="math inline">\(\large{f = \frac{0.293772}{\sqrt{(1+0.293772^2)}}}\)</span>
+</center>
+<p><br/></p>
+<p>The result is 0.2818 <span class="math inline">\(\approx\)</span> 0.3.</p>
+<div id="citations" class="section level4">
+<h4>Citations</h4>
+<ul>
+<li><a href="http://www.unc.edu/~dbauer/manuscripts/kamata-bauer-2008.pdf" class="uri">http://www.unc.edu/~dbauer/manuscripts/kamata-bauer-2008.pdf</a> [pg.144]</li>
+</ul>
+</div>
 </div>
 
 

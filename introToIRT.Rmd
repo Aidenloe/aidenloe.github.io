@@ -16,4 +16,25 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## **Coming Soon**
 
+To convert a discrimination parameter into a value that is similar to a standardised factor loading.
+
+The formula is :
+
+<br/>
+<center>$\large{f = \frac{\alpha}{\sqrt{(1+\alpha{^2})}}}$</center><br/>
+
+Bear in mind that $\alpha = \frac{\alpha}{1.702}$ because you are scaling the logistic metric to a normal ogive.
+
+For example, if $\alpha = 0.5$ which is $0.5/1.702 = 0.293772$, <br/>
+
+Then the standardised loading is:
+
+<br/>
+<center>$\large{f = \frac{0.293772}{\sqrt{(1+0.293772^2)}}}$ </center> <br/>
+
+The result is 0.2818 $\approx$ 0.3.
+
+
+#### Citations
+
 
