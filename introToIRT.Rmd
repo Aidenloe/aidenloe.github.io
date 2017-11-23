@@ -16,6 +16,8 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## **Coming Soon**
 
+## $\alpha{}$ parameter to Std loading
+
 To convert a discrimination parameter into a value that is similar to a standardised factor loading.
 
 The formula is :
@@ -37,4 +39,4 @@ The result is 0.2818 $\approx$ 0.3.
 
 #### Citations
 
-
++ Wirth, R. J., & Edwards, M. C. (2007). Item factor analysis: current approaches and future directions. Psychological methods, 12(1), 58.
