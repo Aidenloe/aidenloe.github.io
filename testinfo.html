@@ -548,7 +548,7 @@ se &lt;- 1/sqrt(10)
 reliability &lt;- 1-se^2
 
 # Reliability to Test information (2 step)
-reliability &lt;- 0.7
+reliability &lt;- 0.9
 se &lt;- sqrt(1-reliability)
 Information&lt;- (1/se)^2
 
@@ -556,18 +556,24 @@ Information&lt;- (1/se)^2
 info &lt;- 10
 reliability &lt;- 1-1/info
 
-#Test information to Reliability (1 step)
+# Reliability to Test information (1 step)
 reliability &lt;- 0.9
 info &lt;- 1/(1-reliability)</code></pre>
 <p><br/></p>
 <div id="inforeliability-plot" class="section level3">
 <h3><strong>Info/Reliability Plot</strong></h3>
 <p>To see how this reliability changes over a range of test information values.</p>
-<p>From the plot you can see that:</p>
+<p>From the <strong>SE plot</strong> you can see that:</p>
 <ul>
-<li><p>Information of 10 is equivalent to reliability of 0.9</p></li>
-<li><p>Information of 5 is equivalent to reliability of 0.8</p></li>
-<li><p>Information of 3.33 is equivalent to reliability of 0.7</p></li>
+<li><p>SE of 0.32 is evaluate to reliability of 0.9.</p></li>
+<li><p>SE of 0.45 is evaluate to reliability of 0.8.</p></li>
+<li><p>SE of 0.54 is evaluate to reliability of 0.7.</p></li>
+</ul>
+<p>From the <strong>Test information plot</strong> you can see that:</p>
+<ul>
+<li><p>Information of 10 is equivalent to reliability of 0.9.</p></li>
+<li><p>Information of 5 is equivalent to reliability of 0.8.</p></li>
+<li><p>Information of 3.33 is equivalent to reliability of 0.7.</p></li>
 </ul>
 <p>The R code can be taken <a href="https://aidenloe.github.io/irtplots.html#inforeliability_plot">here</a>.</p>
 <p><img src="testinfo_files/figure-html/test%20info%20plot-1.png" width="576" style="display: block; margin: auto;" /></p>

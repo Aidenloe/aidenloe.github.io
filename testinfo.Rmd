@@ -269,7 +269,7 @@ se <- 1/sqrt(10)
 reliability <- 1-se^2
 
 # Reliability to Test information (2 step)
-reliability <- 0.7
+reliability <- 0.9
 se <- sqrt(1-reliability)
 Information<- (1/se)^2
 
@@ -277,7 +277,7 @@ Information<- (1/se)^2
 info <- 10
 reliability <- 1-1/info
 
-#Test information to Reliability (1 step)
+# Reliability to Test information (1 step)
 reliability <- 0.9
 info <- 1/(1-reliability)
 
@@ -289,13 +289,21 @@ info <- 1/(1-reliability)
 
 To see how this reliability changes over a range of test information values.
 
-From the plot you can see that: 
+From the **SE plot** you can see that: 
 
-* Information of 10 is equivalent to reliability of 0.9
+* SE of 0.32 is evaluate to reliability of 0.9.
 
-* Information of 5 is equivalent to reliability of 0.8
+* SE of 0.45 is evaluate to reliability of 0.8.
 
-* Information of 3.33 is equivalent to reliability of 0.7
+* SE of 0.54 is evaluate to reliability of 0.7.
+
+From the **Test information plot** you can see that: 
+
+* Information of 10 is equivalent to reliability of 0.9.
+
+* Information of 5 is equivalent to reliability of 0.8.
+
+* Information of 3.33 is equivalent to reliability of 0.7.
 
 The R code can be taken [here](https://aidenloe.github.io/irtplots.html#inforeliability_plot). 
 
@@ -308,6 +316,13 @@ reli <- cbind.data.frame(info, se, reliability)
 
 # plots
 plot1 <- ggplot(reli, aes(x=reliability, y =se )) + geom_point(size=0.01) + theme_classic() +
+  xlim(0,1.0) +
+  geom_vline(aes(xintercept=0.9), colour = "green") + 
+  geom_hline(aes(yintercept=0.32),colour = "green") +
+  geom_vline(aes(xintercept=0.8), colour = "red") + 
+  geom_hline(aes(yintercept=0.45),colour = "red") +
+  geom_vline(aes(xintercept=0.7),colour = "blue") + 
+  geom_hline(aes(yintercept=0.54), colour = "blue") +
   theme(text = element_text(size=14),
         axis.text.x=element_text(colour="black"),
         axis.text.y=element_text(colour="black"))

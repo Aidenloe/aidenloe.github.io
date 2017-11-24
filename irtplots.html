@@ -388,7 +388,8 @@ library(dplyr)
 library(ggplot2)
 library(gtable)
 library(grid)
-require(ggpubr)</code></pre>
+library(ggpubr)
+library(mirt)</code></pre>
 <p><br></p>
 </div>
 <div id="normal-plot-percentile" class="section level2">
@@ -621,7 +622,7 @@ onTheFlyPlot(dataset = scoreDenstiy, quantiles = quantiles)</code></pre>
 <div id="test-information-plot" class="section level2">
 <h2><strong>Test Information plot</strong></h2>
 <p>This helps to create a test information plot that is of publishable quality.</p>
-<p>You will need the <code>eRm</code>,<code>grid</code>,<code>gtable</code> package.</p>
+<p>You will need the <code>eRm</code>,<code>grid</code>,<code>gtable</code> packages.</p>
 <pre class="r"><code>fit &lt;- PCM(pcmdat) # running irt model (partial credit model) 
 
 # test_info() is used to get the information
@@ -688,10 +689,12 @@ g$grobs[[which(g$layout$name == &quot;guide-box&quot;)]] &lt;-
 # draw it
 grid.draw(g)</code></pre>
 <p><img src="irtplots_files/figure-html/test%20info-1.png" width="768" /></p>
+<p><br></p>
 </div>
 <div id="inforeliability-plot" class="section level2">
 <h2><strong>Info/Reliability Plot</strong></h2>
 <p>To see how this reliability changes over a range of test information values.</p>
+<p>You will need the <code>ggplot</code> and <code>ggpubr</code> packages.</p>
 <pre class="r"><code># range of info/reliability values
 info &lt;- seq(1,10, 0.01)
 se &lt;- 1/sqrt(info)
@@ -700,6 +703,13 @@ reli &lt;- cbind.data.frame(info, se, reliability)
 
 # plots
 plot1 &lt;- ggplot(reli, aes(x=reliability, y =se )) + geom_point(size=0.01) + theme_classic() +
+  xlim(0,1.0) +
+  geom_vline(aes(xintercept=0.9), colour = &quot;green&quot;) + 
+  geom_hline(aes(yintercept=0.32),colour = &quot;green&quot;) +
+  geom_vline(aes(xintercept=0.8), colour = &quot;red&quot;) + 
+  geom_hline(aes(yintercept=0.45),colour = &quot;red&quot;) +
+  geom_vline(aes(xintercept=0.7),colour = &quot;blue&quot;) + 
+  geom_hline(aes(yintercept=0.54), colour = &quot;blue&quot;) +
   theme(text = element_text(size=14),
         axis.text.x=element_text(colour=&quot;black&quot;),
         axis.text.y=element_text(colour=&quot;black&quot;))
@@ -726,6 +736,63 @@ annotate_figure(plot3,
                                 color = &quot;red&quot;, face = &quot;bold&quot;,
                                 size = 14))</code></pre>
 <p><img src="irtplots_files/figure-html/test%20info%20plot-1.png" width="576" style="display: block; margin: auto;" /></p>
+<p><br></p>
+</div>
+<div id="iccs-by-difficulty-level" class="section level2">
+<h2><strong>ICCs by difficulty level</strong></h2>
+<p>While colour coding may be helpful, it actually repeats itself after a few times.</p>
+<p>Hence, the best way is to reorder the items in the data so that the items are plotted by difficulty level.</p>
+<p>So far, mirt and the other packages doesn’t have the functionality to do that yet.</p>
+<p>So I asked for help around and came up with the code.</p>
+<p>You will need the <code>mirt</code>, <code>ggplot</code> and <code>dplyr</code> packages.</p>
+<pre class="r"><code>library(mirt)
+dat &lt;- expand.table(LSAT7)
+mod &lt;- mirt(dat, 1, verbose=FALSE)
+
+# Extract all items 
+# Compute the probability trace lines
+# Put into a list
+traceline &lt;- NULL
+for(i in 1:length(dat)){
+extr.2 &lt;- extract.item(mod, i)
+Theta &lt;- matrix(seq(-4,4, by = .1))
+traceline[[i]] &lt;- probtrace(extr.2, Theta)
+}
+
+# rename list
+names(traceline) &lt;- paste(&#39;item&#39;,1:length(traceline))
+
+# rbind traceline
+traceline.df &lt;- do.call(rbind, traceline)
+
+# create item names length based on length of theta provided
+item &lt;- rep(names(traceline),each=length(Theta))
+
+# put them all together into a dataframe
+l.format &lt;- cbind.data.frame(Theta, item, traceline.df)
+
+
+l.format$item&lt;-as.factor(l.format$item)
+aux&lt;-l.format %&gt;%
+  group_by(item) %&gt;%
+  slice(which.min(abs(P.1-0.5))) # We are only using the P.1 column (dichotomous)
+
+aux&lt;-aux[order(aux$Theta),]
+ord&lt;-as.integer(aux$item)
+l.format$item = factor(l.format$item,levels(l.format$item)[ord])
+
+# plot chart
+ggplot(l.format, aes(Theta, P.1, colour = item)) + 
+  geom_line() + 
+  ggtitle(&#39;Probability Tracelines&#39;) + 
+  xlab(expression(theta)) + 
+  ylab(expression(P(theta))) + 
+  geom_hline(aes(yintercept = 0.5)) + theme_bw() + 
+  theme(text = element_text(size=16),
+        axis.text.x=element_text(colour=&quot;black&quot;),
+        axis.text.y=element_text(colour=&quot;black&quot;),
+        legend.title=element_blank())</code></pre>
+<p><img src="irtplots_files/figure-html/unnamed-chunk-1-1.png" width="768" /></p>
 </div>
 
 
