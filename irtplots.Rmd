@@ -30,6 +30,7 @@ library(gtable)
 library(grid)
 library(ggpubr)
 library(mirt)
+library(tidyr)
 ```
 
 
@@ -358,7 +359,7 @@ grid.draw(g)
 
 <br>
 
-## **Info/Reliability Plot**
+## **Info/Reliability plot**
 
 To see how this reliability changes over a range of test information values.
 
@@ -410,11 +411,11 @@ annotate_figure(plot3,
 
 <br>
 
-## **ICCs by difficulty level**
+## **ICCs by difficulty level plots**
 
 While colour coding may be helpful, it actually repeats itself after a few times. 
 
-Hence, the best way is to reorder the items in the data so that the items are plotted by difficulty level. 
+Hence, the best way is to order the items in the data so that they are ranked by difficulty level. 
 
 So far, mirt and the other packages doesn't have the functionality to do that yet. 
 
@@ -472,5 +473,62 @@ ggplot(l.format, aes(Theta, P.1, colour = item)) +
         legend.title=element_blank())
 ```
 
+<br/>
+
+## **ICC polytomous item plot**
+
+The code below will let you to either plot one polytomous item at a time or plot all the items together. 
+
+It is rather messy to plot all the items together. I would recommend each item to have its own separate plot. 
+
+You will need `mirt` and `tidyr` packages to run this demo.
+
+
+```{r warning=FALSE, fig.width=7, fig.height=6}
+data(Science)
+mod <- mirt(Science,1, itemtype='graded', verbose=FALSE)
+
+# Extract all items 
+# Compute the probability trace lines
+# Put into a list
+traceline <- NULL
+for(i in 1:length(Science)){
+  extr.2 <- extract.item(mod, i)
+  Theta <- matrix(seq(-6,6, by = .1))
+  traceline[[i]] <- probtrace(extr.2, Theta)
+}
+
+names(traceline) <- paste('item',1:length(traceline))
+
+# rbind traceline
+traceline.df <- do.call(rbind, traceline)
+
+# create item names length based on length of theta provided
+item <- rep(names(traceline),each=length(Theta))
+
+# put them all together into a dataframe
+l.format <- cbind.data.frame(Theta, item, traceline.df)
+
+# wide to long format. 
+longer.format <- gather(l.format,categorials,measurement,P.1:P.4)
+longer.format$item<-as.factor(longer.format$item)
+
+#items available
+items <- c("item 1", "item 2", "item 3", "item 4")
+item.format <-longer.format[longer.format$item == items[1],]
+
+# plot chart
+ggplot(item.format, aes(Theta, measurement, colour = item, fill=categorials)) + 
+  geom_line() + 
+  ggtitle('Polytomous Tracelines') + 
+  xlab(expression(theta)) + 
+  ylab(expression(P(theta))) + 
+  geom_hline(aes(yintercept = 0.5)) + theme_bw() + 
+  theme(text = element_text(size=16),
+        axis.text.x=element_text(colour="black"),
+        axis.text.y=element_text(colour="black"),
+        legend.title=element_blank())
+
+```
 
 
