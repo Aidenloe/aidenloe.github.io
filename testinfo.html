@@ -371,7 +371,7 @@ div.tocify {
 
 <h1 class="title toc-ignore">Test Information</h1>
 <h4 class="author"><em>Aiden Loe</em></h4>
-<h4 class="date"><em>06 July, 2017</em></h4>
+<h4 class="date"><em>24 November, 2017</em></h4>
 
 </div>
 
@@ -499,8 +499,9 @@ head(test_info)</code></pre>
 <p>Now you essential have the test information that ranges from the <span class="math inline">\(\theta\)</span> value of -4 to 4.</p>
 <p><br/></p>
 </div>
-<div id="standard-error" class="section level3">
-<h3><strong>Standard Error </strong></h3>
+</div>
+<div id="standard-error" class="section level2">
+<h2><strong>Standard Error </strong></h2>
 <p>To translate the amount of information into a standard error of estimation, you only need to take the reciprocal of the square root of the amount of test information.</p>
 <p>So it looks like this:</p>
 <br/>
@@ -514,14 +515,63 @@ se&lt;- 1/(sqrt(test_info))
 head(se)</code></pre>
 <pre><code>## [1] 4.918460 4.885964 4.853694 4.821650 4.789830 4.758233</code></pre>
 <p><br/></p>
-</div>
-<div id="plot" class="section level3">
-<h3><strong>Plot</strong></h3>
+<div id="se-plot" class="section level3">
+<h3><strong>SE Plot</strong></h3>
 <p>Given that you have all the test information and the SE. You can plot it nicely. The R code can be taken <a href="https://aidenloe.github.io/irtplots.html#test_information_plot">here</a>.</p>
 <p><br/> <img src="testinfo_files/figure-html/plot-1.png" width="768" /></p>
 <p>You will notice that the SE values on the right y-axis are extremely high. In fact, they are higher than the test information values on the left y-axis (how strange!). This is expected since we are only using two items to calculate test information. As the number of items increase, more test information is provided, and the resulting SE will becoming smaller and smaller. In most (if not all) published papers, the left-axis values (test information) will always be higher than the right-axis values (SE).</p>
 <p>A test information peaks at some point along the ability <span class="math inline">\(\theta\)</span> scale with unequal precision (see plot). Such a test would be best for estimating the ability of test takers whose abilities fall near the peak of the test information function. Thus, a test would be desirable if the test takers’ abilities falls in the given range that has greater precision.</p>
 <p><br/></p>
+</div>
+</div>
+<div id="test-info-to-reliability" class="section level2">
+<h2><strong>Test info to Reliability</strong></h2>
+<p><strong>2 step process</strong> for information to be directly related to reliability; <br/></p>
+<center>
+<span class="math inline">\(\large{1 - SE^2}\)</span>
+</center>
+<p><br/></p>
+where,
+<center>
+<span class="math inline">\(\large{SE = \frac{1}{sqrt(info)}}\)</span>
+</center>
+<p><br/></p>
+<p>So given that you have an test information value, you must first calculate the SE and then follow by the reliability.</p>
+<p>Alternatively, <strong>1 step process</strong> for information to be directly related to reliability: <br/></p>
+<center>
+<span class="math inline">\(\large{1 - (1/info)}\)</span>
+</center>
+<p><br/></p>
+<pre class="r"><code>#Test information to Reliability (2 step)
+info &lt;- 10
+se &lt;- 1/sqrt(10)
+reliability &lt;- 1-se^2
+
+# Reliability to Test information (2 step)
+reliability &lt;- 0.7
+se &lt;- sqrt(1-reliability)
+Information&lt;- (1/se)^2
+
+#Test information to Reliability (1 step)
+info &lt;- 10
+reliability &lt;- 1-1/info
+
+#Test information to Reliability (1 step)
+reliability &lt;- 0.9
+info &lt;- 1/(1-reliability)</code></pre>
+<p><br/></p>
+<div id="inforeliability-plot" class="section level3">
+<h3><strong>Info/Reliability Plot</strong></h3>
+<p>To see how this reliability changes over a range of test information values.</p>
+<p>From the plot you can see that:</p>
+<ul>
+<li><p>Information of 10 is equivalent to reliability of 0.9</p></li>
+<li><p>Information of 5 is equivalent to reliability of 0.8</p></li>
+<li><p>Information of 3.33 is equivalent to reliability of 0.7</p></li>
+</ul>
+<p>The R code can be taken <a href="https://aidenloe.github.io/irtplots.html#test_information_plot">here</a>.</p>
+<p><img src="testinfo_files/figure-html/test%20info%20plot-1.png" width="576" style="display: block; margin: auto;" /></p>
+<p><br/> <br/></p>
 <div id="acknowledgement" class="section level4">
 <h4>Acknowledgement</h4>
 <p>Would like to thank <a href="http://www.uni-muenster.de/PsyIFP/AEHolling/de/blum/personen/">Diego Blum</a> for working through the item and test information function with me.</p>

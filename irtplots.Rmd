@@ -28,7 +28,7 @@ library(dplyr)
 library(ggplot2)
 library(gtable)
 library(grid)
-
+require(ggpubr)
 ```
 
 
@@ -352,5 +352,47 @@ g$grobs[[which(g$layout$name == "guide-box")]] <-
 
 # draw it
 grid.draw(g)
+
+```
+
+
+## **Info/Reliability Plot**
+
+To see how this reliability changes over a range of test information values.
+
+```{r test info plot,  message=FALSE,fig.width=6, fig.height=3,fig.align='center',fig.show='hold' }
+# range of info/reliability values
+info <- seq(1,10, 0.01)
+se <- 1/sqrt(info)
+reliability <- 1-se^2
+reli <- cbind.data.frame(info, se, reliability)
+
+# plots
+plot1 <- ggplot(reli, aes(x=reliability, y =se )) + geom_point(size=0.01) + theme_classic() +
+  theme(text = element_text(size=14),
+        axis.text.x=element_text(colour="black"),
+        axis.text.y=element_text(colour="black"))
+
+plot2 <- ggplot(reli, aes(x=reliability, y = info)) + geom_point(size=0.01) + 
+  theme_classic() + xlim(0,1.0) +
+  geom_vline(aes(xintercept=0.9), colour = "green") + 
+  geom_hline(aes(yintercept=10),colour = "green") +
+  geom_vline(aes(xintercept=0.8), colour = "red") + 
+  geom_hline(aes(yintercept=5),colour = "red") +
+  geom_vline(aes(xintercept=0.7),colour = "blue") + 
+  geom_hline(aes(yintercept=3.33), colour = "blue") +
+  theme(text = element_text(size=14),
+        axis.text.x=element_text(colour="black"),
+        axis.text.y=element_text(colour="black"))
+
+
+#combine plots together
+plot3 <- ggarrange(plot1, plot2, 
+          ncol = 2, nrow = 1)
+
+annotate_figure(plot3,
+                top = text_grob("Info/Reliability Plot",
+                                color = "red", face = "bold",
+                                size = 14))
 
 ```

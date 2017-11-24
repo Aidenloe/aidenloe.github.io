@@ -10,6 +10,7 @@ output:
       collapsed: false
 ---
 
+
 ## **Item and Test information**
 
 This section covers the area of item and test information. The test information is calculated based on the summation of all the item information. So what you ideally want is to have high item information. It is not possible in some instances such as the Rasch model, where the item information is fixed to 0.25 under the logistic distribution because the discrimination for all items are fixed at 1, where the difficulty of the item will be at the point of 0.5, giving equal likelihood for the test taker to get an item right or wrong.
@@ -149,7 +150,7 @@ Now you essential have the test information that ranges from the $\theta$ value 
 
 <br/>
 
-### **Standard Error **
+## **Standard Error **
 
 To translate the amount of information into a standard error of estimation, you only need to take the reciprocal of the square root of the amount of test information. 
 
@@ -167,7 +168,7 @@ head(se)
 
 <br/>
 
-### **Plot**
+### **SE Plot**
 
 Given that you have all the test information and the SE. You can plot it nicely. The R code can be taken [here](https://aidenloe.github.io/irtplots.html#test_information_plot). 
 
@@ -244,6 +245,99 @@ You will notice that the SE values on the right y-axis are extremely high. In fa
 A test information peaks at some point along the ability $\theta$ scale with unequal precision (see plot). Such a test would be best for estimating the ability of test takers whose abilities fall near the peak of the test information function. Thus, a test would be desirable if the test takers' abilities falls in the given range that has greater precision. 
 
 
+<br/>
+
+## **Test info to Reliability**
+**2 step process** for information to be directly related to reliability; <br/>
+
+<center>$\large{1 - SE^2}$</center><br/>
+
+where, <center> $\large{SE = \frac{1}{sqrt(info)}}$ </center><br/>
+
+So given that you have an test information value, you must first calculate the SE and then follow by the reliability. 
+
+Alternatively, **1 step process** for information to be directly related to reliability: <br/>
+
+
+
+<center>$\large{1 - (1/info)}$</center><br/>
+
+```{r Single test info to reliability}
+#Test information to Reliability (2 step)
+info <- 10
+se <- 1/sqrt(10)
+reliability <- 1-se^2
+
+# Reliability to Test information (2 step)
+reliability <- 0.7
+se <- sqrt(1-reliability)
+Information<- (1/se)^2
+
+#Test information to Reliability (1 step)
+info <- 10
+reliability <- 1-1/info
+
+#Test information to Reliability (1 step)
+reliability <- 0.9
+info <- 1/(1-reliability)
+
+```
+
+<br/>
+
+### **Info/Reliability Plot**
+
+To see how this reliability changes over a range of test information values.
+
+From the plot you can see that: 
+
+* Information of 10 is equivalent to reliability of 0.9
+
+* Information of 5 is equivalent to reliability of 0.8
+
+* Information of 3.33 is equivalent to reliability of 0.7
+
+The R code can be taken [here](https://aidenloe.github.io/irtplots.html#test_information_plot). 
+
+```{r test info plot,  message=FALSE,fig.width=6, fig.height=3,fig.align='center',fig.show='hold', echo=FALSE }
+# range of info/reliability values
+info <- seq(1,10, 0.01)
+se <- 1/sqrt(info)
+reliability <- 1-se^2
+reli <- cbind.data.frame(info, se, reliability)
+
+# plots
+plot1 <- ggplot(reli, aes(x=reliability, y =se )) + geom_point(size=0.01) + theme_classic() +
+  theme(text = element_text(size=14),
+        axis.text.x=element_text(colour="black"),
+        axis.text.y=element_text(colour="black"))
+
+plot2 <- ggplot(reli, aes(x=reliability, y = info)) + geom_point(size=0.01) + 
+  theme_classic() + xlim(0,1.0) +
+  geom_vline(aes(xintercept=0.9), colour = "green") + 
+  geom_hline(aes(yintercept=10),colour = "green") +
+  geom_vline(aes(xintercept=0.8), colour = "red") + 
+  geom_hline(aes(yintercept=5),colour = "red") +
+  geom_vline(aes(xintercept=0.7),colour = "blue") + 
+  geom_hline(aes(yintercept=3.33), colour = "blue") +
+  theme(text = element_text(size=14),
+        axis.text.x=element_text(colour="black"),
+        axis.text.y=element_text(colour="black"))
+
+
+require(ggpubr)
+#combine plots together
+plot3 <- ggarrange(plot1, plot2, 
+          ncol = 2, nrow = 1)
+
+annotate_figure(plot3,
+                top = text_grob("Info/Reliability Plot",
+                                color = "red", face = "bold",
+                                size = 14))
+
+```
+
+<br/>
 <br/>
 
 #### Acknowledgement

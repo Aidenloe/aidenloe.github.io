@@ -37,6 +37,8 @@ Then the standardised loading is:
 The result is 0.2818 $\approx$ 0.3.
 
 
+
+
 #### Citations
 
 + Wirth, R. J., & Edwards, M. C. (2007). Item factor analysis: current approaches and future directions. Psychological methods, 12(1), 58.
