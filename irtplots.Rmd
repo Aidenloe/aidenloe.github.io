@@ -411,7 +411,7 @@ annotate_figure(plot3,
 
 <br>
 
-## **ICCs by difficulty level plots**
+## **ICCs by difficulty level plot**
 
 While colour coding may be helpful, it actually repeats itself after a few times. 
 
