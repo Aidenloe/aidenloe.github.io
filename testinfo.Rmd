@@ -297,7 +297,7 @@ From the plot you can see that:
 
 * Information of 3.33 is equivalent to reliability of 0.7
 
-The R code can be taken [here](https://aidenloe.github.io/irtplots.html#test_information_plot). 
+The R code can be taken [here](https://aidenloe.github.io/irtplots.html#inforeliability_plot). 
 
 ```{r test info plot,  message=FALSE,fig.width=6, fig.height=3,fig.align='center',fig.show='hold', echo=FALSE }
 # range of info/reliability values
