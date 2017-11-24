@@ -16,7 +16,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## **Coming Soon**
 
-## $\alpha{}$ parameter to Std loading
+## **$\alpha{}$ par to std loading**
 
 To convert a discrimination parameter into a value that is similar to a standardised factor loading.
 
