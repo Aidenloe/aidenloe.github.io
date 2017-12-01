@@ -411,15 +411,13 @@ annotate_figure(plot3,
 
 <br>
 
-## **ICCs by difficulty level plot**
+## **ICC plot by difficulty level**
 
 While colour coding may be helpful, it actually repeats itself after a few times. 
 
 Hence, the best way is to order the items in the data so that they are ranked by difficulty level. 
 
 So far, mirt and the other packages doesn't have the functionality to do that yet. 
-
-So I asked for help around and came up with the code. 
 
 You will need the `mirt`, `ggplot` and `dplyr` packages. 
 
@@ -475,13 +473,13 @@ ggplot(l.format, aes(Theta, P.1, colour = item)) +
 
 <br/>
 
-## **ICC polytomous item plot**
+## **Categorical response curve plot**
 
-The code below will let you to either plot one polytomous item at a time or plot all the items together. 
+The code below will let you to either plot one Categorical Response Curves at a time or plot all the items together. 
 
 It is rather messy to plot all the items together. I would recommend each item to have its own separate plot. 
 
-You will need `mirt` and `tidyr` packages to run this demo.
+You will need `mirt` ,`ggplot2` and `tidyr` packages to run this demo.
 
 
 ```{r warning=FALSE, fig.width=7, fig.height=6}
@@ -513,7 +511,7 @@ l.format <- cbind.data.frame(Theta, item, traceline.df)
 longer.format <- gather(l.format,categorials,measurement,P.1:P.4)
 longer.format$item<-as.factor(longer.format$item)
 
-#items available
+# Selecting item
 items <- c("item 1", "item 2", "item 3", "item 4")
 item.format <-longer.format[longer.format$item == items[1],]
 
@@ -531,4 +529,54 @@ ggplot(item.format, aes(Theta, measurement, colour = item, fill=categorials)) +
 
 ```
 
+<br/>
 
+## **OCC plot for polytomous items**
+
+The code below will let you plot an item Operating Characteristic Curve one at a time.  
+
+I would recommend each item to have its own separate plot rathern than putting it all together. 
+
+You will need `mirt` ,`ggplot2` and `tidyr` packages to run this demo.
+
+
+```{r warning=FALSE, fig.width=7, fig.height=6}
+model <- mirt(Science, 1, itemtype="gpcm", verbose=FALSE)
+cfs <- coef(model, IRTpars = TRUE, simplify=TRUE)$items
+
+# 2pl
+twopl <- function(a, b, theta){
+  1 / (1 + exp(-(a * (theta - b))))}
+
+# theta 
+theta <- seq(-4,4,.1)
+
+# select item to display OCC
+item <- 3
+
+# create Operational characteristic curve
+lst <- list()
+for(i in 1:3) lst[[i]] <- twopl(a=cfs[item,1], b=cfs[item,i+1], theta=theta)
+
+dat <- data.frame(theta, as.data.frame(lst))
+names(dat) <- c('theta', 'b1', 'b2', 'b3')
+
+# wide to long format. 
+longer.format <- gather(dat,categorials,measurement,b1:b3)
+
+# Plot item trace line (mirt package)
+plot(model, type="trace")
+
+# plot chart
+ggplot(longer.format, aes(theta, measurement, colour=categorials)) + 
+  geom_line() + 
+  ggtitle(paste('Polytomous Tracelines for Item', rownames(cfs)[item])) + 
+  xlab(expression(theta)) + 
+  ylab(expression(P(theta))) + 
+  geom_hline(aes(yintercept = 0.5)) + theme_bw() + 
+  theme(text = element_text(size=16),
+        axis.text.x=element_text(colour="black"),
+        axis.text.y=element_text(colour="black"),
+        legend.title=element_blank())
+
+```
