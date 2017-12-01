@@ -30,6 +30,7 @@ library("ggplot2")
 library("slam") 
 library("wordcloud") # depends on slam to work
 library("stringr")
+library("pander")
 ```
 
 ## **Important keys**
@@ -486,7 +487,7 @@ We can further confirm our visual result by running a simple pair-wise t-test.
 
 ```{r Run t test}
 # t.test between the groups
-with(all.scores,(t.test(score[telecom=="@ThreeUKSupport"],score[telecom=="@VodafoneUKhelp"])))
-with(all.scores,(t.test(score[telecom=="@ThreeUKSupport"],score[telecom=="@BTcare"])))
-with(all.scores,(t.test(score[telecom=="@VodafoneUKhelp"],score[telecom=="@BTcare"])))     
+pander(with(all.scores,(t.test(score[telecom=="@ThreeUKSupport"],score[telecom=="@VodafoneUKhelp"]))),style="simple")
+pander(with(all.scores,(t.test(score[telecom=="@ThreeUKSupport"],score[telecom=="@BTcare"]))),style="simple")
+pander(with(all.scores,(t.test(score[telecom=="@VodafoneUKhelp"],score[telecom=="@BTcare"]))),style="simple")
 ```

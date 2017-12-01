@@ -371,161 +371,13 @@ div.tocify {
 
 <h1 class="title toc-ignore">Web Scrapping</h1>
 <h4 class="author"><em>Aiden Loe</em></h4>
-<h4 class="date"><em>06 July, 2017</em></h4>
+<h4 class="date"><em>01 December, 2017</em></h4>
 
 </div>
 
 
 <div id="web-scrapping-part-1" class="section level1">
 <h1><strong>Web Scrapping (Part 1)</strong></h1>
-<p>Clearly, there are legal and ethical implications when conducting web scrapping.</p>
-<p>Here, I am merely showing you how it is done based on open content.</p>
-<p>There are many things you can do with web scrapping though. Check out the <a href="https://en.wikipedia.org/wiki/Web_scraping">wiki</a> on it.</p>
-<p>Here are some <a href="https://www.quora.com/What-are-examples-of-how-real-businesses-use-web-scraping">examples</a> of companies.</p>
-<p><em>A note of caution is that, if you want to scrape data, make sure that you are doing it</em> <strong>legally</strong>.</p>
-<div id="scrape-single-web-pages" class="section level2">
-<h2><strong>Scrape Single web pages</strong></h2>
-<p>We are using wikipedia as an example for web scrapping.</p>
-<p>We want to find out how many people are viewing a specific topic for a pariticular month.</p>
-<p>The code below will scrape viewership for a specific month of our choice.</p>
-<p>In this example, we will check out how popular the topic ‘web_scraping’ is on wikipedia.</p>
-<pre class="r"><code>################# Scrapping viewership on one webpage ################
-var=201402
-url=paste0(&quot;http://stats.grok.se/json/en/&quot;,var,&quot;/web_scraping&quot;)
-raw.data &lt;- readLines(url, warn=&quot;F&quot;)  # igore warning, data is scrapped
-
-################### read json data in R ##############
-#### Install the rjson package if you don&#39;t have it already
-require(rjson) # load rjson
-
-rd &lt;- fromJSON(raw.data) # convert to a list object in R
-rd.views &lt;- rd$daily_views # use only the daily_views
-rd.views &lt;- unlist(rd.views) # flatten the list
-df &lt;- as.data.frame(rd.views) # save into df
-
-df$date &lt;-  as.Date(rownames(df)) # save as dates
-colnames(df) &lt;- c(&quot;views&quot;,&quot;date&quot;) # create colnames
-rownames(df) &lt;- 1:nrow(df) # create row names as index</code></pre>
-</div>
-<div id="plot-viewership-by-a-month" class="section level2">
-<h2><strong>Plot viewership by a month</strong></h2>
-<p>Once you the data in a neat format. We can start plotting it.</p>
-<p>Here you want to visualise the number of viewerships using ggplot2.</p>
-<p>We observe a sudden spike somewhere in the middle of feb 2014. I wonder why…</p>
-<pre class="r"><code>#### Install these packages if you don&#39;t have them
-require(ggplot2) 
-require(lubridate)
-
-ggplot(df,aes(x =date, y =views))+   # data frame as first argument, followed by the aesthetics, x and y variables.  
-  geom_line()+   # visulisation
-  geom_smooth(method=&quot;loess&quot;)+ # smoothing function (try changing the argument to &#39;lm&#39; or &#39;gam&#39;)
-  theme_bw(base_size=10) # sets the thumb size to be it legible. </code></pre>
-<p><img src="webscrapping_files/figure-html/plot%20data-1.png" width="672" /></p>
-</div>
-<div id="scrape-data-by-months" class="section level2">
-<h2><strong>Scrape data by months</strong></h2>
-<p>Sometimes it is more fun to find out viewership based on a certain number of months.</p>
-<p>Hence, using ifelse statements and for loop, one can easily scrape the viewership based on the number of months.</p>
-<p>Because the weblink for the months &lt; 10 has a 0 digit before the values (i.e., 01, 02, 03…), we need to think of a way to add a 0 before the single digit. In this case we created an ifelse statement to help us with that. Again, this is just one way of doing it. Another way is to first loop through 0-9, then another loop from 10-12. Finally, you can just cbind them together and remove NAs.</p>
-<pre class="r"><code>## Looping through 12 months
-date =NULL 
-dates=NULL 
-  for (month in 1:12){
-    if(month &lt; 10){
-      date[month] = paste0(2014,0,month) #add a 0 before the numeric value
-    }else{
-      dates[month] = paste0(2014,month)
-    }
-  }
-# Store the data in &#39;all.dates&#39; variable ##
-  dates &lt;- na.omit(dates) # remove NAs
-  all.dates &lt;- c(date, dates) # concatenate them together
-  all.dates &lt;- as.numeric(all.dates) # convert data class to numeric</code></pre>
-</div>
-<div id="scrape-data-by-years" class="section level2">
-<h2><strong>Scrape data by years</strong></h2>
-<p>I am sure you can start seeing a pattern now.</p>
-<p>By introducing a double for loop, the years could also be extracted out as well.</p>
-<p>If you want, you can also extend this to create a triple for loop. The final outer loop could be the language for example.</p>
-<pre class="r"><code>## Looping through XXX Years and 12 months 
-date =NULL 
-dates=NULL 
-years &lt;- NULL
-for (year in 2012:2014){
-  for (month in 1:12){
-    if(month &lt; 10){
-    date[month] = paste0(year,0,month)
-    }else{
-    dates[month] = paste0(year,month)
-    }
-  }
-  ####### Store the data in &#39;all.dates&#39; variable ###
-  dates &lt;- na.omit(dates) # remove NAs
-  all.dates &lt;- c(date, dates) # concatenate them together
-  all.dates &lt;- as.numeric(all.dates) # convert data class to numeric
-  years &lt;- c(all.dates,years) #combind months according to years
-}</code></pre>
-</div>
-<div id="scrape-data-by-years-url" class="section level2">
-<h2><strong>Scrape data by years (URL)</strong></h2>
-<p>Based on what we learned above, we can easily swap it to include the relevant links.</p>
-<p>Here we will scrap data based on the topic ‘web_scrapping’ between 2013 and 2014.</p>
-<pre class="r"><code>## Looping through Years and 12 months based on URL
-topic &lt;- &quot;web_scraping&quot;
-start.year &lt;- 2013
-end.year &lt;- 2014
-
-### fetch data ###
-date =NULL 
-dates=NULL 
-years &lt;- NULL
-for (year in start.year:end.year){
-  for (month in 1:12){
-    if(month &lt; 10){
-      date[month] = paste0(&quot;http://stats.grok.se/json/en/&quot;,year,0,month,&quot;/&quot;,topic,&quot;&quot;) #add a zero before the numeric value
-    }else{
-      dates[month] =paste0(&quot;http://stats.grok.se/json/en/&quot;,year,month,&quot;/&quot;,topic,&quot;&quot;)
-    }
-  }
-  ####### Store the data in &#39;years&#39; variable ###
-  dates &lt;- na.omit(dates) # remove NAs
-  all.dates &lt;- c(date, dates) # concatenate months
-  years &lt;- c(all.dates,years) # concatenate years
-}
-
-raw.data &lt;- NULL
-for(i in 1:length(years)){
-raw.data[i] &lt;- readLines(years[i], warn=&quot;F&quot;)  # igore warning
-}
-
-#### Organise Data ###
-rd &lt;- NULL
-rd.views &lt;- NULL
-for(i in 1:length(raw.data)){
-rd[[i]] &lt;- fromJSON(raw.data[i]) # convert to a list object in R
-rd.views[[i]]&lt;- rd[[i]]$daily_views
-}
-
-rd.views.2 &lt;- unlist(rd.views)
-df &lt;- as.data.frame(rd.views.2)
-df$date &lt;- as.Date(names(rd.views.2)) # save as dates
-colnames(df) &lt;- c(&quot;views&quot;,&quot;date&quot;) # create colnames
-rownames(df) &lt;- 1:nrow(df) # create row names as index
-df &lt;- na.omit(df) #remove NAs. </code></pre>
-</div>
-<div id="plot-viewership-by-years" class="section level2">
-<h2><strong>Plot viewership by years</strong></h2>
-<p>Once the data is organised properly, we can plot it.</p>
-<pre class="r"><code>ggplot(df,aes(x =date, y =views))+   # data frame as first argument, followed by the aesthetics, x and y variables.  
-  geom_line()+   # visulisation
-  geom_smooth(method=&quot;loess&quot;)+ # smoothing function (try changing the argument to &#39;lm&#39; or &#39;gam&#39;)
-  theme_bw(base_size=10)+ # sets the thumb size to be it legible. 
-  labs(title=topic)</code></pre>
-<p><img src="webscrapping_files/figure-html/Plot%20URL%20data-1.png" width="672" /></p>
-</div>
-</div>
-<div id="web-scrapping-part-2" class="section level1">
-<h1><strong>Web Scrapping (Part 2)</strong></h1>
 <p>Scrapping viewership is one area of web scrapping, but perhaps you might be interested in doing sentiment analysis on content.</p>
 <p>So we want to extract the contents of the web pages rather than number of times someone viewed the web page.</p>
 <div id="scrape-content-wiki" class="section level2">
@@ -631,8 +483,8 @@ ldply(url,BBCscrapper1)</code></pre>
 ## 2 Taliban territory: Life in Afghanistan under the militants 8 June 2017</code></pre>
 </div>
 </div>
-<div id="web-scrapping-part-3" class="section level1">
-<h1><strong>Web Scrapping (Part 3)</strong></h1>
+<div id="web-scrapping-part-2" class="section level1">
+<h1><strong>Web Scrapping (Part 2)</strong></h1>
 <p>This example below is taken from code kindly written by David stillwell.</p>
 <p>Some editing has been made to the original code.</p>
 <div id="scrape-from-wiki-tables" class="section level2">
@@ -692,7 +544,7 @@ plot(mydata[,&quot;Population estimate, July 1, 2016[4]&quot;], mydata[,&quot;to
 <p><img src="webscrapping_files/figure-html/Scrape%20Table%20(non-wiki)-1.png" width="672" /></p>
 <pre class="r"><code>## What&#39;s does the correlation between state funding and state population look like?
 cor(mydata[,&quot;Population estimate, July 1, 2016[4]&quot;], mydata[,&quot;total_spend&quot;]) # 0.9924265 - big correlation!</code></pre>
-<pre><code>## [1] 0.9924346</code></pre>
+<pre><code>## [1] 0.9924303</code></pre>
 </div>
 <div id="plot-funding-data-on-map" class="section level2">
 <h2><strong>Plot funding data on map</strong></h2>
@@ -720,8 +572,8 @@ ggplot() +
 <p><img src="webscrapping_files/figure-html/Plot%20on%20Map-1.png" width="1728" /></p>
 </div>
 </div>
-<div id="web-scrapping-part-4" class="section level1">
-<h1><strong>Web Scrapping (Part 4)</strong></h1>
+<div id="web-scrapping-part-3" class="section level1">
+<h1><strong>Web Scrapping (Part 3)</strong></h1>
 <div id="scrape-from-discussion-forums" class="section level2">
 <h2><strong>Scrape from discussion forums</strong></h2>
 <p>Coming soon..</p>

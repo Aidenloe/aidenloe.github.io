@@ -16,192 +16,6 @@ knitr::opts_chunk$set(echo = TRUE)
 
 # **Web Scrapping (Part 1)**
 
-Clearly, there are legal and ethical implications when conducting web scrapping. 
-
-Here, I am merely showing you how it is done based on open content. 
-
-There are many things you can do with web scrapping though. Check out the [wiki](https://en.wikipedia.org/wiki/Web_scraping) on it. 
-
-Here are some [examples](https://www.quora.com/What-are-examples-of-how-real-businesses-use-web-scraping) of companies. 
-
-*A note of caution is that, if you want to scrape data, make sure that you are doing it* **legally**.
-
-
-
-## **Scrape Single web pages**
-
-We are using wikipedia as an example for web scrapping. 
-
-We want to find out how many people are viewing a specific topic for a pariticular month. 
-
-The code below will scrape viewership for a specific month of our choice. 
-
-In this example, we will check out how popular the topic 'web_scraping' is on wikipedia. 
-
-```{r Scrape webpage, message=FALSE}
-
-################# Scrapping viewership on one webpage ################
-var=201402
-url=paste0("http://stats.grok.se/json/en/",var,"/web_scraping")
-raw.data <- readLines(url, warn="F")  # igore warning, data is scrapped
-
-################### read json data in R ##############
-#### Install the rjson package if you don't have it already
-require(rjson) # load rjson
-
-rd <- fromJSON(raw.data) # convert to a list object in R
-rd.views <- rd$daily_views # use only the daily_views
-rd.views <- unlist(rd.views) # flatten the list
-df <- as.data.frame(rd.views) # save into df
-
-df$date <-  as.Date(rownames(df)) # save as dates
-colnames(df) <- c("views","date") # create colnames
-rownames(df) <- 1:nrow(df) # create row names as index
-```
-
-## **Plot viewership by a month**
-
-Once you the data in a neat format. We can start plotting it.  
-
-Here you want to visualise the number of viewerships using ggplot2.
-
-We observe a sudden spike somewhere in the middle of feb 2014. I wonder why... 
-
-```{r plot data, message=FALSE, warning=FALSE}
-#### Install these packages if you don't have them
-require(ggplot2) 
-require(lubridate)
-
-ggplot(df,aes(x =date, y =views))+   # data frame as first argument, followed by the aesthetics, x and y variables.  
-  geom_line()+   # visulisation
-  geom_smooth(method="loess")+ # smoothing function (try changing the argument to 'lm' or 'gam')
-  theme_bw(base_size=10) # sets the thumb size to be it legible. 
-
-```
-
-## **Scrape data by months**
-
-Sometimes it is more fun to find out viewership based on a certain number of months. 
-
-Hence, using ifelse statements and for loop, one can easily scrape the viewership based on the number of months. 
-
-Because the weblink for the months < 10 has a 0 digit before the values (i.e., 01, 02, 03...), we need to think of a way to add a 0 before the single digit. In this case we created an ifelse statement to help us with that. Again, this is just one way of doing it. Another way is to first loop through 0-9, then another loop from 10-12. Finally, you can just cbind them together and remove NAs. 
-
-```{r Scrape by months}
-## Looping through 12 months
-date =NULL 
-dates=NULL 
-  for (month in 1:12){
-    if(month < 10){
-      date[month] = paste0(2014,0,month) #add a 0 before the numeric value
-    }else{
-      dates[month] = paste0(2014,month)
-    }
-  }
-# Store the data in 'all.dates' variable ##
-  dates <- na.omit(dates) # remove NAs
-  all.dates <- c(date, dates) # concatenate them together
-  all.dates <- as.numeric(all.dates) # convert data class to numeric
-
-```  
-
-
-## **Scrape data by years**
-
-I am sure you can start seeing a pattern now. 
-
-By introducing a double for loop, the years could also be extracted out as well.
-
-If you want, you can also extend this to create a triple for loop. The final outer loop could be the language for example. 
-
-
-```{r Scrape by years}  
-## Looping through XXX Years and 12 months 
-date =NULL 
-dates=NULL 
-years <- NULL
-for (year in 2012:2014){
-  for (month in 1:12){
-    if(month < 10){
-    date[month] = paste0(year,0,month)
-    }else{
-    dates[month] = paste0(year,month)
-    }
-  }
-  ####### Store the data in 'all.dates' variable ###
-  dates <- na.omit(dates) # remove NAs
-  all.dates <- c(date, dates) # concatenate them together
-  all.dates <- as.numeric(all.dates) # convert data class to numeric
-  years <- c(all.dates,years) #combind months according to years
-}
-```
-
-
-## **Scrape data by years (URL)**
-
-Based on what we learned above, we can easily swap it to include the relevant links. 
-
-Here we will scrap data based on the topic 'web_scrapping' between 2013 and 2014. 
-```{r Scrape by years based on URL}
-## Looping through Years and 12 months based on URL
-topic <- "web_scraping"
-start.year <- 2013
-end.year <- 2014
-
-### fetch data ###
-date =NULL 
-dates=NULL 
-years <- NULL
-for (year in start.year:end.year){
-  for (month in 1:12){
-    if(month < 10){
-      date[month] = paste0("http://stats.grok.se/json/en/",year,0,month,"/",topic,"") #add a zero before the numeric value
-    }else{
-      dates[month] =paste0("http://stats.grok.se/json/en/",year,month,"/",topic,"")
-    }
-  }
-  ####### Store the data in 'years' variable ###
-  dates <- na.omit(dates) # remove NAs
-  all.dates <- c(date, dates) # concatenate months
-  years <- c(all.dates,years) # concatenate years
-}
-
-raw.data <- NULL
-for(i in 1:length(years)){
-raw.data[i] <- readLines(years[i], warn="F")  # igore warning
-}
-
-#### Organise Data ###
-rd <- NULL
-rd.views <- NULL
-for(i in 1:length(raw.data)){
-rd[[i]] <- fromJSON(raw.data[i]) # convert to a list object in R
-rd.views[[i]]<- rd[[i]]$daily_views
-}
-
-rd.views.2 <- unlist(rd.views)
-df <- as.data.frame(rd.views.2)
-df$date <- as.Date(names(rd.views.2)) # save as dates
-colnames(df) <- c("views","date") # create colnames
-rownames(df) <- 1:nrow(df) # create row names as index
-df <- na.omit(df) #remove NAs. 
-
-```
-
-## **Plot viewership by years**
-
-Once the data is organised properly, we can plot it. 
-
-```{r Plot URL data,warning=FALSE}
-ggplot(df,aes(x =date, y =views))+   # data frame as first argument, followed by the aesthetics, x and y variables.  
-  geom_line()+   # visulisation
-  geom_smooth(method="loess")+ # smoothing function (try changing the argument to 'lm' or 'gam')
-  theme_bw(base_size=10)+ # sets the thumb size to be it legible. 
-  labs(title=topic)
-```
-
-# **Web Scrapping (Part 2)**
-
 Scrapping viewership is one area of web scrapping, but perhaps you might be interested in doing sentiment analysis on content. 
 
 So we want to extract the contents of the web pages rather than number of times someone viewed the web page. 
@@ -325,7 +139,7 @@ ldply(url,BBCscrapper1)
 
 
 
-# **Web Scrapping (Part 3)**
+# **Web Scrapping (Part 2)**
 This example below is taken from code kindly written by David stillwell. 
 
 Some editing has been made to the original code. 
@@ -431,7 +245,7 @@ ggplot() +
 ```
 
 
-# **Web Scrapping (Part 4)**
+# **Web Scrapping (Part 3)**
 ## **Scrape from discussion forums**
 
 Coming soon..

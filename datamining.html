@@ -371,7 +371,7 @@ div.tocify {
 
 <h1 class="title toc-ignore">Data mining</h1>
 <h4 class="author"><em>Aiden Loe</em></h4>
-<h4 class="date"><em>06 July, 2017</em></h4>
+<h4 class="date"><em>01 December, 2017</em></h4>
 
 </div>
 
@@ -386,7 +386,8 @@ div.tocify {
 library(&quot;ggplot2&quot;)
 library(&quot;slam&quot;) 
 library(&quot;wordcloud&quot;) # depends on slam to work
-library(&quot;stringr&quot;)</code></pre>
+library(&quot;stringr&quot;)
+library(&quot;pander&quot;)</code></pre>
 <div id="important-keys" class="section level2">
 <h2><strong>Important keys</strong></h2>
 <p>The four main things you will need are:</p>
@@ -426,7 +427,7 @@ tweet_user$description </code></pre>
 <pre><code>## [1] &quot;Tesla, SpaceX, OpenAI &amp; Neuralink&quot;</code></pre>
 <pre class="r"><code>#how many followers the account has
 tweet_user$followersCount </code></pre>
-<pre><code>## [1] 9790680</code></pre>
+<pre><code>## [1] 15723240</code></pre>
 </div>
 <div id="harvest-data" class="section level2">
 <h2><strong>Harvest data</strong></h2>
@@ -443,7 +444,7 @@ names(tweets) #view tweets</code></pre>
 ##  [9] &quot;replyToUID&quot;    &quot;statusSource&quot;  &quot;screenName&quot;    &quot;retweetCount&quot; 
 ## [13] &quot;isRetweet&quot;     &quot;retweeted&quot;     &quot;longitude&quot;     &quot;latitude&quot;</code></pre>
 <pre class="r"><code>nrow(tweets) #rows of tweets</code></pre>
-<pre><code>## [1] 371</code></pre>
+<pre><code>## [1] 379</code></pre>
 </div>
 <div id="reorganise-data" class="section level2">
 <h2><strong>Reorganise data</strong></h2>
@@ -496,7 +497,7 @@ tweets %&gt;%
 chars_per_tweet = sapply(tweets$text, nchar) 
 summary(chars_per_tweet) #report average number of characters per tweet</code></pre>
 <pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-##   11.00   37.00   78.00   80.94  127.00  148.00</code></pre>
+##   11.00   44.00   81.00   85.27  138.00  144.00</code></pre>
 <pre class="r"><code>hist(chars_per_tweet, breaks=30) #this is the default R histogram plot</code></pre>
 <p><img src="datamining_files/figure-html/Average%20char%20per%20tweet-1.png" width="672" /></p>
 </div>
@@ -508,7 +509,7 @@ word_list = strsplit(tweets$text, &quot; &quot;) #split the tweets into separate
 words_per_tweet = sapply(word_list, length) #count the number of word elements in each tweet
 summary(words_per_tweet) #report average number of words per tweet</code></pre>
 <pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-##    1.00    5.00   13.00   12.53   19.00   30.00</code></pre>
+##    2.00    6.00   12.00   12.91   19.00   29.00</code></pre>
 <pre class="r"><code># the following uses ggplot2 to do the plot, which is much prettier.
 words_per_tweet_df = as.data.frame(words_per_tweet) #ggplot requires the data to be in a data frame
 ggplot(words_per_tweet_df, aes(x=words_per_tweet, group=words_per_tweet)) + 
@@ -523,11 +524,11 @@ ggplot(words_per_tweet_df, aes(x=words_per_tweet, group=words_per_tweet)) +
 hash_per_tweet = sapply (word_list, function(x) length(grep(&quot;#&quot;,x))) #grep is a function that searches for a certain character or set of characters, in this case the #
 table(hash_per_tweet) #counts</code></pre>
 <pre><code>## hash_per_tweet
-##   0   1   2 
-## 359   1   1</code></pre>
+##   0 
+## 350</code></pre>
 <pre class="r"><code>summary(hash_per_tweet) #summary showing mean hashtags</code></pre>
 <pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-## 0.00000 0.00000 0.00000 0.00831 0.00000 2.00000</code></pre>
+##       0       0       0       0       0       0</code></pre>
 </div>
 <div id="top-hash" class="section level2">
 <h2><strong>Top Hash</strong></h2>
@@ -539,9 +540,7 @@ user_hashtags  = unlist(user_hashtags) #put tags in vector
 user_hashtags_freq &lt;- table(user_hashtags) #calculate hashtag frequencies
 user_hashtags_freq_order &lt;- sort(user_hashtags_freq, decreasing=TRUE) #order the frequencies from most to least
 head(user_hashtags_freq_order,10) #report the 10 most common hashtags</code></pre>
-<pre><code>## user_hashtags
-## #%*&amp;gt;    #17.      #2 
-##       1       1       1</code></pre>
+<pre><code>## integer(0)</code></pre>
 </div>
 <div id="word-cloud" class="section level2">
 <h2><strong>Word Cloud</strong></h2>
@@ -551,7 +550,7 @@ head(user_hashtags_freq_order,10) #report the 10 most common hashtags</code></pr
 uniq_words_per_tweet = sapply (word_list, function(x) unique(x)) 
 uniq_words = unlist(uniq_words_per_tweet) #they&#39;re in a list, so convert to a huge vector
 length(uniq_words) #shows how many total words we&#39;ve collected from this user</code></pre>
-<pre><code>## [1] 4390</code></pre>
+<pre><code>## [1] 4401</code></pre>
 <pre class="r"><code>uniq_words&lt;- uniq_words[!uniq_words %in% c(&quot;a&quot;, &quot;in&quot;, &quot;to&quot;, &quot;is&quot;, &quot;for&quot;, &quot;but&quot;, &quot;and&quot;, &quot;on&quot;, &quot;the&quot;, &quot;of&quot;)] # remove some stopwords.
 uniq_words_freq = table(uniq_words) #number of times that each word is displayed
 
@@ -596,8 +595,11 @@ extractTweetsNumber &lt;- 500 #get the 500 most recent Tweets about each
 # It uses a different Twitter API end point. Rather than getting the tweets from a certain account,
 # it gets the Tweets that contain a certain text string.
 companyOne = searchTwitter(companyNameOne, n=extractTweetsNumber, lang=&quot;en&quot;)
-companyTwo = searchTwitter(companyNameTwo, n=extractTweetsNumber, lang=&quot;en&quot;)
-companyThree = searchTwitter(companyNameThree, n=extractTweetsNumber, lang=&quot;en&quot;)
+companyTwo = searchTwitter(companyNameTwo, n=extractTweetsNumber, lang=&quot;en&quot;)</code></pre>
+<pre><code>## Warning in doRppAPICall(&quot;search/tweets&quot;, n, params = params,
+## retryOnRateLimit = retryOnRateLimit, : 500 tweets were requested but the
+## API can only return 219</code></pre>
+<pre class="r"><code>companyThree = searchTwitter(companyNameThree, n=extractTweetsNumber, lang=&quot;en&quot;)
 
 # We only want the actual tweets rather than the meta-data, and this function does that.
 companyOne =  sapply(companyOne, function(x) x$getText())
@@ -711,42 +713,66 @@ ggplot(df, aes(x=telecom, y=meanscore, fill=factor(telecom))) +
 <h2><strong>T test for sentiment score</strong></h2>
 <p>We can further confirm our visual result by running a simple pair-wise t-test.</p>
 <pre class="r"><code># t.test between the groups
-with(all.scores,(t.test(score[telecom==&quot;@ThreeUKSupport&quot;],score[telecom==&quot;@VodafoneUKhelp&quot;])))</code></pre>
-<pre><code>## 
-##  Welch Two Sample t-test
-## 
-## data:  score[telecom == &quot;@ThreeUKSupport&quot;] and score[telecom == &quot;@VodafoneUKhelp&quot;]
-## t = 2.9064, df = 986.04, p-value = 0.003738
-## alternative hypothesis: true difference in means is not equal to 0
-## 95 percent confidence interval:
-##  0.0617148 0.3182852
-## sample estimates:
-## mean of x mean of y 
-##     0.034    -0.156</code></pre>
-<pre class="r"><code>with(all.scores,(t.test(score[telecom==&quot;@ThreeUKSupport&quot;],score[telecom==&quot;@BTcare&quot;])))</code></pre>
-<pre><code>## 
-##  Welch Two Sample t-test
-## 
-## data:  score[telecom == &quot;@ThreeUKSupport&quot;] and score[telecom == &quot;@BTcare&quot;]
-## t = 3.0013, df = 996.83, p-value = 0.002755
-## alternative hypothesis: true difference in means is not equal to 0
-## 95 percent confidence interval:
-##  0.0630029 0.3009971
-## sample estimates:
-## mean of x mean of y 
-##     0.034    -0.148</code></pre>
-<pre class="r"><code>with(all.scores,(t.test(score[telecom==&quot;@VodafoneUKhelp&quot;],score[telecom==&quot;@BTcare&quot;])))     </code></pre>
-<pre><code>## 
-##  Welch Two Sample t-test
-## 
-## data:  score[telecom == &quot;@VodafoneUKhelp&quot;] and score[telecom == &quot;@BTcare&quot;]
-## t = -0.12422, df = 977.79, p-value = 0.9012
-## alternative hypothesis: true difference in means is not equal to 0
-## 95 percent confidence interval:
-##  -0.1343851  0.1183851
-## sample estimates:
-## mean of x mean of y 
-##    -0.156    -0.148</code></pre>
+pander(with(all.scores,(t.test(score[telecom==&quot;@ThreeUKSupport&quot;],score[telecom==&quot;@VodafoneUKhelp&quot;]))),style=&quot;simple&quot;)</code></pre>
+<table>
+<caption>Welch Two Sample t-test: <code>score[telecom == &quot;@ThreeUKSupport&quot;]</code> and <code>score[telecom == &quot;@VodafoneUKhelp&quot;]</code></caption>
+<thead>
+<tr class="header">
+<th align="center">Test statistic</th>
+<th align="center">df</th>
+<th align="center">P value</th>
+<th align="center">Alternative hypothesis</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center">1.132</td>
+<td align="center">435.3</td>
+<td align="center">0.2581</td>
+<td align="center">two.sided</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>pander(with(all.scores,(t.test(score[telecom==&quot;@ThreeUKSupport&quot;],score[telecom==&quot;@BTcare&quot;]))),style=&quot;simple&quot;)</code></pre>
+<table>
+<caption>Welch Two Sample t-test: <code>score[telecom == &quot;@ThreeUKSupport&quot;]</code> and <code>score[telecom == &quot;@BTcare&quot;]</code></caption>
+<thead>
+<tr class="header">
+<th align="center">Test statistic</th>
+<th align="center">df</th>
+<th align="center">P value</th>
+<th align="center">Alternative hypothesis</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center">-0.3028</td>
+<td align="center">997</td>
+<td align="center">0.7621</td>
+<td align="center">two.sided</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>pander(with(all.scores,(t.test(score[telecom==&quot;@VodafoneUKhelp&quot;],score[telecom==&quot;@BTcare&quot;]))),style=&quot;simple&quot;)</code></pre>
+<table>
+<caption>Welch Two Sample t-test: <code>score[telecom == &quot;@VodafoneUKhelp&quot;]</code> and <code>score[telecom == &quot;@BTcare&quot;]</code></caption>
+<thead>
+<tr class="header">
+<th align="center">Test statistic</th>
+<th align="center">df</th>
+<th align="center">P value</th>
+<th align="center">Alternative hypothesis</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center">-1.387</td>
+<td align="center">422.7</td>
+<td align="center">0.1662</td>
+<td align="center">two.sided</td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 
