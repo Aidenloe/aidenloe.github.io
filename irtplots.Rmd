@@ -31,6 +31,7 @@ library(grid)
 library(ggpubr)
 library(mirt)
 library(tidyr)
+library(pander)
 ```
 
 
@@ -535,7 +536,9 @@ ggplot(item.format, aes(Theta, measurement, colour = item, fill=categorials)) +
 
 The code below will let you plot an item Operating Characteristic Curve one at a time.  
 
-I would recommend each item to have its own separate plot rathern than putting it all together. 
+I would recommend each item to have its own separate plot rather than putting it all together. 
+
+Thanks to Phil Chalmers who helped with the initial coding bit. 
 
 You will need `mirt` ,`ggplot2` and `tidyr` packages to run this demo.
 
@@ -567,12 +570,19 @@ longer.format <- gather(dat,categorials,measurement,b1:b3)
 # Plot item trace line (mirt package)
 plot(model, type="trace")
 
+# Item Parameter Estimates table
+itemPar <- cfs
+pander(itemPar, plain.ascii = TRUE, caption = "Item par estimates")
+
 # plot chart
 ggplot(longer.format, aes(theta, measurement, colour=categorials)) + 
   geom_line() + 
   ggtitle(paste('OCC Plot for Item', rownames(cfs)[item])) + 
   xlab(expression(theta)) + 
   ylab(expression(P(theta))) + 
+  geom_vline(aes(xintercept = cfs[item,2]), color='red') +
+  geom_vline(aes(xintercept = cfs[item,3]), color="green") +
+  geom_vline(aes(xintercept = cfs[item,4]), color='blue') +
   geom_hline(aes(yintercept = 0.5)) + theme_bw() + 
   theme(text = element_text(size=16),
         axis.text.x=element_text(colour="black"),
