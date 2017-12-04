@@ -570,7 +570,7 @@ plot(model, type="trace")
 # plot chart
 ggplot(longer.format, aes(theta, measurement, colour=categorials)) + 
   geom_line() + 
-  ggtitle(paste('Polytomous Tracelines for Item', rownames(cfs)[item])) + 
+  ggtitle(paste('OCC Plot for Item', rownames(cfs)[item])) + 
   xlab(expression(theta)) + 
   ylab(expression(P(theta))) + 
   geom_hline(aes(yintercept = 0.5)) + theme_bw() + 
