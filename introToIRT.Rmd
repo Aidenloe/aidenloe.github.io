@@ -26,6 +26,7 @@ library(tidyr)
 library(pander)
 ```
 
+This page provides a broad overview of IRT. In time, I will create more specific content that talks about each area in greater detail. 
 
 ## **Assumptions of IRT**
 
@@ -234,3 +235,4 @@ The result is 0.2818 $\approx$ 0.3.
 
 + Wirth, R. J., & Edwards, M. C. (2007). Item factor analysis: current approaches and future directions. Psychological methods, 12(1), 58.
 
++ Yang, F. M. (2014). Item response theory for measurement validity. Shanghai archives of psychiatry, 26(3), 171.
