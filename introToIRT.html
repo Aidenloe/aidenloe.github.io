@@ -4,7 +4,7 @@
 
 <head>
 
-<meta charset="utf-8">
+<meta charset="utf-8" />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
 
@@ -371,13 +371,91 @@ div.tocify {
 
 <h1 class="title toc-ignore">Intro to IRT</h1>
 <h4 class="author"><em>Aiden Loe</em></h4>
-<h4 class="date"><em>01 December, 2017</em></h4>
+<h4 class="date"><em>11 December, 2017</em></h4>
 
 </div>
 
 
-<div id="coming-soon" class="section level2">
-<h2><strong>Coming Soon</strong></h2>
+<div id="assumptions-of-irt" class="section level2">
+<h2><strong>Assumptions of IRT</strong></h2>
+<p>In short, there are 4 assumptions of IRT.</p>
+<ol style="list-style-type: decimal">
+<li><p>Monotonicity (Shape of curve)</p></li>
+<li><p>Unidimensionality</p></li>
+<li><p>Item invariance</p></li>
+<li><p>Local independence</p></li>
+</ol>
+<div id="monotonicity" class="section level3">
+<h3><em>Monotonicity</em></h3>
+<p>Monotonicity is best displayed on a graph as if the curve look like the following below. This curve are called the item characteristics curve (ICC), which is assumed to reflect the true relationship between the trait and the responses to the item. For example, in an educational setting, what you see is that as the ability level increases, the probability of getting the item correct increases monotonicially. Within a health setting, that would mean that as the ability level incerases, the participant is more likely to endorse a higher response option for that item.</p>
+<p><img src="introToIRT_files/figure-html/mono-1.png" width="672" /></p>
+<p>There are a few ways to test this. One way is to use mokken analysis. The <code>mokken</code> package can be used to test for item monotonicity.</p>
+</div>
+<div id="unidimensionality" class="section level3">
+<h3><em>Unidimensionality</em></h3>
+<p>In the context of IRT, undimensionality is assumed. That is, only one latent trait is measured by the set of items in the test. For example, all the items in the CES-D scale is a measure of the depression symptoms and nothing else. That is what it means to be unidimensional. You can use factor analysis for example to evaluate the dimensionality of the test. You can think of it graphically like the image below. All the items are meant to be measuring only a single latent trait.</p>
+<div class="figure">
+<img src="images/unidimensional.png" />
+
+</div>
+<p>There is something called multidimensional item response theory, where a scale could measure more than a single trait. Reckase (2009) is a fantastic book on the topic of MIRT. But that is something for another day.</p>
+</div>
+<div id="item-invariance" class="section level3">
+<h3><em>Item invariance</em></h3>
+<p>The assumption of invariance is best understood as the characteristics of the item parameters and latent trait being independent of the sample characteristics within a population. That means, for an item such as “I do not cry often”, the item parameters estimated by an IRT model would not change even if the characteristics of the patient, such as age or gender, changes. Under IRT, the ability of a person under measure <em>does not change due to sample characteristics</em>. Differential Item Functioning (DIF) analysis is often used to evaluate if this assumption if violated.</p>
+<p>Here is how two types of DIF looks like:</p>
+<div style="width:500px; height=400px">
+<div class="figure">
+<img src="images/dif.png" alt="image source: https://blog.questionmark.com/item-analysis-differential-item-functioning-dif" />
+<p class="caption">image source: <a href="https://blog.questionmark.com/item-analysis-differential-item-functioning-dif" class="uri">https://blog.questionmark.com/item-analysis-differential-item-functioning-dif</a></p>
+</div>
+</div>
+<p>Ideally, you want both curves to be together rather than separated in order for the assumption of item invariance to hold.</p>
+</div>
+<div id="local-independence" class="section level3">
+<h3><em>Local independence</em></h3>
+<p>Under the assumption of local independence, the participants responses are not statistically related to each other, before and even after the latent trait is taken into consideration. There are two situations where local independence may appear: (1) where negatively worded items are included in the scale. (2) the responses of one item influences the way participant responses to another item. Some solutions to resolve these problems are:</p>
+<ul>
+<li><p>Simplify the wording of items</p></li>
+<li><p>Decrease the number of items</p></li>
+<li><p>Limit the response options.</p></li>
+</ul>
+<p><br/></p>
+</div>
+</div>
+<div id="properties-of-irt" class="section level2">
+<h2><strong>Properties of IRT</strong></h2>
+<p>Several item properties are necessary to know. Namely, the properties are that estimated based on IRT models.</p>
+<ul>
+<li><p>Discrimination(<span class="math inline">\(\alpha{_i}\)</span>)</p></li>
+<li><p>Difficulty(<span class="math inline">\(\beta{_i}\)</span>)</p></li>
+<li><p>Guessing(<span class="math inline">\(c_i\)</span>)</p></li>
+<li><p>Inattention(<span class="math inline">\(d_i\)</span>) parameter.</p></li>
+</ul>
+<p>where, i = items.</p>
+<div id="discrimination-parameter" class="section level3">
+<h3><em>Discrimination parameter</em></h3>
+<p>The discrimiation parameter is aka the <span class="math inline">\(\alpha{_i}\)</span> parameter. It is used to determine how well the items discriminate against different levels of the latent trait. In this case, ranging from -4 to 4. The <span class="math inline">\(\alpha{_i}\)</span> parameter other name is the slope parameter. Steeper slopes at particular level of the traits indicate that it is more discriminative than levels of the traits with gentler slopes.</p>
+<p>So if you just look at the green item, it is most discriminative between -2 to 0, and it is least discriminative between -4 to -2 and 0 to 4. The most discriminative point is always at the centre of the curve.</p>
+<p>In theory, the values for the <span class="math inline">\(\alpha{_i}\)</span> ranges from <span class="math inline">\(-\infty\)</span> to <span class="math inline">\(+\infty\)</span>. Negative values of the <span class="math inline">\(\alpha{_i}\)</span> are possible but considered problematic as it would mean that items with increasing levels of ability are less likely to endore more severe response options. This could happen when the item poorly discriminates between levels of the ability (illogical relationship) or there was some sort of coding error.</p>
+<p><img src="introToIRT_files/figure-html/alpha-1.png" width="576" /></p>
+<p>From the plot above, we can see that some items are more discriminating than others. For example, it is clear that the green item is the most discriminating item because of the steepest slope it has compared to the other items. Arguably, either the red item or the purple item would have the gentlest slope. This has to be confirmed emprically of course.</p>
+</div>
+<div id="difficulty-parameter" class="section level3">
+<h3><em>Difficulty parameter</em></h3>
+</div>
+<div id="guessing-parameter" class="section level3">
+<h3><em>Guessing parameter</em></h3>
+</div>
+<div id="inattention-parameter" class="section level3">
+<h3><em>Inattention parameter</em></h3>
+</div>
+<div id="scaling-factor" class="section level3">
+<h3><em>Scaling factor</em></h3>
+</div>
+</div>
+<div id="irt-models" class="section level2">
+<h2><strong>IRT MODELS</strong></h2>
 </div>
 <div id="alpha-par-to-std-loading" class="section level2">
 <h2><strong><span class="math inline">\(\alpha{}\)</span> par to std loading</strong></h2>
@@ -400,7 +478,8 @@ div.tocify {
 <div id="citations" class="section level4">
 <h4>Citations</h4>
 <ul>
-<li>Wirth, R. J., &amp; Edwards, M. C. (2007). Item factor analysis: current approaches and future directions. Psychological methods, 12(1), 58.</li>
+<li><p>Reckase, M. (2009). Multidimensional item response theory (Vol. 150). New York, NY: Springer.</p></li>
+<li><p>Wirth, R. J., &amp; Edwards, M. C. (2007). Item factor analysis: current approaches and future directions. Psychological methods, 12(1), 58.</p></li>
 </ul>
 </div>
 </div>
@@ -430,7 +509,7 @@ $(document).ready(function () {
   (function () {
     var script = document.createElement("script");
     script.type = "text/javascript";
-    script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
     document.getElementsByTagName("head")[0].appendChild(script);
   })();
 </script>

@@ -21,7 +21,7 @@ Here is a collection of plots that you can use either for publication/presentati
 
 
 ## **Install and load package**
-```{r packages, warnings=FALSE, message=FALSE}
+```{r packages, warning=FALSE, message=FALSE}
 library(eRm)
 library(reshape)
 library(dplyr)

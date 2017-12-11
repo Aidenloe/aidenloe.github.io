@@ -14,7 +14,196 @@ output:
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## **Coming Soon**
+```{r packages, warning=FALSE, message=FALSE, results='hide', echo=FALSE}
+library(eRm)
+library(reshape)
+library(dplyr)
+library(ggplot2)
+library(gtable)
+library(grid)
+library(mirt)
+library(tidyr)
+library(pander)
+```
+
+
+## **Assumptions of IRT**
+
+In short, there are 4 assumptions of IRT. 
+
+1. Monotonicity (Shape of curve)
+
+2. Unidimensionality
+    
+3. Item invariance
+    
+4. Local independence
+    
+### *Monotonicity*
+
+Monotonicity is best displayed on a graph as if the curve look like the following below. This curve are called the item characteristics curve (ICC), which is assumed to reflect the true relationship between the trait and the responses to the item. For example, in an educational setting, what you see is that as the ability level increases, the probability of getting the item correct increases monotonicially.  Within a health setting, that would mean that as the ability level incerases, the participant is more likely to endorse a higher response option for that item.  
+
+```{r mono, echo=FALSE}
+library(mirt)
+dat <- expand.table(LSAT7)
+mod <- mirt(dat, 1,itemtype="Rasch", verbose=FALSE)
+
+# Extract all items 
+# Compute the probability trace lines
+# Put into a list
+traceline <- NULL
+for(i in 1:length(dat)){
+extr.2 <- extract.item(mod, i)
+Theta <- matrix(seq(-4,4, by = .1))
+traceline[[i]] <- probtrace(extr.2, Theta)
+}
+
+# rename list
+names(traceline) <- paste('item',1:length(traceline))
+
+# rbind traceline
+traceline.df <- do.call(rbind, traceline)
+
+# create item names length based on length of theta provided
+item <- rep(names(traceline),each=length(Theta))
+
+# put them all together into a dataframe
+l.format <- cbind.data.frame(Theta, item, traceline.df)
+
+# Selecting item
+items <- c("item 1", "item 2", "item 3", "item 4")
+l.format <-l.format[l.format$item == items[3],]
+
+
+# plot chart
+ggplot(l.format, aes(Theta, P.1, colour = item)) + 
+  geom_line() + 
+  ggtitle('Probability Tracelines') + 
+  xlab(expression(theta)) + 
+  ylab(expression(P(theta))) + 
+  theme_bw() + 
+  theme(text = element_text(size=16),
+        axis.text.x=element_text(colour="black"),
+        axis.text.y=element_text(colour="black"),
+        legend.title=element_blank())
+```
+
+There are a few ways to test this. One way is to use mokken analysis. The `mokken` package can be used to test for item monotonicity. 
+
+### *Unidimensionality*
+
+In the context of IRT, undimensionality is assumed. That is, only one latent trait is measured by the set of items in the test. For example, all the items in the CES-D scale is a measure of the depression symptoms and nothing else. That is what it means to be unidimensional. You can use factor analysis for example to evaluate the dimensionality of the test. You can think of it graphically like the image below. All the items are meant to be measuring only a single latent trait. 
+
+![](images/unidimensional.png)
+
+There is something called multidimensional item response theory, where a scale could measure more than a single trait. Reckase (2009) is a fantastic book on the topic of MIRT. But that is something for another day.
+
+### *Item invariance*
+
+The assumption of invariance is best understood as the characteristics of the item parameters and latent trait being independent of the sample characteristics within a population. That means, for an item such as "I do not cry often", the item parameters estimated by an IRT model would not change even if the characteristics of the patient, such as age or gender, changes. Under IRT, the ability of a person under measure *does not change due to sample characteristics*. Differential Item Functioning (DIF) analysis is often used to evaluate if this assumption if violated.  
+
+Here is how two types of DIF looks like: 
+
+<div style="width:500px; height=400px">
+![image source: https://blog.questionmark.com/item-analysis-differential-item-functioning-dif](images/dif.png)
+</div>
+
+Ideally, you want both curves to be together rather than separated in order for the assumption of item invariance to hold. 
+
+### *Local independence*
+
+Under the assumption of local independence, the participants responses are not statistically related to each other, before and even after the latent trait is taken into consideration. There are two situations where local independence may appear: (1) where negatively worded items are included in the scale. (2) the responses of one item influences the way participant responses to another item. Some solutions to resolve these problems are:
+
++ Simplify the wording of items
+
++ Decrease the number of items
+
++ Limit the response options. 
+
+<br/>
+
+## **Properties of IRT**
+
+Several item properties are necessary to know. Namely, the properties are that estimated based on IRT models. 
+
++ Discrimination($\alpha{_i}$) 
+
++ Difficulty($\beta{_i}$)
+
++ Guessing($c_i$)
+
++ Inattention($d_i$) parameter.  
+
+where, i = items. 
+
+### *Discrimination parameter*
+
+The discrimiation parameter is aka the  $\alpha{_i}$ parameter. It is used to determine how well the items discriminate against different levels of the latent trait. In this case, ranging from -4 to 4. The $\alpha{_i}$ parameter other name is the slope parameter. Steeper slopes at particular level of the traits indicate that it is more discriminative than levels of the traits with gentler slopes. 
+
+So if you just look at the green item, it is most discriminative between -2 to 0, and it is least discriminative between -4 to -2 and 0 to 4. The most discriminative point is always at the centre of the curve.
+
+In theory, the values for the $\alpha{_i}$ ranges from $-\infty$ to $+\infty$. Negative values of the $\alpha{_i}$ are possible but considered problematic as it would mean that items with increasing levels of ability are less likely to endore more severe response options. This could happen when the item poorly discriminates between levels of the ability (illogical relationship) or there was some sort of coding error. 
+
+```{r alpha, echo=FALSE, fig.width=6, fig.height=6}
+library(mirt)
+dat <- expand.table(LSAT7)
+mod <- mirt(dat, 1, verbose=FALSE)
+
+# Extract all items 
+# Compute the probability trace lines
+# Put into a list
+traceline <- NULL
+for(i in 1:length(dat)){
+extr.2 <- extract.item(mod, i)
+Theta <- matrix(seq(-4,4, by = .1))
+traceline[[i]] <- probtrace(extr.2, Theta)
+}
+
+# rename list
+names(traceline) <- paste('item',1:length(traceline))
+
+# rbind traceline
+traceline.df <- do.call(rbind, traceline)
+
+# create item names length based on length of theta provided
+item <- rep(names(traceline),each=length(Theta))
+
+# put them all together into a dataframe
+l.format <- cbind.data.frame(Theta, item, traceline.df)
+
+l.format$item<-as.factor(l.format$item)
+aux<-l.format %>%
+  group_by(item) %>%
+  slice(which.min(abs(P.1-0.5))) # We are only using the P.1 column (dichotomous)
+
+aux<-aux[order(aux$Theta),]
+ord<-as.integer(aux$item)
+l.format$item = factor(l.format$item,levels(l.format$item)[ord])
+
+# plot chart
+ggplot(l.format, aes(Theta, P.1, colour = item)) + 
+  geom_line() + 
+  ggtitle('Probability Tracelines') + 
+  xlab(expression(theta)) + 
+  ylab(expression(P(theta))) + 
+  geom_hline(aes(yintercept = 0.5)) + theme_bw() + 
+  theme(text = element_text(size=16),
+        axis.text.x=element_text(colour="black"),
+        axis.text.y=element_text(colour="black"),
+        legend.position="none")
+```
+
+From the plot above, we can see that some items are more discriminating than others. For example, it is clear that the green item is the most discriminating item because of the steepest slope it has compared to the other items. Arguably, either the red item or the purple item would have the gentlest slope. This has to be confirmed emprically of course. 
+
+### *Difficulty parameter*
+
+### *Guessing parameter*
+
+### *Inattention parameter*
+
+### *Scaling factor*
+
+## **IRT MODELS** 
 
 ## **$\alpha{}$ par to std loading**
 
@@ -41,4 +230,7 @@ The result is 0.2818 $\approx$ 0.3.
 
 #### Citations
 
++ Reckase, M. (2009). Multidimensional item response theory (Vol. 150). New York, NY: Springer.
+
 + Wirth, R. J., & Edwards, M. C. (2007). Item factor analysis: current approaches and future directions. Psychological methods, 12(1), 58.
+
