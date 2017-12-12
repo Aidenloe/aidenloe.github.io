@@ -446,6 +446,8 @@ ggplot(l.format, aes(Theta, P.1)) +
   xlab(expression(theta)) + 
   ylab(expression(P(theta))) + 
   ylim(c(0,1))+
+  geom_hline(aes(yintercept = 0.2))+
+  annotate(geom="text", label=0.2, x=-4, y=0.2, vjust=-1, size=4) +
   theme_bw() + 
   theme(text = element_text(size=16),
         axis.text.x=element_text(colour="black"),
@@ -458,7 +460,7 @@ ggplot(l.format, aes(Theta, P.1)) +
 
 ### *Inattention parameter ($d_i$)*
 
-The inattention parameter is included when we want to account for situations where someone may have answered incorrectly unintentionally. This could be reasons such as fatigue, accidently clicking on the wrong response option etc. 
+The inattention parameter is included when we want to account for situations where someone may have answered incorrectly unintentionally. This could be reasons such as fatigue, accidently clicking on the wrong response option etc. We set an arbitrary upper value of 0.8.
 
 Again, not so widely use in psychological assessment. 
 
@@ -511,7 +513,8 @@ ggplot(l.format, aes(Theta, P.1)) +
   xlab(expression(theta)) + 
   ylab(expression(P(theta))) + 
   ylim(c(0,1))+
-  theme_bw() + 
+  geom_hline(aes(yintercept = 0.8)) + 
+  annotate(geom="text", label=0.8, x=-4, y=0.8, vjust=-1, size=4)  +theme_bw() + 
   theme(text = element_text(size=16),
         axis.text.x=element_text(colour="black"),
         axis.text.y=element_text(colour="black"),
@@ -521,7 +524,7 @@ ggplot(l.format, aes(Theta, P.1)) +
 
 ### *Scaling factor: D constant*
 
-The scaling factor is a constant with the value of 1.7 that is used to bring the estimates of the logistic function and the mornal ogive function in an IRT model to be similar. The logistic function was introduced by Brinbaum t make it easier to calculate item parameters and the probability of theta without too much mathematical complications. The normal ogive function on the other hand, is based on the cumulative normal distribution. Nowadays, the logistic function based IRT model is more widely used than the normal ogive function based IRT model. 
+The scaling factor is a constant with the value of 1.7 that is used to bring the estimates of the logistic function and the normnal ogive function in an IRT model to be similar. The logistic function was introduced by Brinbaum to make it easier to calculate item parameters and the probability of theta without too much mathematical complications. The normal ogive function on the other hand, is based on the cumulative normal distribution. Nowadays, the logistic models are more widely used than the normal ogive models. 
 
 <br/>
 
