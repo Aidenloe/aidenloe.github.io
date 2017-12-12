@@ -4,7 +4,7 @@
 
 <head>
 
-<meta charset="utf-8" />
+<meta charset="utf-8">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
 
@@ -376,7 +376,7 @@ div.tocify {
 </div>
 
 
-<p>This page provides a broad overview of IRT. In time, I will create more specific content that talks about each area in greater detail.</p>
+<p>This page provides a broad overview of IRT. In time, I will create more specific content that talks about each area in greater detail. Please email me if you notice any problems. I can be reached at <a href="mailto:bsl28@cam.ac.uk">bsl28@cam.ac.uk</a></p>
 <p><br/></p>
 <div id="assumptions-of-irt" class="section level2">
 <h2><strong>Assumptions of IRT</strong></h2>
@@ -434,14 +434,14 @@ div.tocify {
 <p>Several item properties are necessary to know. Namely, the properties are that estimated based on IRT models.</p>
 <ul>
 <li><p>Discrimination(<span class="math inline">\(\alpha{_i}\)</span>)</p></li>
-<li><p>Difficulty(<span class="math inline">\(\beta{_i}\)</span>)</p></li>
+<li><p>Difficulty(<span class="math inline">\(b_i\)</span>)</p></li>
 <li><p>Guessing(<span class="math inline">\(c_i\)</span>)</p></li>
 <li><p>Inattention(<span class="math inline">\(d_i\)</span>) parameter.</p></li>
 </ul>
 <p>where, i = items.</p>
 <p><br/></p>
 <div id="discrimination-parameter-alpha_i" class="section level3">
-<h3><em>Discrimination parameter (<span class="math inline">\(\alpha{_i})\)</span></em></h3>
+<h3><em>Discrimination parameter (<span class="math inline">\(\alpha{_i}\)</span>)</em></h3>
 <p>The discrimiation parameter is aka the <span class="math inline">\(\alpha{_i}\)</span> parameter. It is used to determine how well the items discriminate against different levels of the latent trait. In this case, ranging from -4 to 4. The <span class="math inline">\(\alpha{_i}\)</span> parameter other name is the slope parameter. Steeper slopes at particular level of the traits indicate that it is more discriminative than levels of the traits with gentler slopes.</p>
 <p>So if you just look at the green item, it is most discriminative between -2 to 0, and it is least discriminative between -4 to -2 and 0 to 4. The most discriminative point is always at the centre of the curve.</p>
 <p>In theory, the values for the <span class="math inline">\(\alpha{_i}\)</span> ranges from <span class="math inline">\(-\infty\)</span> to <span class="math inline">\(+\infty\)</span>. Negative values of the <span class="math inline">\(\alpha{_i}\)</span> are possible but considered problematic as it would mean that items with increasing levels of ability are less likely to endore more severe response options. This could happen when the item poorly discriminates between levels of the ability (illogical relationship) or there was some sort of coding error.</p>
@@ -449,23 +449,38 @@ div.tocify {
 <p>From the plot above, we can see that some items are more discriminating than others. For example, it is clear that the green item is the most discriminating item because of the steepest slope it has compared to the other items. Arguably, either the red item or the purple item would have the gentlest slope. This has to be confirmed emprically of course.</p>
 <p><br/></p>
 </div>
-<div id="difficulty-parameter-beta_i" class="section level3">
-<h3><em>Difficulty parameter (<span class="math inline">\(\beta{_i}\)</span>)</em></h3>
+<div id="difficulty-parameter-b_i" class="section level3">
+<h3><em>Difficulty parameter (<span class="math inline">\(b_i\)</span>)</em></h3>
+<div id="dichotomous-response-options" class="section level4">
+<h4><em>Dichotomous response options</em></h4>
 <p>The difficulty parameter is used to describe how difficulty an item is to achieve a 0.5 probability of correct response at a given ability. Therefore, if the 50% chance of correctly answering an item is at the right side of the plot, then it means that a higher level of ability is needed to achieve that goal. Here you can see that item 5 is easier than item 4 because it requires a lower level of theta ability to get a 50% chance of answering an item correctly.</p>
 <p><img src="introToIRT_files/figure-html/diffOne-1.png" width="672" /></p>
-<p>In the health setting, the location parameter is used instead of difficulty. Because there are far more response options in a health questionnaire (e.g. 4 response options), the categorical response curves for an item are used instead. That is, a patient with a higher level of ability, say depression, would be more likely to have a 50% probability of endorsing the most severse response options than a patient with a lower level of ability. The categorical response curve shows the probability of each response against the theta value that mesaures the location of the latent trait.</p>
+</div>
+<div id="polytomous-response-options" class="section level4">
+<h4><em>Polytomous response options</em></h4>
+<p>In the health setting, the location parameter is used instead of difficulty. Because there are far more response options in a health questionnaire (e.g. 4 response options), the categorical response curves for an item are used instead. That is, a patient with a higher level of ability, say depression, would be more likely to have a 50% probability of endorsing the most severse response options than a patient with a lower level of ability.</p>
+<p>The <em>categorical response curve</em> shows the probability of each response against the theta value that measures the location of the latent trait. In other words, they represent the probability that an individual responds in a particularly category given a trait level. Just a note that, at any fixed value of ability, the sum of the response probabilities is equal to 1.0.</p>
 <p>The points where the curves cut each other represents the transition moving from one category to the next. So patients with a theta value of less than -3 will most likely select category 1. Those between greater than -3 and -1.8 will select category 2, so on and so forth. For polytomous items (more than 2 response options), it is very complex to put them all the item curves in a single plot. So each plot represents an item.</p>
-<p><img src="introToIRT_files/figure-html/crc-1.png" width="672" /><img src="introToIRT_files/figure-html/crc-2.png" width="672" /></p>
 <p><br/></p>
+<p><img src="introToIRT_files/figure-html/crc-1.png" width="672" /></p>
+<p>The point of between category threshold parameters represent the point (<span class="math inline">\(b_{ij}\)</span>) along the latent trait scale at which the participants have a 0.5 probability of responding in or above a category threshold. The value for that point is known as the difficulty parameter between the two categories. So if you have 4 response option, you have 3 categories (<em>k - 1, where k is number of categories</em>).</p>
+<p><br/></p>
+<p><img src="introToIRT_files/figure-html/poly%20diff-1.png" width="672" /></p>
+<p><br/></p>
+</div>
 </div>
 <div id="guessing-parameter-c_i" class="section level3">
 <h3><em>Guessing parameter (<span class="math inline">\(c_i\)</span>)</em></h3>
-<p>The guessing parameter is more widely used in the educational setting where guessing the correct answer for an item may be attempted by the test taker. So the IRT model has to account for the guessing or the pseudo-chance-level paramter (<span class="math inline">\(c_i\)</span>).</p>
-<p>This parameter is not so widely used in the health area or personality assessment since there are usually no right or wrong answers. <br/></p>
+<p>The guessing parameter is more widely used in the educational setting where guessing the correct answer for an item may be attempted by the test taker. So the IRT model has to account for the guessing or the pseudo-chance-level paramter (<span class="math inline">\(c_i\)</span>). The plot below shows that we set a global guessing parameter to be 0.2 for all items. For example, the guessing parameter is set to 0.2 because there are 5 response options, so a 0.2 chance of randomly guessing the item correctly. It is possible to get the IRT model to get the guessing parameter as well.</p>
+<p>This parameter is not so widely used in the health area or personality assessment since there are usually no right or wrong answers.</p>
+<p><img src="introToIRT_files/figure-html/guessing-1.png" width="672" /></p>
+<p><br/></p>
 </div>
 <div id="inattention-parameter-d_i" class="section level3">
 <h3><em>Inattention parameter (<span class="math inline">\(d_i\)</span>)</em></h3>
-<p><br/></p>
+<p>The inattention parameter is included when we want to account for situations where someone may have answered incorrectly unintentionally. This could be reasons such as fatigue, accidently clicking on the wrong response option etc.</p>
+<p>Again, not so widely use in psychological assessment.</p>
+<p><img src="introToIRT_files/figure-html/inattention-1.png" width="672" /> <br/></p>
 </div>
 <div id="scaling-factor-d-constant" class="section level3">
 <h3><em>Scaling factor: D constant</em></h3>
@@ -474,11 +489,42 @@ div.tocify {
 </div>
 </div>
 <div id="irt-models" class="section level2">
-<h2><strong>IRT MODELS</strong></h2>
+<h2><strong>IRT Models</strong></h2>
+<p>There are many different IRT models. I will just list the popular ones here for now. I also included the LLTM(s) because I have used them previously. IRT models that include reaction time is not within the scope for now.</p>
+<div id="dichotomous-model" class="section level4">
+<h4><em>Dichotomous Model</em></h4>
+<ul>
+<li><p>Rasch model</p></li>
+<li><p>1 parameter logistic model</p></li>
+<li><p>2 parameter logistic model</p></li>
+<li><p>3 parameter logistic model</p></li>
+<li><p>4 parameter logistic model</p></li>
+<li><p>Unfolding model (Ideal point models)</p></li>
+</ul>
+</div>
+<div id="polytomous-model" class="section level4">
+<h4><em>Polytomous Model</em></h4>
+<ul>
+<li><p>Polytmous Rasch Model</p></li>
+<li><p>Partial Credit Model</p></li>
+<li><p>Generalised Partial Credit Model</p></li>
+<li><p>Graded Response Model</p></li>
+</ul>
+</div>
+<div id="specialised-model" class="section level4">
+<h4><em>Specialised Model</em></h4>
+<ul>
+<li><p>Linear Logistic Test Model (LLTM)</p></li>
+<li><p>LLTM + error</p></li>
+<li><p>Random weights LLTM</p></li>
+</ul>
 <p><br/></p>
 </div>
-<div id="alpha-par-to-std-loading" class="section level2">
-<h2><strong><span class="math inline">\(\alpha{}\)</span> par to std loading</strong></h2>
+</div>
+<div id="general-information" class="section level2">
+<h2><strong>General Information</strong></h2>
+<div id="alpha-par-to-std-loading" class="section level3">
+<h3><em><span class="math inline">\(\alpha{}\)</span> par to std loading</em></h3>
 <p>To convert a discrimination parameter into a value that is similar to a standardised factor loading.</p>
 <p>The formula is :</p>
 <br/>
@@ -499,10 +545,12 @@ div.tocify {
 <div id="citations" class="section level4">
 <h4>Citations</h4>
 <ul>
+<li><p>Chalmers, R. P. (2012). mirt: A multidimensional item response theory package for the R environment. Journal of Statistical Software, 48(6), 1-29.</p></li>
 <li><p>Reckase, M. (2009). Multidimensional item response theory (Vol. 150). New York, NY: Springer.</p></li>
 <li><p>Wirth, R. J., &amp; Edwards, M. C. (2007). Item factor analysis: current approaches and future directions. Psychological methods, 12(1), 58.</p></li>
 <li><p>Yang, F. M. (2014). Item response theory for measurement validity. Shanghai archives of psychiatry, 26(3), 171.</p></li>
 </ul>
+</div>
 </div>
 </div>
 
@@ -531,7 +579,7 @@ $(document).ready(function () {
   (function () {
     var script = document.createElement("script");
     script.type = "text/javascript";
-    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
     document.getElementsByTagName("head")[0].appendChild(script);
   })();
 </script>

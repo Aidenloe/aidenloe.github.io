@@ -27,7 +27,7 @@ library(tidyr)
 library(pander)
 ```
 
-This page provides a broad overview of IRT. In time, I will create more specific content that talks about each area in greater detail. 
+This page provides a broad overview of IRT. In time, I will create more specific content that talks about each area in greater detail. Please email me if you notice any problems. I can be reached at bsl28@cam.ac.uk
 
 <br/>
 
@@ -84,7 +84,7 @@ l.format <-l.format[l.format$item == items[3],]
 # plot chart
 ggplot(l.format, aes(Theta, P.1, colour = item)) + 
   geom_line() + 
-  ggtitle('Probability Tracelines') + 
+  ggtitle('ICC') + 
   xlab(expression(theta)) + 
   ylab(expression(P(theta))) + 
   theme_bw() + 
@@ -140,7 +140,7 @@ Several item properties are necessary to know. Namely, the properties are that e
 
 + Discrimination($\alpha{_i}$) 
 
-+ Difficulty($\beta{_i}$)
++ Difficulty($b_i$)
 
 + Guessing($c_i$)
 
@@ -150,7 +150,7 @@ where, i = items.
 
 <br/>
 
-### *Discrimination parameter ($\alpha{_i})$*
+### *Discrimination parameter ($\alpha{_i}$)*
 
 The discrimiation parameter is aka the  $\alpha{_i}$ parameter. It is used to determine how well the items discriminate against different levels of the latent trait. In this case, ranging from -4 to 4. The $\alpha{_i}$ parameter other name is the slope parameter. Steeper slopes at particular level of the traits indicate that it is more discriminative than levels of the traits with gentler slopes. 
 
@@ -197,7 +197,7 @@ l.format$item = factor(l.format$item,levels(l.format$item)[ord])
 # plot chart
 ggplot(l.format, aes(Theta, P.1, colour = item)) + 
   geom_line() + 
-  ggtitle('Probability Tracelines') + 
+  ggtitle('ICC') + 
   xlab(expression(theta)) + 
   ylab(expression(P(theta))) + 
    theme_bw() + 
@@ -211,7 +211,9 @@ From the plot above, we can see that some items are more discriminating than oth
 
 <br/>
 
-### *Difficulty parameter ($\beta{_i}$)*
+### *Difficulty parameter ($b_i$)*
+
+#### *Dichotomous response options*
 
 The difficulty parameter is used to describe how difficulty an item is to achieve a 0.5 probability of correct response at a given ability. Therefore, if the 50% chance of correctly answering an item is at the right side of the plot, then it means that a higher level of ability is needed to achieve that goal. Here you can see that item 5 is easier than item 4 because it requires a lower level of theta ability to get a 50% chance of answering an item correctly. 
 
@@ -255,7 +257,7 @@ l.format$item = factor(l.format$item,levels(l.format$item)[ord])
 # plot chart
 ggplot(l.format, aes(Theta, P.1, colour = item)) + 
   geom_line() + 
-  ggtitle('Probability Tracelines') + 
+  ggtitle('ICC') + 
   xlab(expression(theta)) + 
   ylab(expression(P(theta))) + 
   geom_hline(aes(yintercept = 0.5)) + theme_bw() + 
@@ -266,10 +268,15 @@ ggplot(l.format, aes(Theta, P.1, colour = item)) +
 
 ```
 
-In the health setting, the location parameter is used instead of difficulty. Because there are far more response options in a health questionnaire (e.g. 4 response options), the categorical response curves for an item are used instead. That is, a patient with a higher level of ability, say depression, would be more likely to have a 50% probability of endorsing the most severse response options than a patient with a lower level of ability. The categorical response curve shows the probability of each response against the theta value that mesaures the location of the latent trait.
+#### *Polytomous response options*
 
-The points where the curves cut each other represents the transition moving from one category to the next.
-So patients with a theta value of less than -3 will most likely select category 1. Those between greater than -3 and -1.8 will select category 2, so on and so forth. For polytomous items (more than 2 response options), it is very complex to put them all the item curves in a single plot. So each plot represents an item. 
+In the health setting, the location parameter is used instead of difficulty. Because there are far more response options in a health questionnaire (e.g. 4 response options), the categorical response curves for an item are used instead. That is, a patient with a higher level of ability, say depression, would be more likely to have a 50% probability of endorsing the most severse response options than a patient with a lower level of ability.
+
+The *categorical response curve* shows the probability of each response against the theta value that measures the location of the latent trait. In other words, they represent the probability that an individual responds in a particularly category given a trait level. Just a note that, at any fixed value of ability, the sum of the response probabilities is equal to 1.0. 
+
+The points where the curves cut each other represents the transition moving from one category to the next. So patients with a theta value of less than -3 will most likely select category 1. Those between greater than -3 and -1.8 will select category 2, so on and so forth. For polytomous items (more than 2 response options), it is very complex to put them all the item curves in a single plot. So each plot represents an item. 
+
+<br/>
 
 ```{r crc, echo=FALSE}
 data(Science)
@@ -368,31 +375,148 @@ plot2 <- ggplot(longer.format, aes(theta, measurement, colour=categorials)) +
   
 
 plot1
+
+
+
+```
+
+The point of between category threshold parameters represent the point ($b_{ij}$) along the latent trait scale at which the participants have a 0.5 probability of responding in or above a category threshold. The value for that point is known as the difficulty parameter between the two categories. So if you have 4 response option, you have 3 categories (*k - 1, where k is number of categories*). 
+
+<br/>
+
+```{r poly diff, echo=FALSE}
 plot2
-
-#combine plots together
-# plot3 <- ggarrange(plot1, plot2, 
-#           ncol = 2, nrow = 1, widths=4)
-# 
-# annotate_figure(plot3,
-#                 top = text_grob("abc",
-#                                 color = "red", face = "bold",
-#                                 size = 3))
-
-
 ```
 
 <br/>
 
 ### *Guessing parameter ($c_i$)*
 
-The guessing parameter is more widely used in the educational setting where guessing the correct answer for an item may be attempted by the test taker. So the IRT model has to account for the guessing or the pseudo-chance-level paramter ($c_i$). 
+The guessing parameter is more widely used in the educational setting where guessing the correct answer for an item may be attempted by the test taker. So the IRT model has to account for the guessing or the pseudo-chance-level paramter ($c_i$). The plot below shows that we set a global guessing parameter to be 0.2 for all items. For example, the guessing parameter is set to 0.2 because there are 5 response options, so a 0.2 chance of randomly guessing the item correctly. It is possible to get the IRT model to get the guessing parameter as well. 
 
 This parameter is not so widely used in the health area or personality assessment since there are usually no right or wrong answers. 
+
+
+```{r guessing, echo=FALSE}
+data(SAT12)
+
+# Anything that is 1 becomes 1 in the first column
+# Anything that is 4 becomes 1 in the second column. etc
+data <- key2binary(SAT12,
+                   key = c(1,4,5,2,3,1,
+                           2,1,3,1,2,4,
+                           2,1,5,3,4,4,
+                           1,4,3,3,4,1,
+                           3,5,1,3,1,5,
+                           4,5))
+
+#with fixed guessing parameters
+mod <- mirt(data, 1, guess = .2, verbose=FALSE)
+data(SAT12)
+
+# Extract all items 
+# Compute the probability trace lines
+# Put into a list
+traceline <- NULL
+for(i in 1:length(dat)){
+  extr.2 <- extract.item(mod, i)
+  Theta <- matrix(seq(-4,4, by = .1))
+  traceline[[i]] <- probtrace(extr.2, Theta)
+}
+
+# rename list
+names(traceline) <- paste('item',1:length(traceline))
+
+# rbind traceline
+traceline.df <- do.call(rbind, traceline)
+
+# create item names length based on length of theta provided
+item <- rep(names(traceline),each=length(Theta))
+
+# put them all together into a dataframe
+l.format <- cbind.data.frame(Theta, item, traceline.df)
+
+items <- c("item 1", "item 2", "item 3", "item 4")
+l.format <-l.format[l.format$item == items[2],]
+
+# plot chart
+ggplot(l.format, aes(Theta, P.1)) + 
+  geom_line(colour="red") + 
+  ggtitle('ICC') + 
+  xlab(expression(theta)) + 
+  ylab(expression(P(theta))) + 
+  ylim(c(0,1))+
+  theme_bw() + 
+  theme(text = element_text(size=16),
+        axis.text.x=element_text(colour="black"),
+        axis.text.y=element_text(colour="black"),
+        legend.title=element_blank())
+```
+
+
 <br/>
 
 ### *Inattention parameter ($d_i$)*
 
+The inattention parameter is included when we want to account for situations where someone may have answered incorrectly unintentionally. This could be reasons such as fatigue, accidently clicking on the wrong response option etc. 
+
+Again, not so widely use in psychological assessment. 
+
+```{r inattention, echo=FALSE, warning=FALSE, message=FALSE}
+data(SAT12)
+
+# Anything that is 1 becomes 1 in the first column
+# Anything that is 4 becomes 1 in the second column. etc
+data <- key2binary(SAT12,
+                   key = c(1,4,5,2,3,1,
+                           2,1,3,1,2,4,
+                           2,1,5,3,4,4,
+                           1,4,3,3,4,1,
+                           3,5,1,3,1,5,
+                           4,5))
+
+#with fixed guessing parameters
+mod <- mirt(data, 1, upper=.8, verbose=FALSE)
+data(SAT12)
+
+# Extract all items 
+# Compute the probability trace lines
+# Put into a list
+traceline <- NULL
+for(i in 1:length(dat)){
+  extr.2 <- extract.item(mod, i)
+  Theta <- matrix(seq(-4,4, by = .1))
+  traceline[[i]] <- probtrace(extr.2, Theta)
+}
+
+# rename list
+names(traceline) <- paste('item',1:length(traceline))
+
+# rbind traceline
+traceline.df <- do.call(rbind, traceline)
+
+# create item names length based on length of theta provided
+item <- rep(names(traceline),each=length(Theta))
+
+# put them all together into a dataframe
+l.format <- cbind.data.frame(Theta, item, traceline.df)
+
+items <- c("item 1", "item 2", "item 3", "item 4")
+l.format <-l.format[l.format$item == items[2],]
+
+# plot chart
+ggplot(l.format, aes(Theta, P.1)) + 
+  geom_line(colour="blue") + 
+  ggtitle('ICC') + 
+  xlab(expression(theta)) + 
+  ylab(expression(P(theta))) + 
+  ylim(c(0,1))+
+  theme_bw() + 
+  theme(text = element_text(size=16),
+        axis.text.x=element_text(colour="black"),
+        axis.text.y=element_text(colour="black"),
+        legend.title=element_blank())
+```
 <br/>
 
 ### *Scaling factor: D constant*
@@ -401,11 +525,47 @@ The scaling factor is a constant with the value of 1.7 that is used to bring the
 
 <br/>
 
-## **IRT MODELS** 
+## **IRT Models** 
+
+There are many different IRT models. I will just list the popular ones here for now. I also included the LLTM(s) because I have used them previously. IRT models that include reaction time is not within the scope for now. 
+
+#### *Dichotomous Model*
+
++ Rasch model
+
++ 1 parameter logistic model
+
++ 2 parameter logistic model 
+
++ 3 parameter logistic model 
+
++ 4 parameter logistic model 
+
++ Unfolding model (Ideal point models)
+
+#### *Polytomous Model*
+
++ Polytmous Rasch Model
+
++ Partial Credit Model 
+
++ Generalised Partial Credit Model 
+
++ Graded Response Model 
+
+#### *Specialised Model*
+
++ Linear Logistic Test Model (LLTM)
+
++ LLTM + error
+
++ Random weights LLTM
 
 <br/>
 
-## **$\alpha{}$ par to std loading**
+## **General Information**
+
+### *$\alpha{}$ par to std loading*
 
 To convert a discrimination parameter into a value that is similar to a standardised factor loading.
 
@@ -428,6 +588,8 @@ The result is 0.2818 $\approx$ 0.3.
 <br/>
 
 #### Citations
+
++ Chalmers, R. P. (2012). mirt: A multidimensional item response theory package for the R environment. Journal of Statistical Software, 48(6), 1-29.
 
 + Reckase, M. (2009). Multidimensional item response theory (Vol. 150). New York, NY: Springer.
 
