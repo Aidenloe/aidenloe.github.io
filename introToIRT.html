@@ -371,12 +371,13 @@ div.tocify {
 
 <h1 class="title toc-ignore">Intro to IRT</h1>
 <h4 class="author"><em>Aiden Loe</em></h4>
-<h4 class="date"><em>11 December, 2017</em></h4>
+<h4 class="date"><em>12 December, 2017</em></h4>
 
 </div>
 
 
 <p>This page provides a broad overview of IRT. In time, I will create more specific content that talks about each area in greater detail.</p>
+<p><br/></p>
 <div id="assumptions-of-irt" class="section level2">
 <h2><strong>Assumptions of IRT</strong></h2>
 <p>In short, there are 4 assumptions of IRT.</p>
@@ -386,11 +387,13 @@ div.tocify {
 <li><p>Item invariance</p></li>
 <li><p>Local independence</p></li>
 </ol>
+<p><br/></p>
 <div id="monotonicity" class="section level3">
 <h3><em>Monotonicity</em></h3>
 <p>Monotonicity is best displayed on a graph as if the curve look like the following below. This curve are called the item characteristics curve (ICC), which is assumed to reflect the true relationship between the trait and the responses to the item. For example, in an educational setting, what you see is that as the ability level increases, the probability of getting the item correct increases monotonicially. Within a health setting, that would mean that as the ability level incerases, the participant is more likely to endorse a higher response option for that item.</p>
 <p><img src="introToIRT_files/figure-html/mono-1.png" width="672" /></p>
 <p>There are a few ways to test this. One way is to use mokken analysis. The <code>mokken</code> package can be used to test for item monotonicity.</p>
+<p><br/></p>
 </div>
 <div id="unidimensionality" class="section level3">
 <h3><em>Unidimensionality</em></h3>
@@ -400,6 +403,7 @@ div.tocify {
 
 </div>
 <p>There is something called multidimensional item response theory, where a scale could measure more than a single trait. Reckase (2009) is a fantastic book on the topic of MIRT. But that is something for another day.</p>
+<p><br/></p>
 </div>
 <div id="item-invariance" class="section level3">
 <h3><em>Item invariance</em></h3>
@@ -412,6 +416,7 @@ div.tocify {
 </div>
 </div>
 <p>Ideally, you want both curves to be together rather than separated in order for the assumption of item invariance to hold.</p>
+<p><br/></p>
 </div>
 <div id="local-independence" class="section level3">
 <h3><em>Local independence</em></h3>
@@ -434,29 +439,43 @@ div.tocify {
 <li><p>Inattention(<span class="math inline">\(d_i\)</span>) parameter.</p></li>
 </ul>
 <p>where, i = items.</p>
-<div id="discrimination-parameter" class="section level3">
-<h3><em>Discrimination parameter</em></h3>
+<p><br/></p>
+<div id="discrimination-parameter-alpha_i" class="section level3">
+<h3><em>Discrimination parameter (<span class="math inline">\(\alpha{_i})\)</span></em></h3>
 <p>The discrimiation parameter is aka the <span class="math inline">\(\alpha{_i}\)</span> parameter. It is used to determine how well the items discriminate against different levels of the latent trait. In this case, ranging from -4 to 4. The <span class="math inline">\(\alpha{_i}\)</span> parameter other name is the slope parameter. Steeper slopes at particular level of the traits indicate that it is more discriminative than levels of the traits with gentler slopes.</p>
 <p>So if you just look at the green item, it is most discriminative between -2 to 0, and it is least discriminative between -4 to -2 and 0 to 4. The most discriminative point is always at the centre of the curve.</p>
 <p>In theory, the values for the <span class="math inline">\(\alpha{_i}\)</span> ranges from <span class="math inline">\(-\infty\)</span> to <span class="math inline">\(+\infty\)</span>. Negative values of the <span class="math inline">\(\alpha{_i}\)</span> are possible but considered problematic as it would mean that items with increasing levels of ability are less likely to endore more severe response options. This could happen when the item poorly discriminates between levels of the ability (illogical relationship) or there was some sort of coding error.</p>
-<p><img src="introToIRT_files/figure-html/alpha-1.png" width="576" /></p>
+<p><img src="introToIRT_files/figure-html/alpha-1.png" width="672" /></p>
 <p>From the plot above, we can see that some items are more discriminating than others. For example, it is clear that the green item is the most discriminating item because of the steepest slope it has compared to the other items. Arguably, either the red item or the purple item would have the gentlest slope. This has to be confirmed emprically of course.</p>
+<p><br/></p>
 </div>
-<div id="difficulty-parameter" class="section level3">
-<h3><em>Difficulty parameter</em></h3>
+<div id="difficulty-parameter-beta_i" class="section level3">
+<h3><em>Difficulty parameter (<span class="math inline">\(\beta{_i}\)</span>)</em></h3>
+<p>The difficulty parameter is used to describe how difficulty an item is to achieve a 0.5 probability of correct response at a given ability. Therefore, if the 50% chance of correctly answering an item is at the right side of the plot, then it means that a higher level of ability is needed to achieve that goal. Here you can see that item 5 is easier than item 4 because it requires a lower level of theta ability to get a 50% chance of answering an item correctly.</p>
+<p><img src="introToIRT_files/figure-html/diffOne-1.png" width="672" /></p>
+<p>In the health setting, the location parameter is used instead of difficulty. Because there are far more response options in a health questionnaire (e.g. 4 response options), the categorical response curves for an item are used instead. That is, a patient with a higher level of ability, say depression, would be more likely to have a 50% probability of endorsing the most severse response options than a patient with a lower level of ability. The categorical response curve shows the probability of each response against the theta value that mesaures the location of the latent trait.</p>
+<p>The points where the curves cut each other represents the transition moving from one category to the next. So patients with a theta value of less than -3 will most likely select category 1. Those between greater than -3 and -1.8 will select category 2, so on and so forth. For polytomous items (more than 2 response options), it is very complex to put them all the item curves in a single plot. So each plot represents an item.</p>
+<p><img src="introToIRT_files/figure-html/crc-1.png" width="672" /><img src="introToIRT_files/figure-html/crc-2.png" width="672" /></p>
+<p><br/></p>
 </div>
-<div id="guessing-parameter" class="section level3">
-<h3><em>Guessing parameter</em></h3>
+<div id="guessing-parameter-c_i" class="section level3">
+<h3><em>Guessing parameter (<span class="math inline">\(c_i\)</span>)</em></h3>
+<p>The guessing parameter is more widely used in the educational setting where guessing the correct answer for an item may be attempted by the test taker. So the IRT model has to account for the guessing or the pseudo-chance-level paramter (<span class="math inline">\(c_i\)</span>).</p>
+<p>This parameter is not so widely used in the health area or personality assessment since there are usually no right or wrong answers. <br/></p>
 </div>
-<div id="inattention-parameter" class="section level3">
-<h3><em>Inattention parameter</em></h3>
+<div id="inattention-parameter-d_i" class="section level3">
+<h3><em>Inattention parameter (<span class="math inline">\(d_i\)</span>)</em></h3>
+<p><br/></p>
 </div>
-<div id="scaling-factor" class="section level3">
-<h3><em>Scaling factor</em></h3>
+<div id="scaling-factor-d-constant" class="section level3">
+<h3><em>Scaling factor: D constant</em></h3>
+<p>The scaling factor is a constant with the value of 1.7 that is used to bring the estimates of the logistic function and the mornal ogive function in an IRT model to be similar. The logistic function was introduced by Brinbaum t make it easier to calculate item parameters and the probability of theta without too much mathematical complications. The normal ogive function on the other hand, is based on the cumulative normal distribution. Nowadays, the logistic function based IRT model is more widely used than the normal ogive function based IRT model.</p>
+<p><br/></p>
 </div>
 </div>
 <div id="irt-models" class="section level2">
 <h2><strong>IRT MODELS</strong></h2>
+<p><br/></p>
 </div>
 <div id="alpha-par-to-std-loading" class="section level2">
 <h2><strong><span class="math inline">\(\alpha{}\)</span> par to std loading</strong></h2>
@@ -476,6 +495,7 @@ div.tocify {
 </center>
 <p><br/></p>
 <p>The result is 0.2818 <span class="math inline">\(\approx\)</span> 0.3.</p>
+<p><br/></p>
 <div id="citations" class="section level4">
 <h4>Citations</h4>
 <ul>

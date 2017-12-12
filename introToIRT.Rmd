@@ -20,6 +20,7 @@ library(reshape)
 library(dplyr)
 library(ggplot2)
 library(gtable)
+library(gridExtra)
 library(grid)
 library(mirt)
 library(tidyr)
@@ -27,6 +28,8 @@ library(pander)
 ```
 
 This page provides a broad overview of IRT. In time, I will create more specific content that talks about each area in greater detail. 
+
+<br/>
 
 ## **Assumptions of IRT**
 
@@ -39,7 +42,9 @@ In short, there are 4 assumptions of IRT.
 3. Item invariance
     
 4. Local independence
-    
+
+<br/>
+
 ### *Monotonicity*
 
 Monotonicity is best displayed on a graph as if the curve look like the following below. This curve are called the item characteristics curve (ICC), which is assumed to reflect the true relationship between the trait and the responses to the item. For example, in an educational setting, what you see is that as the ability level increases, the probability of getting the item correct increases monotonicially.  Within a health setting, that would mean that as the ability level incerases, the participant is more likely to endorse a higher response option for that item.  
@@ -91,6 +96,8 @@ ggplot(l.format, aes(Theta, P.1, colour = item)) +
 
 There are a few ways to test this. One way is to use mokken analysis. The `mokken` package can be used to test for item monotonicity. 
 
+<br/>
+
 ### *Unidimensionality*
 
 In the context of IRT, undimensionality is assumed. That is, only one latent trait is measured by the set of items in the test. For example, all the items in the CES-D scale is a measure of the depression symptoms and nothing else. That is what it means to be unidimensional. You can use factor analysis for example to evaluate the dimensionality of the test. You can think of it graphically like the image below. All the items are meant to be measuring only a single latent trait. 
@@ -98,6 +105,8 @@ In the context of IRT, undimensionality is assumed. That is, only one latent tra
 ![](images/unidimensional.png)
 
 There is something called multidimensional item response theory, where a scale could measure more than a single trait. Reckase (2009) is a fantastic book on the topic of MIRT. But that is something for another day.
+
+<br/>
 
 ### *Item invariance*
 
@@ -110,6 +119,8 @@ Here is how two types of DIF looks like:
 </div>
 
 Ideally, you want both curves to be together rather than separated in order for the assumption of item invariance to hold. 
+
+<br/>
 
 ### *Local independence*
 
@@ -137,7 +148,9 @@ Several item properties are necessary to know. Namely, the properties are that e
 
 where, i = items. 
 
-### *Discrimination parameter*
+<br/>
+
+### *Discrimination parameter ($\alpha{_i})$*
 
 The discrimiation parameter is aka the  $\alpha{_i}$ parameter. It is used to determine how well the items discriminate against different levels of the latent trait. In this case, ranging from -4 to 4. The $\alpha{_i}$ parameter other name is the slope parameter. Steeper slopes at particular level of the traits indicate that it is more discriminative than levels of the traits with gentler slopes. 
 
@@ -145,7 +158,7 @@ So if you just look at the green item, it is most discriminative between -2 to 0
 
 In theory, the values for the $\alpha{_i}$ ranges from $-\infty$ to $+\infty$. Negative values of the $\alpha{_i}$ are possible but considered problematic as it would mean that items with increasing levels of ability are less likely to endore more severe response options. This could happen when the item poorly discriminates between levels of the ability (illogical relationship) or there was some sort of coding error. 
 
-```{r alpha, echo=FALSE, fig.width=6, fig.height=6}
+```{r alpha, echo=FALSE}
 library(mirt)
 dat <- expand.table(LSAT7)
 mod <- mirt(dat, 1, verbose=FALSE)
@@ -187,7 +200,7 @@ ggplot(l.format, aes(Theta, P.1, colour = item)) +
   ggtitle('Probability Tracelines') + 
   xlab(expression(theta)) + 
   ylab(expression(P(theta))) + 
-  geom_hline(aes(yintercept = 0.5)) + theme_bw() + 
+   theme_bw() + 
   theme(text = element_text(size=16),
         axis.text.x=element_text(colour="black"),
         axis.text.y=element_text(colour="black"),
@@ -196,15 +209,201 @@ ggplot(l.format, aes(Theta, P.1, colour = item)) +
 
 From the plot above, we can see that some items are more discriminating than others. For example, it is clear that the green item is the most discriminating item because of the steepest slope it has compared to the other items. Arguably, either the red item or the purple item would have the gentlest slope. This has to be confirmed emprically of course. 
 
-### *Difficulty parameter*
+<br/>
 
-### *Guessing parameter*
+### *Difficulty parameter ($\beta{_i}$)*
 
-### *Inattention parameter*
+The difficulty parameter is used to describe how difficulty an item is to achieve a 0.5 probability of correct response at a given ability. Therefore, if the 50% chance of correctly answering an item is at the right side of the plot, then it means that a higher level of ability is needed to achieve that goal. Here you can see that item 5 is easier than item 4 because it requires a lower level of theta ability to get a 50% chance of answering an item correctly. 
 
-### *Scaling factor*
+```{r diffOne, echo=FALSE}
+library(mirt)
+dat <- expand.table(LSAT7)
+mod <- mirt(dat, 1, itemtype='Rasch',verbose=FALSE)
+
+# Extract all items 
+# Compute the probability trace lines
+# Put into a list
+traceline <- NULL
+for(i in 1:length(dat)){
+extr.2 <- extract.item(mod, i)
+Theta <- matrix(seq(-4,4, by = .1))
+traceline[[i]] <- probtrace(extr.2, Theta)
+}
+
+# rename list
+names(traceline) <- paste('item',1:length(traceline))
+
+# rbind traceline
+traceline.df <- do.call(rbind, traceline)
+
+# create item names length based on length of theta provided
+item <- rep(names(traceline),each=length(Theta))
+
+# put them all together into a dataframe
+l.format <- cbind.data.frame(Theta, item, traceline.df)
+
+
+l.format$item<-as.factor(l.format$item)
+aux<-l.format %>%
+  group_by(item) %>%
+  slice(which.min(abs(P.1-0.5))) # We are only using the P.1 column (dichotomous)
+
+aux<-aux[order(aux$Theta),]
+ord<-as.integer(aux$item)
+l.format$item = factor(l.format$item,levels(l.format$item)[ord])
+
+# plot chart
+ggplot(l.format, aes(Theta, P.1, colour = item)) + 
+  geom_line() + 
+  ggtitle('Probability Tracelines') + 
+  xlab(expression(theta)) + 
+  ylab(expression(P(theta))) + 
+  geom_hline(aes(yintercept = 0.5)) + theme_bw() + 
+  theme(text = element_text(size=16),
+        axis.text.x=element_text(colour="black"),
+        axis.text.y=element_text(colour="black"),
+        legend.title=element_blank())
+
+```
+
+In the health setting, the location parameter is used instead of difficulty. Because there are far more response options in a health questionnaire (e.g. 4 response options), the categorical response curves for an item are used instead. That is, a patient with a higher level of ability, say depression, would be more likely to have a 50% probability of endorsing the most severse response options than a patient with a lower level of ability. The categorical response curve shows the probability of each response against the theta value that mesaures the location of the latent trait.
+
+The points where the curves cut each other represents the transition moving from one category to the next.
+So patients with a theta value of less than -3 will most likely select category 1. Those between greater than -3 and -1.8 will select category 2, so on and so forth. For polytomous items (more than 2 response options), it is very complex to put them all the item curves in a single plot. So each plot represents an item. 
+
+```{r crc, echo=FALSE}
+data(Science)
+mod <- mirt(Science,1, itemtype='gpcm', verbose=FALSE)
+
+# Extract all items 
+# Compute the probability trace lines
+# Put into a list
+traceline <- NULL
+for(i in 1:length(Science)){
+  extr.2 <- extract.item(mod, i)
+  Theta <- matrix(seq(-6,6, by = .1))
+  traceline[[i]] <- probtrace(extr.2, Theta)
+}
+
+names(traceline) <- paste('item',1:length(traceline))
+
+# rbind traceline
+traceline.df <- do.call(rbind, traceline)
+
+# create item names length based on length of theta provided
+item <- rep(names(traceline),each=length(Theta))
+
+# put them all together into a dataframe
+l.format <- cbind.data.frame(Theta, item, traceline.df)
+
+# wide to long format. 
+longer.format <- gather(l.format,categorials,measurement,P.1:P.4)
+longer.format$item<-as.factor(longer.format$item)
+
+# Selecting items
+items <- c("item 1", "item 2", "item 3", "item 4")
+
+# select item to display CRC and OCC
+item <- 4
+item.format <-longer.format[longer.format$item == items[item],]
+
+# plot chart
+plot1 <- ggplot(item.format, aes(Theta, measurement, colour = categorials, fill=categorials)) + 
+  geom_line() + 
+  ggtitle('Categorical Response Curve for Item Benefit') + 
+  xlab(expression(theta)) + 
+  ylab(expression(P(theta))) + 
+  theme_bw() + 
+  theme(text = element_text(size=16),
+        axis.text.x=element_text(colour="black"),
+        axis.text.y=element_text(colour="black"),
+        legend.position="none") + 
+  geom_text(aes(x = -4, y = 0.75, label = "C1", color="P.1")) + 
+  geom_text(aes(x = -2, y = 0.58, label = "C2", color="P.2")) + 
+  geom_text(aes(x = 0.2, y = 0.65, label = "C3", color="P.3")) + 
+  geom_text(aes(x = 2.5, y = 0.75, label = "C4", color="P.4")) 
+
+
+# item coefficient
+cfs <- coef(mod, IRTpars = TRUE, simplify=TRUE)$items
+
+# 2pl
+twopl <- function(a, b, theta){
+  1 / (1 + exp(-(a * (theta - b))))}
+
+# theta 
+theta <- seq(-6,6,.1)
+
+# create Operational characteristic curve
+lst <- list()
+for(i in 1:3) lst[[i]] <- twopl(a=cfs[item,1], b=cfs[item,i+1], theta=theta)
+
+dat <- data.frame(theta, as.data.frame(lst))
+names(dat) <- c('theta', 'b1', 'b2', 'b3')
+
+# wide to long format. 
+longer.format <- gather(dat,categorials,measurement,b1:b3)
+
+# Item Parameter Estimates table
+itemPar <- cfs
+
+# plot chart
+plot2 <- ggplot(longer.format, aes(theta, measurement, colour=categorials)) + 
+  geom_line() + 
+  ggtitle(paste('Operational Characteristic Curve for Item', rownames(cfs)[item])) + 
+  xlab(expression(theta)) + 
+  ylab(expression(P(theta))) + 
+  geom_vline(aes(xintercept = cfs[item,2]), color='red') +
+  geom_vline(aes(xintercept = cfs[item,3]), color="green") +
+  geom_vline(aes(xintercept = cfs[item,4]), color='blue') +
+  geom_hline(aes(yintercept = 0.5)) + theme_bw() + 
+  theme(text = element_text(size=16),
+        axis.text.x=element_text(colour="black"),
+        axis.text.y=element_text(colour="black"),
+        legend.title=element_blank(),
+         legend.position="hide") +
+  geom_text(aes(x = -3.3, y = 0.55, label = "b1", color="b1")) + 
+  geom_text(aes(x = -1.2, y = 0.55, label = "b2", color="b2")) + 
+  geom_text(aes(x = 1.3, y = 0.55, label = "b3", color="b3")) 
+  
+
+plot1
+plot2
+
+#combine plots together
+# plot3 <- ggarrange(plot1, plot2, 
+#           ncol = 2, nrow = 1, widths=4)
+# 
+# annotate_figure(plot3,
+#                 top = text_grob("abc",
+#                                 color = "red", face = "bold",
+#                                 size = 3))
+
+
+```
+
+<br/>
+
+### *Guessing parameter ($c_i$)*
+
+The guessing parameter is more widely used in the educational setting where guessing the correct answer for an item may be attempted by the test taker. So the IRT model has to account for the guessing or the pseudo-chance-level paramter ($c_i$). 
+
+This parameter is not so widely used in the health area or personality assessment since there are usually no right or wrong answers. 
+<br/>
+
+### *Inattention parameter ($d_i$)*
+
+<br/>
+
+### *Scaling factor: D constant*
+
+The scaling factor is a constant with the value of 1.7 that is used to bring the estimates of the logistic function and the mornal ogive function in an IRT model to be similar. The logistic function was introduced by Brinbaum t make it easier to calculate item parameters and the probability of theta without too much mathematical complications. The normal ogive function on the other hand, is based on the cumulative normal distribution. Nowadays, the logistic function based IRT model is more widely used than the normal ogive function based IRT model. 
+
+<br/>
 
 ## **IRT MODELS** 
+
+<br/>
 
 ## **$\alpha{}$ par to std loading**
 
@@ -226,8 +425,7 @@ Then the standardised loading is:
 
 The result is 0.2818 $\approx$ 0.3.
 
-
-
+<br/>
 
 #### Citations
 
