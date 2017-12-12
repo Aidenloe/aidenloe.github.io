@@ -461,7 +461,7 @@ plot1
 
 ```
 
-The point of between category threshold parameters represent the point ($b_{ij}$) along the latent trait scale at which the participants have a 0.5 probability of responding in or above a category threshold. The value for that point is known as the difficulty parameter between the two categories. So if you have 4 response option, you have 3 categories (*k - 1, where k is number of categories*). 
+The point of between category threshold parameters represent the point ($b_{ij}$) along the latent trait scale at which the participants have a 0.5 probability of responding in or above a category threshold. The value for that point is known as the difficulty parameter between the two categories. So if you have 4 response option, you have 3 categories (*k - 1, where k is the number of categories*). 
 
 <br/>
 
@@ -625,7 +625,7 @@ There are many different IRT models. I will just list the popular ones here for 
 
 + 4 parameter logistic model 
 
-+ Unfolding model (Ideal point models)
++ Unfolding model (aka Ideal point model)
 
 #### *Polytomous Model*
 
@@ -648,6 +648,32 @@ There are many different IRT models. I will just list the popular ones here for 
 <br/>
 
 ## **General Information**
+
+### *Sample size*
+
+The more the merrier is the answer really. There is no gold standard or magic number (Morizot et al, 2007, p.411)
+
+Here are certain guidelines:
+
+1. Dichotomous response formats. 
+
+    + Rasch (At least 100)
+    
+    + 2PL (At least 250, but best is at least 500). 
+    
+    
+2. Polytomous response formats 
+
+    + GRM (At least 250, but 500 for accurate parameter estimates) [Reeve & Fayers, 2005, p.71]
+    
+    + PCM (At least 500 - 1000, based on RMSEs comparisons) [He & Wheadon, 2013] 
+    
+
+Embretson and Reise (2000) recommended that the focus should be on the size of the standard error of item parameter estimates.
+
+Root mean square errors (RMSEs) reflect the variation of sample parameter estimates within replications for a specific size class. When the sample size is 150, the RMSEs for some categories are as high as 0.90 logits. The RMSEs for most of the categories stay within 0.20 logits when the sample size increases to greater than 1000. *(See Qing Ping He & Christopher Wheadon, 2013 for a more detailed discussion)*
+
+<br/>
 
 ### *$\alpha{}$ par to std loading*
 
@@ -675,8 +701,18 @@ The result is 0.2818 $\approx$ 0.3.
 
 + Chalmers, R. P. (2012). mirt: A multidimensional item response theory package for the R environment. Journal of Statistical Software, 48(6), 1-29.
 
++ Embretson, S. E., & Reise, S. P. (2013). Item response theory. Psychology Press.
+
++ He, Q., & Wheadon, C. (2013). The effect of sample size on item parameter estimation for the partial credit model. International Journal of Quantitative Research in Education, 1(3), 297-315.
+
++ Morizot, J., Ainsworth, A. T., & Reise, S. P. (2007). Toward modern psychometrics: Application of item response theory models in personality research. In R. W. Robins, R. C. Fraley, & R. F. Krueger (Eds.), Handbook of Research Methods in Personality Psychology (pp. 407-423). New York: Guilford.
+
 + Reckase, M. (2009). Multidimensional item response theory (Vol. 150). New York, NY: Springer.
+
++ Reeve, B. B., & Fayers, P. (2005). Applying item response theory modeling for evaluating questionnaire item and scale properties. In P. Fayers & R. D. Hays (Eds.), Assessing quality of life in clinical trials: Methods of practice (2nd ed). New York: Oxford University Press, 2005. p. 55–73. 
 
 + Wirth, R. J., & Edwards, M. C. (2007). Item factor analysis: current approaches and future directions. Psychological methods, 12(1), 58.
 
 + Yang, F. M. (2014). Item response theory for measurement validity. Shanghai archives of psychiatry, 26(3), 171.
+
+

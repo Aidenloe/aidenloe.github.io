@@ -4,7 +4,7 @@
 
 <head>
 
-<meta charset="utf-8">
+<meta charset="utf-8" />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
 
@@ -24,8 +24,8 @@
 <link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
 <script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
-<link href="site_libs/highlightjs-1.1/textmate.css" rel="stylesheet" />
-<script src="site_libs/highlightjs-1.1/highlight.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
 
 <style type="text/css">code{white-space: pre;}</style>
 <style type="text/css">
@@ -34,10 +34,12 @@
   }
 </style>
 <script type="text/javascript">
-if (window.hljs && document.readyState && document.readyState === "complete") {
-   window.setTimeout(function() {
-      hljs.initHighlighting();
-   }, 0);
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
 }
 </script>
 
@@ -458,7 +460,7 @@ div.tocify {
 <p>The points where the curves cut each other represents the transition moving from one category to the next. So patients with a theta value of less than -3 will most likely select category 1. Those between greater than -3 and -1.8 will select category 2, so on and so forth. For polytomous items (more than 2 response options), it is very complex to put them all the item curves in a single plot. So each plot represents an item.</p>
 <p><br/></p>
 <p><img src="introToIRT_files/figure-html/crc-1.png" width="672" /></p>
-<p>The point of between category threshold parameters represent the point (<span class="math inline">\(b_{ij}\)</span>) along the latent trait scale at which the participants have a 0.5 probability of responding in or above a category threshold. The value for that point is known as the difficulty parameter between the two categories. So if you have 4 response option, you have 3 categories (<em>k - 1, where k is number of categories</em>).</p>
+<p>The point of between category threshold parameters represent the point (<span class="math inline">\(b_{ij}\)</span>) along the latent trait scale at which the participants have a 0.5 probability of responding in or above a category threshold. The value for that point is known as the difficulty parameter between the two categories. So if you have 4 response option, you have 3 categories (<em>k - 1, where k is the number of categories</em>).</p>
 <p><br/></p>
 <p><img src="introToIRT_files/figure-html/poly%20diff-1.png" width="672" /></p>
 <p><br/></p>
@@ -494,7 +496,7 @@ div.tocify {
 <li><p>2 parameter logistic model</p></li>
 <li><p>3 parameter logistic model</p></li>
 <li><p>4 parameter logistic model</p></li>
-<li><p>Unfolding model (Ideal point models)</p></li>
+<li><p>Unfolding model (aka Ideal point model)</p></li>
 </ul>
 </div>
 <div id="polytomous-model" class="section level4">
@@ -518,6 +520,26 @@ div.tocify {
 </div>
 <div id="general-information" class="section level2">
 <h2><strong>General Information</strong></h2>
+<div id="sample-size" class="section level3">
+<h3><em>Sample size</em></h3>
+<p>The more the merrier is the answer really. There is no gold standard or magic number (Morizot et al, 2007, p.411)</p>
+<p>Here are certain guidelines:</p>
+<ol style="list-style-type: decimal">
+<li><p>Dichotomous response formats.</p>
+<ul>
+<li><p>Rasch (At least 100)</p></li>
+<li><p>2PL (At least 250, but best is at least 500).</p></li>
+</ul></li>
+<li><p>Polytomous response formats</p>
+<ul>
+<li><p>GRM (At least 250, but 500 for accurate parameter estimates) [Reeve &amp; Fayers, 2005, p.71]</p></li>
+<li><p>PCM (At least 500 - 1000, based on RMSEs comparisons) [He &amp; Wheadon, 2013]</p></li>
+</ul></li>
+</ol>
+<p>Embretson and Reise (2000) recommended that the focus should be on the size of the standard error of item parameter estimates.</p>
+<p>Root mean square errors (RMSEs) reflect the variation of sample parameter estimates within replications for a specific size class. When the sample size is 150, the RMSEs for some categories are as high as 0.90 logits. The RMSEs for most of the categories stay within 0.20 logits when the sample size increases to greater than 1000. <em>(See Qing Ping He &amp; Christopher Wheadon, 2013 for a more detailed discussion)</em></p>
+<p><br/></p>
+</div>
 <div id="alpha-par-to-std-loading" class="section level3">
 <h3><em><span class="math inline">\(\alpha{}\)</span> par to std loading</em></h3>
 <p>To convert a discrimination parameter into a value that is similar to a standardised factor loading.</p>
@@ -541,7 +563,11 @@ div.tocify {
 <h4>Citations</h4>
 <ul>
 <li><p>Chalmers, R. P. (2012). mirt: A multidimensional item response theory package for the R environment. Journal of Statistical Software, 48(6), 1-29.</p></li>
+<li><p>Embretson, S. E., &amp; Reise, S. P. (2013). Item response theory. Psychology Press.</p></li>
+<li><p>He, Q., &amp; Wheadon, C. (2013). The effect of sample size on item parameter estimation for the partial credit model. International Journal of Quantitative Research in Education, 1(3), 297-315.</p></li>
+<li><p>Morizot, J., Ainsworth, A. T., &amp; Reise, S. P. (2007). Toward modern psychometrics: Application of item response theory models in personality research. In R. W. Robins, R. C. Fraley, &amp; R. F. Krueger (Eds.), Handbook of Research Methods in Personality Psychology (pp. 407-423). New York: Guilford.</p></li>
 <li><p>Reckase, M. (2009). Multidimensional item response theory (Vol. 150). New York, NY: Springer.</p></li>
+<li><p>Reeve, B. B., &amp; Fayers, P. (2005). Applying item response theory modeling for evaluating questionnaire item and scale properties. In P. Fayers &amp; R. D. Hays (Eds.), Assessing quality of life in clinical trials: Methods of practice (2nd ed). New York: Oxford University Press, 2005. p. 55–73.</p></li>
 <li><p>Wirth, R. J., &amp; Edwards, M. C. (2007). Item factor analysis: current approaches and future directions. Psychological methods, 12(1), 58.</p></li>
 <li><p>Yang, F. M. (2014). Item response theory for measurement validity. Shanghai archives of psychiatry, 26(3), 171.</p></li>
 </ul>
@@ -574,7 +600,7 @@ $(document).ready(function () {
   (function () {
     var script = document.createElement("script");
     script.type = "text/javascript";
-    script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
     document.getElementsByTagName("head")[0].appendChild(script);
   })();
 </script>

@@ -1,57 +1,53 @@
-name: "my-website"
-output_dir: "."
+name: my-website
+output_dir: .
 navbar:
-  title: "Aiden Loe"
+  title: Aiden Loe
   left:
-    #- text: "Home"
-    #  href: index.html
-    - text: "About"
-      href: about.html
-    - text: "R 4 Social Scientists"
-      href: r4psychologists.html
-      menu:
-        - text: "What is R?"
-        - text: "Intro to R"
-          href: introToR.html
-        - text: "Data Visualisation"
-          href: dataVisual.html
-        - text: "Data Wrangling"
-          href: datawrangling.html
-    - text: "Big Data 4 Social Scientists"
-      href: ML.html      
-      menu:
-        - text: "What is ML?"
-        - text: "Intro to ML"
-          href: introToML.html
-        - text: "Web Scrapping"
-          href: webscrapping.html
-        - text: "Data Mining"
-          href: datamining.html
-    - text: "IRT 4 Social Scientists"
-      href: irt.html
-      menu:
-        - text: "What is IRT?"
-        - text: "Intro to IRT"
-          href: introToIRT.html
-        - text: "Test Information"
-          href: testinfo.html
-        - text: "Plotting to IRT"
-          href: irtplots.html
-    - text: "CAT 4 Social Scientists"
-      href: CAT.html
-      menu:
-        - text: "What is CAT?"
-        - text: "Intro to CAT"
-          href: introToCAT.html
-        - text: "CAT simulation"
-          href: catSimulation.html
-          
-          
-
- 
+  - text: About
+    href: about.html
+  - text: R 4 Social Scientists
+    href: r4psychologists.html
+    menu:
+    - text: What is R?
+    - text: Intro to R
+      href: introToR.html
+    - text: Data Visualisation
+      href: dataVisual.html
+    - text: Data Wrangling
+      href: datawrangling.html
+  - text: Big Data 4 Social Scientists
+    href: ML.html
+    menu:
+    - text: What is ML?
+    - text: Intro to ML
+      href: introToML.html
+    - text: Web Scrapping
+      href: webscrapping.html
+    - text: Data Mining
+      href: datamining.html
+  - text: IRT 4 Social Scientists
+    href: irt.html
+    menu:
+    - text: What is IRT?
+    - text: Intro to IRT
+      href: introToIRT.html
+    - text: Test Information
+      href: testinfo.html
+    - text: Plotting to IRT
+      href: irtplots.html
+  - text: CAT 4 Social Scientists
+    href: CAT.html
+    menu:
+    - text: What is CAT?
+    - text: Intro to CAT
+      href: introToCAT.html
+    - text: CAT simulation
+      href: catSimulation.html
 output:
   html_document:
     theme: cosmo
     highlight: textmate
     css: style.css
+    lib_dir: site_libs
+    self_contained: no
 
