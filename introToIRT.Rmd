@@ -114,9 +114,90 @@ The assumption of invariance is best understood as the characteristics of the it
 
 Here is how two types of DIF looks like: 
 
-<div style="width:500px; height=400px">
-![image source: https://blog.questionmark.com/item-analysis-differential-item-functioning-dif](images/dif.png)
-</div>
+```{r dif, echo=FALSE, fig.width=8, fig.height=8 }
+dat <- expand.table(LSAT7)
+mod <- mirt(dat, 1, verbose=FALSE)
+
+# Extract all items 
+# Compute the probability trace lines
+# Put into a list
+traceline <- NULL
+for(i in 1:length(dat)){
+  extr.2 <- extract.item(mod, i)
+  Theta <- matrix(seq(-4,4, by = .1))
+  traceline[[i]] <- probtrace(extr.2, Theta)
+}
+
+# rename list
+names(traceline) <- paste('item',1:length(traceline))
+
+# rbind traceline
+traceline.df <- do.call(rbind, traceline)
+
+# create item names length based on length of theta provided
+item <- rep(names(traceline),each=length(Theta))
+
+# put them all together into a dataframe
+l.format <- cbind.data.frame(Theta, item, traceline.df)
+
+l.format$item<-as.factor(l.format$item)
+aux<-l.format %>%
+  group_by(item) %>%
+  slice(which.min(abs(P.1-0.5))) # We are only using the P.1 column (dichotomous)
+
+aux<-aux[order(aux$Theta),]
+ord<-as.integer(aux$item)
+l.format$item = factor(l.format$item,levels(l.format$item)[ord])
+
+# first dif plot
+items <- c("item 1", "item 2")
+
+# select item to display CRC and OCC
+
+item.format <-l.format[l.format$item %in% items,]
+
+# plot chart
+plt1 <- ggplot(item.format, aes(Theta, P.1, colour = item)) + 
+  geom_line() + 
+  ggtitle('ICC: Uniform DIF') + 
+  xlab(expression(theta)) + 
+  ylab(expression(P(theta))) + 
+  theme_bw() + 
+  theme(text = element_text(size=16),
+        axis.text.x=element_text(colour="black"),
+        axis.text.y=element_text(colour="black"),
+        legend.position="bottom") + 
+  scale_colour_manual(name="",
+                        values=c("red","black"),
+                        labels=c("Focal Group", "Reference Group"))
+  
+
+# second dif plot
+# Selecting items
+items <- c("item 2", "item 4")
+# select item to display CRC and OCC
+
+item.format <-l.format[l.format$item %in% items,]
+
+
+# plot chart
+plt2 <- ggplot(item.format, aes(Theta, P.1, colour = item)) + 
+  geom_line() + 
+  ggtitle('ICC: Non-Uniform DIF') + 
+  xlab(expression(theta)) + 
+  ylab(expression(P(theta))) + 
+  theme_bw() + 
+  theme(text = element_text(size=16),
+        axis.text.x=element_text(colour="black"),
+        axis.text.y=element_text(colour="black"),
+        legend.position="bottom") +
+  scale_colour_manual(name="",
+                      values=c("red","black"),
+                      labels=c("Focal Group", "Reference Group"))
+
+grid.arrange(plt1, plt2, ncol=2, vp=viewport(width=1, height=0.6))
+
+```
 
 Ideally, you want both curves to be together rather than separated in order for the assumption of item invariance to hold. 
 
