@@ -387,6 +387,7 @@ library(reshape)
 library(dplyr)
 library(ggplot2)
 library(gtable)
+library(gridExtra)
 library(grid)
 library(ggpubr)
 library(mirt)
@@ -708,10 +709,13 @@ plot1 &lt;- ggplot(reli, aes(x=reliability, y =se )) + geom_point(size=0.01) + t
   xlim(0,1.0) +
   geom_vline(aes(xintercept=0.9), colour = &quot;green&quot;) + 
   geom_hline(aes(yintercept=0.32),colour = &quot;green&quot;) +
+  annotate(geom=&quot;text&quot;, label=0.32, x=0, y=0.32, vjust=-0.5,hjust=-0.1, size=4) +
   geom_vline(aes(xintercept=0.8), colour = &quot;red&quot;) + 
   geom_hline(aes(yintercept=0.45),colour = &quot;red&quot;) +
+  annotate(geom=&quot;text&quot;, label=0.45, x=0, y=0.45, vjust=-0.5,hjust=-0.1, size=4) +
   geom_vline(aes(xintercept=0.7),colour = &quot;blue&quot;) + 
   geom_hline(aes(yintercept=0.54), colour = &quot;blue&quot;) +
+  annotate(geom=&quot;text&quot;, label=0.54, x=0, y=0.54, vjust=-0.5,hjust=-0.1, size=4) +
   theme(text = element_text(size=14),
         axis.text.x=element_text(colour=&quot;black&quot;),
         axis.text.y=element_text(colour=&quot;black&quot;))
@@ -724,10 +728,10 @@ plot2 &lt;- ggplot(reli, aes(x=reliability, y = info)) + geom_point(size=0.01) +
   geom_hline(aes(yintercept=5),colour = &quot;red&quot;) +
   geom_vline(aes(xintercept=0.7),colour = &quot;blue&quot;) + 
   geom_hline(aes(yintercept=3.33), colour = &quot;blue&quot;) +
+  annotate(geom=&quot;text&quot;, label=3.33, x=0, y=3.33, vjust=-0.5,hjust=-0.1, size=4) +
   theme(text = element_text(size=14),
         axis.text.x=element_text(colour=&quot;black&quot;),
-        axis.text.y=element_text(colour=&quot;black&quot;),
-        legend.position=&quot;hide&quot;)
+        axis.text.y=element_text(colour=&quot;black&quot;))
 
 
 #combine plots together
@@ -947,6 +951,94 @@ ggplot(longer.format, aes(theta, measurement, colour=categorials)) +
         axis.text.y=element_text(colour=&quot;black&quot;),
         legend.title=element_blank())</code></pre>
 <p><img src="irtplots_files/figure-html/unnamed-chunk-3-2.png" width="672" /></p>
+</div>
+<div id="crc-and-occ-plot-combined" class="section level2">
+<h2><strong>CRC and OCC plot combined</strong></h2>
+<p>Categorical response curve and operating characteristic curve plots overlap one another.</p>
+<pre class="r"><code>data(Science)
+itemtype &lt;- &#39;gpcm&#39;
+mod &lt;- mirt(Science,1, itemtype=itemtype, verbose=FALSE)
+
+# select item to display CRC and OCC
+itemSelected &lt;- 4
+
+# Extract all items 
+# Compute the probability trace lines
+# Put into a list
+traceline &lt;- NULL
+for(i in 1:length(Science)){
+  extr.2 &lt;- extract.item(mod, i)
+  Theta &lt;- matrix(seq(-6,6, by = .1))
+  traceline[[i]] &lt;- probtrace(extr.2, Theta)
+}
+
+names(traceline) &lt;- paste(&#39;item&#39;,1:length(traceline))
+
+# rbind traceline
+traceline.df &lt;- do.call(rbind, traceline)
+
+# create item names length based on length of theta provided
+item &lt;- rep(names(traceline),each=length(Theta))
+
+# put them all together into a dataframe
+l.format &lt;- cbind.data.frame(Theta, item, traceline.df)
+
+# wide to long format. 
+longer.format &lt;- gather(l.format,categorials,measurement,P.1:P.4)
+longer.format$item&lt;-as.factor(longer.format$item)
+
+# Selecting items
+items &lt;- c(&quot;item 1&quot;, &quot;item 2&quot;, &quot;item 3&quot;, &quot;item 4&quot;)
+
+item.format &lt;-longer.format[longer.format$item == items[itemSelected],]
+
+# item coefficient
+cfs &lt;- coef(mod, IRTpars = TRUE, simplify=TRUE)$items
+
+# 2pl
+twopl &lt;- function(a, b, theta){
+  1 / (1 + exp(-(a * (theta - b))))}
+
+# theta 
+theta &lt;- seq(-6,6,.1)
+
+# create Operational characteristic curve
+lst &lt;- list()
+for(i in 1:3) lst[[i]] &lt;- twopl(a=cfs[itemSelected,1], b=cfs[itemSelected,i+1], theta=theta)
+
+dat &lt;- data.frame(theta, as.data.frame(lst))
+names(dat) &lt;- c(&#39;Theta&#39;, &#39;b1&#39;, &#39;b2&#39;, &#39;b3&#39;)
+
+# wide to long format. 
+longer.format &lt;- gather(dat,categorials,measurement,b1:b3)
+
+# Item Parameter Estimates table
+itemPar &lt;- cfs
+
+# plot chart
+ggplot() + 
+  geom_line(data=longer.format, aes(Theta, measurement, fill=categorials)) + 
+  geom_line(data=item.format, aes(Theta, measurement, colour = item,fill=categorials)) +
+  ggtitle(paste(&quot;CRC + OCC Plot:&quot;,itemtype)) +
+  xlab(expression(theta)) +  
+  ylab(expression(P(theta))) + 
+  geom_vline(aes(xintercept = cfs[itemSelected,2]), color=&#39;black&#39;) +
+  geom_vline(aes(xintercept = cfs[itemSelected,3]), color=&quot;black&quot;) +
+  geom_vline(aes(xintercept = cfs[itemSelected,4]), color=&#39;black&#39;) +
+  geom_hline(aes(yintercept = 0.5), color=&quot;black&quot;) + theme_bw() + 
+  theme(text = element_text(size=16),
+        axis.text.x=element_text(colour=&quot;black&quot;),
+        axis.text.y=element_text(colour=&quot;black&quot;),
+        legend.title=element_blank(),
+        legend.position=&quot;hide&quot;) +
+  geom_text(aes(x = -3.3, y = 0.55, label = &quot;b1&quot;)) + 
+  geom_text(aes(x = -1.5, y = 0.55, label = &quot;b2&quot;)) + 
+  geom_text(aes(x = 1.3, y = 0.55, label = &quot;b3&quot;)) +
+  geom_text(aes(x = -4, y = 0.75, label = &quot;C1&quot;, color=&quot;P.1&quot;)) + 
+  geom_text(aes(x = -2, y = 0.58, label = &quot;C2&quot;, color=&quot;P.2&quot;)) + 
+  geom_text(aes(x = 0.2, y = 0.63, label = &quot;C3&quot;, color=&quot;P.3&quot;)) + 
+  geom_text(aes(x = 2.5, y = 0.75, label = &quot;C4&quot;, color=&quot;P.4&quot;)) </code></pre>
+<p><img src="irtplots_files/figure-html/crc%20and%20occ-1.png" width="672" /></p>
 </div>
 
 

@@ -47,7 +47,7 @@ In short, there are 4 assumptions of IRT.
 
 ### *Monotonicity*
 
-Monotonicity is best displayed on a graph as if the curve look like the following below. This curve are called the item characteristics curve (ICC), which is assumed to reflect the true relationship between the trait and the responses to the item. For example, in an educational setting, what you see is that as the ability level increases, the probability of getting the item correct increases monotonicially.  Within a health setting, that would mean that as the ability level incerases, the participant is more likely to endorse a higher response option for that item.  
+Monotonicity is best displayed on a graph as if the curve look like the following below. This curve is called the item characteristics curve (ICC), which is assumed to reflect the true relationship between the trait and the responses to the item. For example, in an educational setting, what you see is that as the ability level increases, the probability of getting the item correct increases monotonicially.  Within a health setting, that would mean that as the ability level incerases, the participant is more likely to endorse a higher response option for that item.  
 
 ```{r mono, echo=FALSE}
 library(mirt)
@@ -661,6 +661,8 @@ Here are certain guidelines:
     
     + 2PL (At least 250, but best is at least 500). 
     
+    + 3PL (At least 1000) [De Ayala, 2013]
+    
     
 2. Polytomous response formats 
 
@@ -700,6 +702,8 @@ The result is 0.2818 $\approx$ 0.3.
 #### Citations
 
 + Chalmers, R. P. (2012). mirt: A multidimensional item response theory package for the R environment. Journal of Statistical Software, 48(6), 1-29.
+
++ De Ayala, R. J. (2013). Theory and practice of item response theory. Guilford Publications.
 
 + Embretson, S. E., & Reise, S. P. (2013). Item response theory. Psychology Press.
 
