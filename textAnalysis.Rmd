@@ -1,0 +1,80 @@
+---
+title: "Text Analysis"
+author: "Aiden Loe"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output:
+  html_document:
+    toc: true
+    toc_depth: 3
+    toc_float: 
+      collapsed: false
+      
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## **Introduction**
+Hello! I am listing down things that I found difficult when it comes to text analysis. 
+
+## **White and Blank spaces**
+This took me a while to learn. Hint** white spaces and blank spaces are not the same. 
+
+`trimsw()` will not work at all if it is blank spaces. 
+
+
+Here are some useful tips to know more about regular expressions.
+
++ [:digit:] or \d: digits, 0 1 2 3 4 5 6 7 8 9, equivalent to [0-9].
+
++ \D: non-digits, equivalent to [^0-9].
+
++ [:lower:]: lower-case letters, equivalent to [a-z].
+
++ [:upper:]: upper-case letters, equivalent to [A-Z].
+
++ [:alpha:]: alphabetic characters, equivalent to [[:lower:][:upper:]] or [A-z].
+
++ [:alnum:]: alphanumeric characters, equivalent to [[:alpha:][:digit:]] or [A-z0-9].
+
++ \w: word characters, equivalent to [[:alnum:]_] or [A-z0-9_].
+
++ \W: not word, equivalent to [^A-z0-9_].
+
++ \s[:xdigit:]: hexadecimal digits (base 16), 0 1 2 3 4 5 6 7 8 9 A B C D E F a b c d e f, equivalent to [0-9A-Fa-f].
+
++ "[:blank:]": blank characters, i.e. space and tab.
+
++ "[:space:]": space characters: tab, newline, vertical tab, form feed, carriage return, space.
+
++ \s: space, ` `.
+
++ \S: not space.
+
++ [:punct:]: punctuation characters, ! " # $ % & ’ ( ) * + , - . / : ; < = > ? @ [  ] ^ _ ` { | } ~.
+
++ [:graph:]: graphical (human readable) characters: equivalent to [[:alnum:][:punct:]].
+
++ [:print:]: printable characters, equivalent to [[:alnum:][:punct:]\\s].
+
++ [:cntrl:]: control characters, like \n or \r, [\x00-\x1F\x7F].
+
+
+
+#### Citations
+
++ http://stat545.com/block022_regular-expression.html
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-98916204-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
