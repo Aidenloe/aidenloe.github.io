@@ -376,7 +376,7 @@ div.tocify {
 
 <h1 class="title toc-ignore">Intro to IRT</h1>
 <h4 class="author"><em>Aiden Loe</em></h4>
-<h4 class="date"><em>22 February, 2018</em></h4>
+<h4 class="date"><em>08 October, 2018</em></h4>
 
 </div>
 
@@ -414,6 +414,7 @@ div.tocify {
 <h3><em>Item invariance</em></h3>
 <p>The assumption of invariance is best understood as the characteristics of the item parameters and latent trait being independent of the sample characteristics within a population. That means, for an item such as “I do not cry often”, the item parameters estimated by an IRT model would not change even if the characteristics of the patient, such as age or gender, changes. Under IRT, the ability of a person under measure <em>does not change due to sample characteristics</em>. Differential Item Functioning (DIF) analysis is often used to evaluate if this assumption if violated.</p>
 <p>Here is how two types of DIF looks like:</p>
+<pre><code>## Warning: package &#39;bindrcpp&#39; was built under R version 3.4.4</code></pre>
 <p><img src="introToIRT_files/figure-html/dif-1.png" width="768" /></p>
 <p>Ideally, you want both curves to be together rather than separated in order for the assumption of item invariance to hold.</p>
 <p><br/></p>
@@ -563,6 +564,27 @@ div.tocify {
 <p><br/></p>
 <p>The result is 0.2818 <span class="math inline">\(\approx\)</span> 0.3.</p>
 <p><br/></p>
+</div>
+<div id="assessing-goodness-of-fit-for-irt-models" class="section level3">
+<h3><em>Assessing goodness of fit for IRT models</em></h3>
+<p>The goodness-of-fit of tests cannot be computed if there are <strong>lesser distinct variances and covariances</strong> than the <strong>number of estimated parameters</strong>.</p>
+<p>This is because we get a <strong>negative degrees of freedom</strong>.</p>
+<p>We can use <span class="math inline">\(t = \frac{p(p+1)}{2}\)</span> to calculate the distinct variances and covariances.</p>
+<p>The number of estimated parameters is dependent on the total number of response options (no. of items * no. of response options).</p>
+<p>For e.g. if we have 4 items with 7 response options. Then the distinct variances and covariances is:<br/></p>
+<center>
+<span class="math inline">\(\frac{4(4+1)}{2} = 10\)</span> parameters.
+</center>
+<p><br/></p>
+<p>The number of estimated parameters is:<br/></p>
+<center>
+<span class="math inline">\(4 * 7 = 28\)</span>.
+</center>
+<p><br/></p>
+<p>Thus, 10 - 28 = -18, which results in a negative df.</p>
+<p>Only the fit of more constrained IRT models with less than 10 parameters can be tested using covariances.</p>
+<p>Alternatively, one may also collapse categories prior to the analysis to reduce the number of estimated parameters.</p>
+<p>see <em>(Maydeu-Olivares, Cai &amp; Hernándex, 2011, pg. 340)</em> for more discussion on this.</p>
 <div id="citations" class="section level4">
 <h4>Citations</h4>
 <ul>
@@ -570,6 +592,7 @@ div.tocify {
 <li><p>De Ayala, R. J. (2013). Theory and practice of item response theory. Guilford Publications.</p></li>
 <li><p>Embretson, S. E., &amp; Reise, S. P. (2013). Item response theory. Psychology Press.</p></li>
 <li><p>He, Q., &amp; Wheadon, C. (2013). The effect of sample size on item parameter estimation for the partial credit model. International Journal of Quantitative Research in Education, 1(3), 297-315.</p></li>
+<li><p>Maydeu-Olivares, A., Cai, L., &amp; Hernández, A. (2011). Comparing the fit of item response theory and factor analysis models. Structural Equation Modeling: A Multidisciplinary Journal, 18(3), 333-356.</p></li>
 <li><p>Morizot, J., Ainsworth, A. T., &amp; Reise, S. P. (2007). Toward modern psychometrics: Application of item response theory models in personality research. In R. W. Robins, R. C. Fraley, &amp; R. F. Krueger (Eds.), Handbook of Research Methods in Personality Psychology (pp. 407-423). New York: Guilford.</p></li>
 <li><p>Reckase, M. (2009). Multidimensional item response theory (Vol. 150). New York, NY: Springer.</p></li>
 <li><p>Reeve, B. B., &amp; Fayers, P. (2005). Applying item response theory modeling for evaluating questionnaire item and scale properties. In P. Fayers &amp; R. D. Hays (Eds.), Assessing quality of life in clinical trials: Methods of practice (2nd ed). New York: Oxford University Press, 2005. p. 55–73.</p></li>
