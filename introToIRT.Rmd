@@ -709,12 +709,14 @@ We can use $t = \frac{p(p+1)}{2}$ to calculate the distinct variances and covari
 
 The number of estimated parameters is dependent on the total number of response options (no. of items * no. of response options).
 
-For e.g. if we have 4 items with 7 response options. Then the distinct variances and covariances is:<br/> 
+For e.g. if we have 4 items with 7 response options. Then the distinct variances and covariances is:
 
+<br/> 
 <center> $\frac{4(4+1)}{2} = 10$ parameters. </center> <br/>
 
-The number of estimated parameters is:<br/>
+The number of estimated parameters is:
 
+<br/>
 <center >$4 * 7 = 28$. </center> <br/>
 
 Thus, 10 - 28 = -18, which results in a negative df. 
