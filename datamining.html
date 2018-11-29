@@ -1,0 +1,871 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+<meta name="author" content="Aiden Loe" />
+
+
+<title>Data mining</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 51px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+
+.section h2 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h3 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h4 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h5 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h6 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
+
+<!-- code folding -->
+
+
+
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = false;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+  padding-left: 25px;
+  text-indent: 0;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+.tocify-subheader {
+  display: inline;
+}
+.tocify-subheader .tocify-item {
+  font-size: 0.95em;
+}
+
+</style>
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Aiden Loe</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="about.html">About</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    R 4 Social Scientists
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li class="dropdown-header">What is R?</li>
+    <li>
+      <a href="introToR.html">Intro to R</a>
+    </li>
+    <li>
+      <a href="dataVisual.html">Data Visualisation</a>
+    </li>
+    <li>
+      <a href="datawrangling.html">Data Wrangling</a>
+    </li>
+    <li>
+      <a href="textAnalysis.html">Regular Expressions</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Big Data 4 Social Scientists
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li class="dropdown-header">What is ML?</li>
+    <li>
+      <a href="introToML.html">Intro to ML</a>
+    </li>
+    <li>
+      <a href="webscrapping.html">Web Scrapping</a>
+    </li>
+    <li>
+      <a href="datamining.html">Data Mining</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    IRT 4 Social Scientists
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li class="dropdown-header">What is IRT?</li>
+    <li>
+      <a href="introToIRT.html">Intro to IRT</a>
+    </li>
+    <li>
+      <a href="testinfo.html">Test Information</a>
+    </li>
+    <li>
+      <a href="irtplots.html">Plotting to IRT</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    CAT 4 Social Scientists
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li class="dropdown-header">What is CAT?</li>
+    <li>
+      <a href="introToCAT.html">Intro to CAT</a>
+    </li>
+    <li>
+      <a href="catSimulation.html">CAT simulation</a>
+    </li>
+  </ul>
+</li>
+<li>
+  <a href="blog.html">Blog Post</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Data mining</h1>
+<h4 class="author"><em>Aiden Loe</em></h4>
+<h4 class="date"><em>29 November, 2018</em></h4>
+
+</div>
+
+
+<div id="data-mining-twitter" class="section level1">
+<h1><strong>Data Mining (Twitter)</strong></h1>
+<p>Data mining is slightly different from web scrapping. It concerns itself with the data that is scraped, but it invovles the process of discovering patterns in large data sets.</p>
+<p>We are going to extract twitter data through their API.</p>
+<p>First of all, you need to create a twitter app before you can have access to the data through their API.</p>
+<p>We start off with loading the relevant packages.</p>
+<pre class="r"><code>library(&quot;twitteR&quot;)
+library(&quot;ggplot2&quot;)
+library(&quot;slam&quot;) 
+library(&quot;wordcloud&quot;) # depends on slam to work
+library(&quot;stringr&quot;)
+library(&quot;pander&quot;)</code></pre>
+<div id="important-keys" class="section level2">
+<h2><strong>Important keys</strong></h2>
+<p>The four main things you will need are:</p>
+<ul>
+<li>consumer_key</li>
+<li>consumer secret</li>
+<li>access_token</li>
+<li>access_secret</li>
+</ul>
+<pre class="r"><code>## Set up the Twitter API session
+options(httr_oauth_cache=F) #set oauth cacheing to false so that it doesn&#39;t bring up a prompt.
+setup_twitter_oauth(consumer_key=consumer_key, 
+                    consumer_secret=consumer_secret, 
+                    access_token=access_token, 
+                    access_secret=access_secret)</code></pre>
+<pre><code>## [1] &quot;Using direct authentication&quot;</code></pre>
+</div>
+<div id="get-data" class="section level2">
+<h2><strong>Get data</strong></h2>
+<pre class="r"><code>## Get data for a specific Twitter username
+tweet_user = getUser(&#39;elonmusk&#39;) #will get user info from the @david_stillwell account
+
+## Explore our new data
+ls(tweet_user) #see the elements in the new list variable</code></pre>
+<pre><code>##  [1] &quot;created&quot;           &quot;description&quot;       &quot;favoritesCount&quot;   
+##  [4] &quot;followersCount&quot;    &quot;followRequestSent&quot; &quot;friendsCount&quot;     
+##  [7] &quot;id&quot;                &quot;initFields&quot;        &quot;initialize&quot;       
+## [10] &quot;lang&quot;              &quot;lastStatus&quot;        &quot;listedCount&quot;      
+## [13] &quot;location&quot;          &quot;name&quot;              &quot;profileImageUrl&quot;  
+## [16] &quot;protected&quot;         &quot;screenName&quot;        &quot;statusesCount&quot;    
+## [19] &quot;url&quot;               &quot;verified&quot;</code></pre>
+<pre class="r"><code>#how long the account has been a Twitter user for
+tweet_user$created </code></pre>
+<pre><code>## [1] &quot;2009-06-02 20:12:29 UTC&quot;</code></pre>
+<pre class="r"><code>#user&#39;s description
+tweet_user$description </code></pre>
+<pre><code>## [1] &quot;&quot;</code></pre>
+<pre class="r"><code>#how many followers the account has
+tweet_user$followersCount </code></pre>
+<pre><code>## [1] 23540548</code></pre>
+</div>
+<div id="harvest-data" class="section level2">
+<h2><strong>Harvest data</strong></h2>
+<p>Here we want to extract at most up to 3200 tweets. This is the limit anyway so you can’t cross it.</p>
+<p>However, more often than not, you will not get the full 3200 tweets. It will always be less than that.</p>
+<p>We want to convert it into a data frame so we can use the data easily in R.</p>
+<pre class="r"><code>library(&quot;twitteR&quot;)
+## harvest tweets from user (usually return fewer)
+tweets.1 = userTimeline(&#39;elonmusk&#39;, n=3200, includeRts=FALSE)  # no re-tweets. 
+tweets = twListToDF(tweets.1) #put the Tweets in a data frame
+names(tweets) #view tweets</code></pre>
+<pre><code>##  [1] &quot;text&quot;          &quot;favorited&quot;     &quot;favoriteCount&quot; &quot;replyToSN&quot;    
+##  [5] &quot;created&quot;       &quot;truncated&quot;     &quot;replyToSID&quot;    &quot;id&quot;           
+##  [9] &quot;replyToUID&quot;    &quot;statusSource&quot;  &quot;screenName&quot;    &quot;retweetCount&quot; 
+## [13] &quot;isRetweet&quot;     &quot;retweeted&quot;     &quot;longitude&quot;     &quot;latitude&quot;</code></pre>
+<pre class="r"><code>nrow(tweets) #rows of tweets</code></pre>
+<pre><code>## [1] 410</code></pre>
+</div>
+<div id="reorganise-data" class="section level2">
+<h2><strong>Reorganise data</strong></h2>
+<p>Here we want to reorganise data to use the columns we are interested in.</p>
+<ul>
+<li><p>source = application the tweet came from (i.e. iphone or android)</p></li>
+<li><p>text = the tweet</p></li>
+<li><p>created = time of which the tweet was created</p></li>
+</ul>
+<pre class="r"><code>## reorganise data
+library(&quot;tidyr&quot;)
+library(&quot;dplyr&quot;)
+tweets &lt;- tweets %&gt;% 
+  select(id, statusSource, text, created) %&gt;% ## select these 4 columns
+  extract(statusSource, &quot;source&quot;, &quot;Twitter for (.*?)&lt;&quot;) %&gt;% #strip html code and rename
+  filter(source %in% c(&quot;iPhone&quot;)) # select only rows with iphone
+names(tweets)</code></pre>
+<pre><code>## [1] &quot;id&quot;      &quot;source&quot;  &quot;text&quot;    &quot;created&quot;</code></pre>
+<pre class="r"><code>head(tweets)</code></pre>
+<pre><code>##                    id source
+## 1 1068219566679969792 iPhone
+## 2 1068215834877685760 iPhone
+## 3 1068215333159231488 iPhone
+## 4 1068214601370615808 iPhone
+## 5 1068213320589565952 iPhone
+## 6 1068211885487476737 iPhone
+##                                                                                      text
+## 1                                                                  @megnsander Definitely
+## 2 After safety, our goal is to make a Tesla the most fun you could possibly have in a car
+## 3              @rocketisfine @racchava @gwestr We tried. Nintendo won’t license it to us.
+## 4                                                    @racchava @gwestr That would be cool
+## 5                                                      @gwestr Haha kinda true \U0001f600
+## 6                                                         @ArnaoutShady Never heard of it
+##               created
+## 1 2018-11-29 19:06:05
+## 2 2018-11-29 18:51:16
+## 3 2018-11-29 18:49:16
+## 4 2018-11-29 18:46:22
+## 5 2018-11-29 18:41:16
+## 6 2018-11-29 18:35:34</code></pre>
+</div>
+<div id="tweets-most-frequently" class="section level2">
+<h2><strong>Tweets most frequently</strong></h2>
+<p>Let’s find out at what point of time he tweets the most.</p>
+<p>We will use the data frame that we just cleaned.</p>
+<p>It only contains:</p>
+<ul>
+<li><p>source = application the tweet came from (i.e. iphone or android)</p></li>
+<li><p>text = the tweets</p></li>
+<li><p>created = time of which the tweet was created</p></li>
+</ul>
+<pre class="r"><code>## Investigate when he tweets the most (time of the day)
+library(&quot;lubridate&quot;)
+library(&quot;scales&quot;)
+library(&#39;dplyr&#39;)
+
+tweets %&gt;%
+  count(source, hour = hour(with_tz(created, &quot;EST&quot;))) %&gt;%  #count observations by source.
+  mutate(percent = n / sum(n)) %&gt;% #add a new column into the data frame
+  
+  # plot it
+  ggplot(aes(hour, percent, color = source)) + 
+  geom_line() +
+  scale_y_continuous(labels = percent_format()) +
+  labs(x = &quot;Hour of day (EST)&quot;,
+       y = &quot;% of tweets&quot;,
+       color = &quot;&quot;) </code></pre>
+<p><img src="datamining_files/figure-html/Tweets%20most%20frequently-1.png" width="672" /></p>
+</div>
+<div id="average-char-per-tweet" class="section level2">
+<h2><strong>Average char per tweet</strong></h2>
+<p>What is the average number of characters per tweet?</p>
+<pre class="r"><code>#apply the nchar function (number of characters) to the text column of every row of the dataset
+chars_per_tweet = sapply(tweets$text, nchar) 
+summary(chars_per_tweet) #report average number of characters per tweet</code></pre>
+<pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+##    4.00   32.00   61.00   73.77  124.75  148.00</code></pre>
+<pre class="r"><code>hist(chars_per_tweet, breaks=30) #this is the default R histogram plot</code></pre>
+<p><img src="datamining_files/figure-html/Average%20char%20per%20tweet-1.png" width="672" /></p>
+</div>
+<div id="average-word-per-tweet" class="section level2">
+<h2><strong>Average word per tweet</strong></h2>
+<p>What is the average number of words per tweet?</p>
+<pre class="r"><code>## What is the average number of words per tweet?
+word_list = strsplit(tweets$text, &quot; &quot;) #split the tweets into separate words by using spaces
+words_per_tweet = sapply(word_list, length) #count the number of word elements in each tweet
+summary(words_per_tweet) #report average number of words per tweet</code></pre>
+<pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+##    1.00    4.00    9.00   10.72   18.00   38.00</code></pre>
+<pre class="r"><code># the following uses ggplot2 to do the plot, which is much prettier.
+words_per_tweet_df = as.data.frame(words_per_tweet) #ggplot requires the data to be in a data frame
+ggplot(words_per_tweet_df, aes(x=words_per_tweet, group=words_per_tweet)) + 
+  geom_bar(fill=&quot;blue&quot;) + 
+  scale_x_continuous(limits=c(0,30))</code></pre>
+<pre><code>## Warning: Removed 2 rows containing non-finite values (stat_count).</code></pre>
+<p><img src="datamining_files/figure-html/Average%20word%20per%20tweet-1.png" width="672" /></p>
+</div>
+<div id="average-hashtags-per-tweet" class="section level2">
+<h2><strong>Average hashtags per tweet</strong></h2>
+<p>Clearly he does not hash much in his tweets.</p>
+<pre class="r"><code>## how many hashtags per tweet?
+hash_per_tweet = sapply (word_list, function(x) length(grep(&quot;#&quot;,x))) #grep is a function that searches for a certain character or set of characters, in this case the #
+table(hash_per_tweet) #counts</code></pre>
+<pre><code>## hash_per_tweet
+##   0   1 
+## 409   1</code></pre>
+<pre class="r"><code>summary(hash_per_tweet) #summary showing mean hashtags</code></pre>
+<pre><code>##     Min.  1st Qu.   Median     Mean  3rd Qu.     Max. 
+## 0.000000 0.000000 0.000000 0.002439 0.000000 1.000000</code></pre>
+</div>
+<div id="top-hash" class="section level2">
+<h2><strong>Top Hash</strong></h2>
+<p>What are the top 10 most commonly used hashtags?</p>
+<pre class="r"><code># get the hashtags. This function looks for anything that starts with a # and is followed by text
+user_hashtags &lt;- str_extract_all(tweets$text, &quot;#\\S+&quot;) 
+user_hashtags  = unlist(user_hashtags) #put tags in vector
+
+user_hashtags_freq &lt;- table(user_hashtags) #calculate hashtag frequencies
+user_hashtags_freq_order &lt;- sort(user_hashtags_freq, decreasing=TRUE) #order the frequencies from most to least
+head(user_hashtags_freq_order,10) #report the 10 most common hashtags</code></pre>
+<pre><code>## #OccupyMars 
+##           1</code></pre>
+</div>
+<div id="word-cloud" class="section level2">
+<h2><strong>Word Cloud</strong></h2>
+<p>Usually, you would have to remove important stopwords before creating a word cloud.</p>
+<p>Here we are just using some stopwords.</p>
+<pre class="r"><code>#counts unique words from each tweet (so if you use the same word twice in a tweet it&#39;ll only be counted once)
+uniq_words_per_tweet = sapply (word_list, function(x) unique(x)) 
+uniq_words = unlist(uniq_words_per_tweet) #they&#39;re in a list, so convert to a huge vector
+length(uniq_words) #shows how many total words we&#39;ve collected from this user</code></pre>
+<pre><code>## [1] 4256</code></pre>
+<pre class="r"><code>uniq_words&lt;- uniq_words[!uniq_words %in% c(&quot;a&quot;, &quot;in&quot;, &quot;to&quot;, &quot;is&quot;, &quot;for&quot;, &quot;but&quot;, &quot;and&quot;, &quot;on&quot;, &quot;the&quot;, &quot;of&quot;)] # remove some stopwords.
+uniq_words_freq = table(uniq_words) #number of times that each word is displayed
+
+wordcloud(names(uniq_words_freq),scale=c(8,1.5), min.freq=3, uniq_words_freq, random.order=FALSE, colors= &quot;#1B9E77&quot;) #Produces the word cloud
+title(&quot;words in Tweets&quot;,cex.main=3, col.main=&quot;gray51&quot;) #gives the word cloud a title</code></pre>
+<p><img src="datamining_files/figure-html/Word%20Cloud-1.png" width="1440" /></p>
+</div>
+</div>
+<div id="sentiment-analysis" class="section level1">
+<h1><em>Sentiment Analysis</em></h1>
+<p>This is a simple example of how one can conduct a simple sentiment analysis.</p>
+<p>We will be mining twitter data of 3 UK telecommunication companies.</p>
+<p>The tweets will be taken from the customer support accounts.</p>
+<p>We will then evaluate the sentiment of these tweets.</p>
+<p>We will plot it and then compare the sentiment score between the companies.</p>
+<p>You may begin going through the code from there.</p>
+<p>But you must first get your consumer and secret keys to access the Twitter API.</p>
+<div id="load-dictionaries" class="section level2">
+<h2><strong>Load Dictionaries</strong></h2>
+<p>The first thing to do is to load the dictionaries of positive and negative words.</p>
+<p>We are using the <a href="https://www.cs.uic.edu/~liub/FBS/sentiment-analysis.html">Sentiment Lexicon</a>.</p>
+<p>It has around 6800 words <a href="https://www.cs.uic.edu/~liub/publications/kdd04-revSummary.pdf">Hu and Lui, KDD-2004</a>.</p>
+<pre class="r"><code>## Positive and negative word dictionaries
+# Make sure you have positive_words.txt and negative_words.txt in your working directory
+# You can open the files in Notepad to see what&#39;s in them.
+pos = readLines(&quot;datasets/positive_words.txt&quot;)
+neg = readLines(&quot;datasets/negative_words.txt&quot;)</code></pre>
+</div>
+<div id="search-data" class="section level2">
+<h2><strong>Search data</strong></h2>
+<p>We are going to search the twitter data of 3 UK telecommunication companies.</p>
+<p>Then we clean the tweets of things we don’t want in it.</p>
+<p>This can be punctuations, numbers, html links etc..</p>
+<pre class="r"><code>## Get tweets mentioning 3 UK companies
+# name the companies
+companyNameOne &lt;- &quot;@ThreeUKSupport&quot;
+companyNameTwo &lt;- &quot;@VodafoneUKhelp&quot;
+companyNameThree &lt;- &quot;@BTcare&quot;
+extractTweetsNumber &lt;- 500 #get the 500 most recent Tweets about each
+
+# Notice we&#39;re using searchTwitter function. We didn&#39;t use this function before in the previous Twitter API lecture.
+# It uses a different Twitter API end point. Rather than getting the tweets from a certain account,
+# it gets the Tweets that contain a certain text string.
+companyOne = searchTwitter(companyNameOne, n=extractTweetsNumber, lang=&quot;en&quot;)
+companyTwo = searchTwitter(companyNameTwo, n=extractTweetsNumber, lang=&quot;en&quot;)</code></pre>
+<pre><code>## Warning in doRppAPICall(&quot;search/tweets&quot;, n, params = params,
+## retryOnRateLimit = retryOnRateLimit, : 500 tweets were requested but the
+## API can only return 8</code></pre>
+<pre class="r"><code>companyThree = searchTwitter(companyNameThree, n=extractTweetsNumber, lang=&quot;en&quot;)
+
+# We only want the actual tweets rather than the meta-data, and this function does that.
+companyOne =  sapply(companyOne, function(x) x$getText())
+companyTwo =  sapply(companyTwo, function(x) x$getText())
+companyThree  =  sapply(companyThree, function(x) x$getText())
+
+## Clean the Tweets
+companies = list(companyOne, companyTwo, companyThree) #create a list with the three companies in it
+
+compan2 &lt;- NULL
+for (i in 1:length(companies)) { #set up a loop to do all three companies
+  #remove retweet entities
+  companies[i] = lapply(X = companies[i], gsub,
+                        pattern=&quot;(RT|via)((?:\\b\\W*@\\w+)+)&quot;, replacement=&quot;&quot;)
+
+  #remove at people
+  (companies[i] = lapply(X = companies[i], gsub,
+                         pattern=&quot;@\\w+&quot;, replacement=&quot;&quot;))
+  # remove punctuation
+  (companies[i] = lapply(X = companies[i], gsub,
+                         pattern=&quot;[[:punct:]]&quot;, replacement=&quot;&quot;))
+  # remove numbers
+  (companies[i] = lapply(X = companies[i], gsub,
+                         pattern=&quot;[[:digit:]]&quot;, replacement=&quot;&quot;))
+  # remove html links
+  (companies[i] = lapply(X = companies[i], gsub,
+                         pattern=&quot;http\\w+&quot;, replacement=&quot;&quot;))
+  # remove new lines and replace with a space
+  (companies[i] = lapply(X = companies[i], gsub,
+                         pattern=&quot;\\n&quot;, replacement=&quot;&quot;))
+  # remove unnecessary spaces
+  #anything with 2 or more spaces, replace with 1
+  (companies[i] = lapply(X = companies[i], gsub,
+                         pattern=&quot;[ \t]{2,}&quot;, replacement=&quot;&quot;)) 
+  #remove any spaces at the beginning of tweets
+  (companies[i] = lapply(X = companies[i], gsub,
+                         pattern=&quot;^\\s+|\\s+$&quot;, replacement=&quot;&quot;)) 
+
+  # remove NAs in each specific  txt to setup for Corpus and score_sentiment
+  companies[i] = companies[i][!is.na(companies[i])]
+
+  #unlist
+  compan &lt;- unlist(companies[i])
+  # makes everything lower case
+  (compan2[[i]] = sapply(X = compan, try.error))
+
+}
+
+#put the data back in the companyOne/Two/Three variables, just for ease of use
+companyOne = companies[[1]]
+companyTwo = companies[[2]]
+companyThree = companies[[3]]</code></pre>
+</div>
+<div id="sentiment-score" class="section level2">
+<h2><strong>Sentiment score</strong></h2>
+<p>Code for sentiment analysis was copied heavily from <a href="https://github.com/jeffreybreen/twitter-sentiment-analysis-tutorial-201107/blob/master/R/sentiment.R">here</a></p>
+<p>We derive a sentiment score for every tweet.</p>
+<p>The idea is that every word in a tweet will be compared to the positive and negative dictionary. For every positive word found, a score of +1 is given, and a score of -1 is given for every negative word found in the sentence.</p>
+<pre class="r"><code># apply function score.sentiment and add new variable in column
+companyOne.score = score.sentiment(companyOne, .progress=&quot;text&quot;, pos, neg)
+
+companyTwo.score = score.sentiment(companyTwo, .progress=&quot;text&quot;, pos, neg)
+
+companyThree.score = score.sentiment(companyThree, .progress=&quot;text&quot;, pos, neg)
+
+# have a look at what Tweets are labeled positive and negative:
+#head(companyOne.score)</code></pre>
+</div>
+<div id="plot-sentiment-score" class="section level2">
+<h2><strong>Plot Sentiment score</strong></h2>
+<p>Once we have the score for every sentence, we can then plot it on a bar chart.</p>
+<pre class="r"><code>## Produce a bar graph showing which companies are on average more positively/negatively rated.
+
+# name the companies
+companyOne.score$telecom = companyNameOne
+companyTwo.score$telecom = companyNameTwo
+companyThree.score$telecom = companyNameThree
+
+# combine all scores into a single variable
+all.scores = rbind(companyOne.score, companyTwo.score, companyThree.score)
+all.scores &lt;- all.scores[,c(1,3,2)] #reorder the columns
+
+# Gives you the average of each of the three categories
+meanscore = tapply(all.scores$score, all.scores$telecom, mean) 
+
+#### sem
+# first calculate sd
+# then use sd to calculate se
+sdscore = tapply(all.scores$score, all.scores$telecom, sd) 
+companyOne.SEm &lt;- sdscore[1]/sqrt(nrow(companyOne.score))
+companyTwo.SEm &lt;- sdscore[2]/sqrt(nrow(companyThree.score))
+companyThree.SEm &lt;- sdscore[3]/sqrt(nrow(companyThree.score))
+sem &lt;- c(companyOne.SEm,companyTwo.SEm,companyThree.SEm) # put them back
+
+# create a data frame to be plotted
+df = data.frame(telecom=names(meanscore), meanscore=meanscore, sem=sem)
+
+values = c(&quot;red&quot;,&quot;blue&quot;, &quot;green&quot;) #bar colours in the plot
+limits &lt;- aes(ymax = df$meanscore + df$sem, # setting the upper and lower limits
+              ymin = df$meanscore - df$sem) # setting the upper and lower limits
+
+#do the plot
+ggplot(df, aes(x=telecom, y=meanscore, fill=factor(telecom))) +
+  geom_bar(data=df,stat=&quot;identity&quot;) +
+  geom_errorbar(limits, position = position_dodge(width = 0.9), width = 0.25) +
+  ggtitle(&quot;Average Sentiment Score&quot;) +
+  scale_fill_discrete(guide = guide_legend(title = &quot;Companies&quot;)) # title text</code></pre>
+<p><img src="datamining_files/figure-html/plot%20barchart-1.png" width="672" /></p>
+</div>
+<div id="t-test-for-sentiment-score" class="section level2">
+<h2><strong>T test for sentiment score</strong></h2>
+<p>We can further confirm our visual result by running a simple pair-wise t-test.</p>
+<pre class="r"><code># t.test between the groups
+pander(with(all.scores,(t.test(score[telecom==&quot;@ThreeUKSupport&quot;],score[telecom==&quot;@VodafoneUKhelp&quot;]))),style=&quot;simple&quot;)</code></pre>
+<table>
+<caption>Welch Two Sample t-test: <code>score[telecom == &quot;@ThreeUKSupport&quot;]</code> and <code>score[telecom == &quot;@VodafoneUKhelp&quot;]</code></caption>
+<thead>
+<tr class="header">
+<th align="center">Test statistic</th>
+<th align="center">df</th>
+<th align="center">P value</th>
+<th align="center">Alternative hypothesis</th>
+<th align="center">mean of x</th>
+<th align="center">mean of y</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center">-1.22</td>
+<td align="center">7.371</td>
+<td align="center">0.2602</td>
+<td align="center">two.sided</td>
+<td align="center">0.05</td>
+<td align="center">0.375</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>pander(with(all.scores,(t.test(score[telecom==&quot;@ThreeUKSupport&quot;],score[telecom==&quot;@BTcare&quot;]))),style=&quot;simple&quot;)</code></pre>
+<table>
+<caption>Welch Two Sample t-test: <code>score[telecom == &quot;@ThreeUKSupport&quot;]</code> and <code>score[telecom == &quot;@BTcare&quot;]</code> (continued below)</caption>
+<thead>
+<tr class="header">
+<th align="center">Test statistic</th>
+<th align="center">df</th>
+<th align="center">P value</th>
+<th align="center">Alternative hypothesis</th>
+<th align="center">mean of x</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center">4.176</td>
+<td align="center">997.6</td>
+<td align="center">3.223e-05 * * *</td>
+<td align="center">two.sided</td>
+<td align="center">0.05</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="mean-of-y" class="section level2">
+<h2>mean of y</h2>
+<p>-0.204</p>
+<pre class="r"><code>pander(with(all.scores,(t.test(score[telecom==&quot;@VodafoneUKhelp&quot;],score[telecom==&quot;@BTcare&quot;]))),style=&quot;simple&quot;)</code></pre>
+<table>
+<caption>Welch Two Sample t-test: <code>score[telecom == &quot;@VodafoneUKhelp&quot;]</code> and <code>score[telecom == &quot;@BTcare&quot;]</code></caption>
+<thead>
+<tr class="header">
+<th align="center">Test statistic</th>
+<th align="center">df</th>
+<th align="center">P value</th>
+<th align="center">Alternative hypothesis</th>
+<th align="center">mean of x</th>
+<th align="center">mean of y</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center">2.172</td>
+<td align="center">7.387</td>
+<td align="center">0.06444</td>
+<td align="center">two.sided</td>
+<td align="center">0.375</td>
+<td align="center">-0.204</td>
+</tr>
+</tbody>
+</table>
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-98916204-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+</div>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
