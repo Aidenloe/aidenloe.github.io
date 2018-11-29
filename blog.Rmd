@@ -1,0 +1,13 @@
+---
+title: "Blog Post"
+author: "Aiden"
+date: "29/11/2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Here are my blog posts. For example check out my post about esrc new investgiator [grant](https://aidenloe.github.io/esrc_p1.html)
+

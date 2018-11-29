@@ -113,6 +113,7 @@ tweets <- tweets %>%
   filter(source %in% c("iPhone")) # select only rows with iphone
 names(tweets)
 
+head(tweets)
 ```
 
 ## **Tweets most frequently**
@@ -134,6 +135,8 @@ It only contains:
 ## Investigate when he tweets the most (time of the day)
 library("lubridate")
 library("scales")
+library('dplyr')
+
 tweets %>%
   count(source, hour = hour(with_tz(created, "EST"))) %>%  #count observations by source.
   mutate(percent = n / sum(n)) %>% #add a new column into the data frame
@@ -144,7 +147,7 @@ tweets %>%
   scale_y_continuous(labels = percent_format()) +
   labs(x = "Hour of day (EST)",
        y = "% of tweets",
-       color = "")
+       color = "") 
 
 ```
 

@@ -45,8 +45,12 @@ navbar:
       href: introToCAT.html
     - text: CAT simulation
       href: catSimulation.html
+  - text: Blog Post    
+    href: blog.html
+    menu:
 output:
   html_document:
+  #prettydoc::html_pretty:
     theme: cosmo
     highlight: textmate
     css: style.css

@@ -324,7 +324,7 @@ You can get the [script here](https://www.dropbox.com/s/77a1hqup3eek74s/Exercise
 Don't fret. Everyone's been there.
 
 ```{r dataset ggplot questions, result='hide', message=FALSE, echo=FALSE}
-require(reshape) 
+require(reshape2) 
 #### Load data set ####
 Big5mfq <- big5
 

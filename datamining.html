@@ -95,6 +95,9 @@ img {
 .tabbed-pane {
   padding-top: 12px;
 }
+.html-widget {
+  margin-bottom: 20px;
+}
 button.code-folding-btn:focus {
   outline: none;
 }
@@ -362,6 +365,9 @@ div.tocify {
     </li>
   </ul>
 </li>
+<li>
+  <a href="blog.html">Blog Post</a>
+</li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         
@@ -376,7 +382,7 @@ div.tocify {
 
 <h1 class="title toc-ignore">Data mining</h1>
 <h4 class="author"><em>Aiden Loe</em></h4>
-<h4 class="date"><em>22 February, 2018</em></h4>
+<h4 class="date"><em>29 November, 2018</em></h4>
 
 </div>
 
@@ -432,7 +438,7 @@ tweet_user$description </code></pre>
 <pre><code>## [1] &quot;&quot;</code></pre>
 <pre class="r"><code>#how many followers the account has
 tweet_user$followersCount </code></pre>
-<pre><code>## [1] 19777154</code></pre>
+<pre><code>## [1] 23539285</code></pre>
 </div>
 <div id="harvest-data" class="section level2">
 <h2><strong>Harvest data</strong></h2>
@@ -449,7 +455,7 @@ names(tweets) #view tweets</code></pre>
 ##  [9] &quot;replyToUID&quot;    &quot;statusSource&quot;  &quot;screenName&quot;    &quot;retweetCount&quot; 
 ## [13] &quot;isRetweet&quot;     &quot;retweeted&quot;     &quot;longitude&quot;     &quot;latitude&quot;</code></pre>
 <pre class="r"><code>nrow(tweets) #rows of tweets</code></pre>
-<pre><code>## [1] 442</code></pre>
+<pre><code>## [1] 412</code></pre>
 </div>
 <div id="reorganise-data" class="section level2">
 <h2><strong>Reorganise data</strong></h2>
@@ -468,6 +474,28 @@ tweets &lt;- tweets %&gt;%
   filter(source %in% c(&quot;iPhone&quot;)) # select only rows with iphone
 names(tweets)</code></pre>
 <pre><code>## [1] &quot;id&quot;      &quot;source&quot;  &quot;text&quot;    &quot;created&quot;</code></pre>
+<pre class="r"><code>head(tweets)</code></pre>
+<pre><code>##                    id source
+## 1 1068208290528555010 iPhone
+## 2 1068198572879831040 iPhone
+## 3 1067969782803128320 iPhone
+## 4 1067967799547449344 iPhone
+## 5 1067927074797629440 iPhone
+## 6 1067695084609527808 iPhone
+##                                                                                                                                           text
+## 1                                                                 @prades_maxime Software upgrade to rain sensing neural net coming next month
+## 2                                                                                                                               @poeticZay Yes
+## 3 @NBCNews This is completely backwards. Based on what we’ve learned from the Hawthorne test tunnel, we’re moving for… https://t.co/udmtXFnrIF
+## 4 You can summon your Tesla from your phone. Only short distances today, but in a few years summon will work from acr… https://t.co/CMkL2pX3Uq
+## 5 Cool! Actually, if you buy a Tesla without a test drive, you have 3 days to return it. If you buy after a test driv… https://t.co/LHkG4WE3ik
+## 6                                                                                                               @Shell Tiny wizard \U0001f9d9‍♂️
+##               created
+## 1 2018-11-29 18:21:17
+## 2 2018-11-29 17:42:40
+## 3 2018-11-29 02:33:32
+## 4 2018-11-29 02:25:39
+## 5 2018-11-28 23:43:50
+## 6 2018-11-28 08:21:59</code></pre>
 </div>
 <div id="tweets-most-frequently" class="section level2">
 <h2><strong>Tweets most frequently</strong></h2>
@@ -482,6 +510,8 @@ names(tweets)</code></pre>
 <pre class="r"><code>## Investigate when he tweets the most (time of the day)
 library(&quot;lubridate&quot;)
 library(&quot;scales&quot;)
+library(&#39;dplyr&#39;)
+
 tweets %&gt;%
   count(source, hour = hour(with_tz(created, &quot;EST&quot;))) %&gt;%  #count observations by source.
   mutate(percent = n / sum(n)) %&gt;% #add a new column into the data frame
@@ -492,7 +522,7 @@ tweets %&gt;%
   scale_y_continuous(labels = percent_format()) +
   labs(x = &quot;Hour of day (EST)&quot;,
        y = &quot;% of tweets&quot;,
-       color = &quot;&quot;)</code></pre>
+       color = &quot;&quot;) </code></pre>
 <p><img src="datamining_files/figure-html/Tweets%20most%20frequently-1.png" width="672" /></p>
 </div>
 <div id="average-char-per-tweet" class="section level2">
@@ -502,7 +532,7 @@ tweets %&gt;%
 chars_per_tweet = sapply(tweets$text, nchar) 
 summary(chars_per_tweet) #report average number of characters per tweet</code></pre>
 <pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-##     3.0    42.0    81.0    83.1   138.0   144.0</code></pre>
+##    4.00   34.00   65.00   76.54  130.25  148.00</code></pre>
 <pre class="r"><code>hist(chars_per_tweet, breaks=30) #this is the default R histogram plot</code></pre>
 <p><img src="datamining_files/figure-html/Average%20char%20per%20tweet-1.png" width="672" /></p>
 </div>
@@ -514,12 +544,13 @@ word_list = strsplit(tweets$text, &quot; &quot;) #split the tweets into separate
 words_per_tweet = sapply(word_list, length) #count the number of word elements in each tweet
 summary(words_per_tweet) #report average number of words per tweet</code></pre>
 <pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-##    1.00    5.00   12.00   12.13   19.00   29.00</code></pre>
+##    1.00    4.00   10.00   11.18   18.00   38.00</code></pre>
 <pre class="r"><code># the following uses ggplot2 to do the plot, which is much prettier.
 words_per_tweet_df = as.data.frame(words_per_tweet) #ggplot requires the data to be in a data frame
 ggplot(words_per_tweet_df, aes(x=words_per_tweet, group=words_per_tweet)) + 
   geom_bar(fill=&quot;blue&quot;) + 
   scale_x_continuous(limits=c(0,30))</code></pre>
+<pre><code>## Warning: Removed 2 rows containing non-finite values (stat_count).</code></pre>
 <p><img src="datamining_files/figure-html/Average%20word%20per%20tweet-1.png" width="672" /></p>
 </div>
 <div id="average-hashtags-per-tweet" class="section level2">
@@ -529,11 +560,11 @@ ggplot(words_per_tweet_df, aes(x=words_per_tweet, group=words_per_tweet)) +
 hash_per_tweet = sapply (word_list, function(x) length(grep(&quot;#&quot;,x))) #grep is a function that searches for a certain character or set of characters, in this case the #
 table(hash_per_tweet) #counts</code></pre>
 <pre><code>## hash_per_tweet
-##   0   1   2 
-## 402   2   1</code></pre>
+##   0   1 
+## 411   1</code></pre>
 <pre class="r"><code>summary(hash_per_tweet) #summary showing mean hashtags</code></pre>
 <pre><code>##     Min.  1st Qu.   Median     Mean  3rd Qu.     Max. 
-## 0.000000 0.000000 0.000000 0.009876 0.000000 2.000000</code></pre>
+## 0.000000 0.000000 0.000000 0.002427 0.000000 1.000000</code></pre>
 </div>
 <div id="top-hash" class="section level2">
 <h2><strong>Top Hash</strong></h2>
@@ -545,9 +576,8 @@ user_hashtags  = unlist(user_hashtags) #put tags in vector
 user_hashtags_freq &lt;- table(user_hashtags) #calculate hashtag frequencies
 user_hashtags_freq_order &lt;- sort(user_hashtags_freq, decreasing=TRUE) #order the frequencies from most to least
 head(user_hashtags_freq_order,10) #report the 10 most common hashtags</code></pre>
-<pre><code>## user_hashtags
-## #FalconHeavy      #SpaceX 
-##            3            1</code></pre>
+<pre><code>## #’s 
+##   1</code></pre>
 </div>
 <div id="word-cloud" class="section level2">
 <h2><strong>Word Cloud</strong></h2>
@@ -557,7 +587,7 @@ head(user_hashtags_freq_order,10) #report the 10 most common hashtags</code></pr
 uniq_words_per_tweet = sapply (word_list, function(x) unique(x)) 
 uniq_words = unlist(uniq_words_per_tweet) #they&#39;re in a list, so convert to a huge vector
 length(uniq_words) #shows how many total words we&#39;ve collected from this user</code></pre>
-<pre><code>## [1] 4788</code></pre>
+<pre><code>## [1] 4451</code></pre>
 <pre class="r"><code>uniq_words&lt;- uniq_words[!uniq_words %in% c(&quot;a&quot;, &quot;in&quot;, &quot;to&quot;, &quot;is&quot;, &quot;for&quot;, &quot;but&quot;, &quot;and&quot;, &quot;on&quot;, &quot;the&quot;, &quot;of&quot;)] # remove some stopwords.
 uniq_words_freq = table(uniq_words) #number of times that each word is displayed
 
@@ -605,7 +635,7 @@ companyOne = searchTwitter(companyNameOne, n=extractTweetsNumber, lang=&quot;en&
 companyTwo = searchTwitter(companyNameTwo, n=extractTweetsNumber, lang=&quot;en&quot;)</code></pre>
 <pre><code>## Warning in doRppAPICall(&quot;search/tweets&quot;, n, params = params,
 ## retryOnRateLimit = retryOnRateLimit, : 500 tweets were requested but the
-## API can only return 4</code></pre>
+## API can only return 8</code></pre>
 <pre class="r"><code>companyThree = searchTwitter(companyNameThree, n=extractTweetsNumber, lang=&quot;en&quot;)
 
 # We only want the actual tweets rather than the meta-data, and this function does that.
@@ -735,12 +765,12 @@ pander(with(all.scores,(t.test(score[telecom==&quot;@ThreeUKSupport&quot;],score
 </thead>
 <tbody>
 <tr class="odd">
-<td align="center">-0.8936</td>
-<td align="center">3.142</td>
-<td align="center">0.4347</td>
+<td align="center">-1.168</td>
+<td align="center">7.356</td>
+<td align="center">0.2794</td>
 <td align="center">two.sided</td>
-<td align="center">0.024</td>
-<td align="center">0.25</td>
+<td align="center">0.064</td>
+<td align="center">0.375</td>
 </tr>
 </tbody>
 </table>
@@ -758,11 +788,11 @@ pander(with(all.scores,(t.test(score[telecom==&quot;@ThreeUKSupport&quot;],score
 </thead>
 <tbody>
 <tr class="odd">
-<td align="center">3.665</td>
-<td align="center">992.1</td>
-<td align="center">0.0002602 * * *</td>
+<td align="center">4.155</td>
+<td align="center">997.9</td>
+<td align="center">3.525e-05 * * *</td>
 <td align="center">two.sided</td>
-<td align="center">0.024</td>
+<td align="center">0.064</td>
 </tr>
 </tbody>
 </table>
@@ -785,11 +815,11 @@ pander(with(all.scores,(t.test(score[telecom==&quot;@ThreeUKSupport&quot;],score
 </thead>
 <tbody>
 <tr class="odd">
-<td align="center">1.705</td>
-<td align="center">3.166</td>
-<td align="center">0.182</td>
+<td align="center">2.091</td>
+<td align="center">7.362</td>
+<td align="center">0.07292</td>
 <td align="center">two.sided</td>
-<td align="center">0.25</td>
+<td align="center">0.375</td>
 <td align="center">-0.182</td>
 </tr>
 </tbody>

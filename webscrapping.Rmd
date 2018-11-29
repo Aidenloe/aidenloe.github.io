@@ -87,8 +87,8 @@ All you need to do is to find the correct function to scrape.
 
 
 ##### BBC Example ####
-url <- "http://www.bbc.co.uk/news/uk-england-london-40196565"
-url <- "http://www.bbc.co.uk/news/world-asia-40188215"
+url <- "https://www.bbc.co.uk/news/uk-england-london-46387998"
+url <- "https://www.bbc.co.uk/news/education-46382919"
 txt = getURL(url) # get the URL html code
 
 # parsing html code into readable format
@@ -120,7 +120,7 @@ BBCscrapper1<- function(url){
 
 
 # Use function that was just created. 
-BBCscrapper1("http://www.bbc.co.uk/news/world-asia-40188215")
+BBCscrapper1("https://www.bbc.co.uk/news/education-46382919")
 ```
 
 ## **Keeping it neat**
@@ -130,7 +130,7 @@ Using the `plyr` package helps to arrange the data in an organised way.
 ## Putting the title and date into a dataframe
 require(plyr)
 #url
-url<- c("http://www.bbc.co.uk/news/world-asia-40188215", "http://www.bbc.co.uk/news/world-asia-40171379")
+url<- c("https://www.bbc.co.uk/news/uk-england-london-46387998", "https://www.bbc.co.uk/news/education-46382919")
 ## ldply: For each element of a list, apply function then combine results into a data frame
 #put into a dataframe
 ldply(url,BBCscrapper1)

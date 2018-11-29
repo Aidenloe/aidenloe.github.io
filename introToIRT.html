@@ -95,6 +95,9 @@ img {
 .tabbed-pane {
   padding-top: 12px;
 }
+.html-widget {
+  margin-bottom: 20px;
+}
 button.code-folding-btn:focus {
   outline: none;
 }
@@ -362,6 +365,9 @@ div.tocify {
     </li>
   </ul>
 </li>
+<li>
+  <a href="blog.html">Blog Post</a>
+</li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         
@@ -376,7 +382,7 @@ div.tocify {
 
 <h1 class="title toc-ignore">Intro to IRT</h1>
 <h4 class="author"><em>Aiden Loe</em></h4>
-<h4 class="date"><em>08 October, 2018</em></h4>
+<h4 class="date"><em>29 November, 2018</em></h4>
 
 </div>
 
@@ -414,7 +420,6 @@ div.tocify {
 <h3><em>Item invariance</em></h3>
 <p>The assumption of invariance is best understood as the characteristics of the item parameters and latent trait being independent of the sample characteristics within a population. That means, for an item such as “I do not cry often”, the item parameters estimated by an IRT model would not change even if the characteristics of the patient, such as age or gender, changes. Under IRT, the ability of a person under measure <em>does not change due to sample characteristics</em>. Differential Item Functioning (DIF) analysis is often used to evaluate if this assumption if violated.</p>
 <p>Here is how two types of DIF looks like:</p>
-<pre><code>## Warning: package &#39;bindrcpp&#39; was built under R version 3.4.4</code></pre>
 <p><img src="introToIRT_files/figure-html/dif-1.png" width="768" /></p>
 <p>Ideally, you want both curves to be together rather than separated in order for the assumption of item invariance to hold.</p>
 <p><br/></p>

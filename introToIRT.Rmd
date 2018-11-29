@@ -728,8 +728,6 @@ Alternatively, one may also collapse categories prior to the analysis to reduce 
 see *(Maydeu-Olivares, Cai & Hernándex, 2011, pg. 340)* for more discussion on this. 
 
 
-
-
 #### Citations
 
 + Chalmers, R. P. (2012). mirt: A multidimensional item response theory package for the R environment. Journal of Statistical Software, 48(6), 1-29.
