@@ -438,7 +438,7 @@ tweet_user$description </code></pre>
 <pre><code>## [1] &quot;&quot;</code></pre>
 <pre class="r"><code>#how many followers the account has
 tweet_user$followersCount </code></pre>
-<pre><code>## [1] 23540320</code></pre>
+<pre><code>## [1] 23540457</code></pre>
 </div>
 <div id="harvest-data" class="section level2">
 <h2><strong>Harvest data</strong></h2>
@@ -765,11 +765,11 @@ pander(with(all.scores,(t.test(score[telecom==&quot;@ThreeUKSupport&quot;],score
 </thead>
 <tbody>
 <tr class="odd">
-<td align="center">-1.19</td>
-<td align="center">7.366</td>
-<td align="center">0.271</td>
+<td align="center">-1.22</td>
+<td align="center">7.371</td>
+<td align="center">0.2602</td>
 <td align="center">two.sided</td>
-<td align="center">0.058</td>
+<td align="center">0.05</td>
 <td align="center">0.375</td>
 </tr>
 </tbody>
@@ -788,18 +788,18 @@ pander(with(all.scores,(t.test(score[telecom==&quot;@ThreeUKSupport&quot;],score
 </thead>
 <tbody>
 <tr class="odd">
-<td align="center">4.264</td>
-<td align="center">997.4</td>
-<td align="center">2.196e-05 * * *</td>
+<td align="center">4.176</td>
+<td align="center">997.6</td>
+<td align="center">3.223e-05 * * *</td>
 <td align="center">two.sided</td>
-<td align="center">0.058</td>
+<td align="center">0.05</td>
 </tr>
 </tbody>
 </table>
 </div>
 <div id="mean-of-y" class="section level2">
 <h2>mean of y</h2>
-<p>-0.2</p>
+<p>-0.204</p>
 <pre class="r"><code>pander(with(all.scores,(t.test(score[telecom==&quot;@VodafoneUKhelp&quot;],score[telecom==&quot;@BTcare&quot;]))),style=&quot;simple&quot;)</code></pre>
 <table>
 <caption>Welch Two Sample t-test: <code>score[telecom == &quot;@VodafoneUKhelp&quot;]</code> and <code>score[telecom == &quot;@BTcare&quot;]</code></caption>
@@ -815,12 +815,12 @@ pander(with(all.scores,(t.test(score[telecom==&quot;@ThreeUKSupport&quot;],score
 </thead>
 <tbody>
 <tr class="odd">
-<td align="center">2.157</td>
-<td align="center">7.385</td>
-<td align="center">0.06591</td>
+<td align="center">2.172</td>
+<td align="center">7.387</td>
+<td align="center">0.06444</td>
 <td align="center">two.sided</td>
 <td align="center">0.375</td>
-<td align="center">-0.2</td>
+<td align="center">-0.204</td>
 </tr>
 </tbody>
 </table>
