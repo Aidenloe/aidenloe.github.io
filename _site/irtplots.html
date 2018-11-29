@@ -24,8 +24,8 @@
 <link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
 <script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
-<link href="site_libs/highlightjs-1.1/textmate.css" rel="stylesheet" />
-<script src="site_libs/highlightjs-1.1/highlight.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
 
 <style type="text/css">code{white-space: pre;}</style>
 <style type="text/css">
@@ -34,10 +34,12 @@
   }
 </style>
 <script type="text/javascript">
-if (window.hljs && document.readyState && document.readyState === "complete") {
-   window.setTimeout(function() {
-      hljs.initHighlighting();
-   }, 0);
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
 }
 </script>
 
@@ -92,6 +94,9 @@ img {
 }
 .tabbed-pane {
   padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
 }
 button.code-folding-btn:focus {
   outline: none;
@@ -301,6 +306,9 @@ div.tocify {
     <li>
       <a href="datawrangling.html">Data Wrangling</a>
     </li>
+    <li>
+      <a href="textAnalysis.html">Regular Expressions</a>
+    </li>
   </ul>
 </li>
 <li class="dropdown">
@@ -357,6 +365,9 @@ div.tocify {
     </li>
   </ul>
 </li>
+<li>
+  <a href="blog.html">Blog Post</a>
+</li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         
@@ -371,7 +382,7 @@ div.tocify {
 
 <h1 class="title toc-ignore">IRT plots</h1>
 <h4 class="author"><em>Aiden Loe</em></h4>
-<h4 class="date"><em>12 December, 2017</em></h4>
+<h4 class="date"><em>29 November, 2018</em></h4>
 
 </div>
 
@@ -484,6 +495,7 @@ normal_prob_area_plot &lt;- function(dnorm=0.5,semTheta=0.5, lb=20, ub=140, lb1=
 }
 
 normal_prob_area_plot(dnorm=engTheta,semTheta=engSem)</code></pre>
+<pre><code>## Warning: Ignoring unknown aesthetics: x</code></pre>
 <p><img src="irtplots_files/figure-html/normal%20distribution-1.png" width="672" /></p>
 <p><br></p>
 </div>
@@ -569,6 +581,7 @@ normal_prob_area_plotZ &lt;- function(dnorm= engTheta, semTheta= semTheta, lb=-3
 
 }
 normal_prob_area_plotZ(2,semTheta=semTheta)</code></pre>
+<pre><code>## Warning: Ignoring unknown aesthetics: x</code></pre>
 <p><img src="irtplots_files/figure-html/z%20score-1.png" width="768" /></p>
 <p><br></p>
 </div>
@@ -1039,6 +1052,16 @@ ggplot() +
   geom_text(aes(x = 0.2, y = 0.63, label = &quot;C3&quot;, color=&quot;P.3&quot;)) + 
   geom_text(aes(x = 2.5, y = 0.75, label = &quot;C4&quot;, color=&quot;P.4&quot;)) </code></pre>
 <p><img src="irtplots_files/figure-html/crc%20and%20occ-1.png" width="672" /></p>
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-98916204-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
 </div>
 
 

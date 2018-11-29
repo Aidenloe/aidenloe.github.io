@@ -4,7 +4,7 @@
 
 <head>
 
-<meta charset="utf-8">
+<meta charset="utf-8" />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
 
@@ -24,8 +24,8 @@
 <link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
 <script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
-<link href="site_libs/highlightjs-1.1/textmate.css" rel="stylesheet" />
-<script src="site_libs/highlightjs-1.1/highlight.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
 
 <style type="text/css">code{white-space: pre;}</style>
 <style type="text/css">
@@ -34,10 +34,12 @@
   }
 </style>
 <script type="text/javascript">
-if (window.hljs && document.readyState && document.readyState === "complete") {
-   window.setTimeout(function() {
-      hljs.initHighlighting();
-   }, 0);
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
 }
 </script>
 
@@ -92,6 +94,9 @@ img {
 }
 .tabbed-pane {
   padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
 }
 button.code-folding-btn:focus {
   outline: none;
@@ -301,6 +306,9 @@ div.tocify {
     <li>
       <a href="datawrangling.html">Data Wrangling</a>
     </li>
+    <li>
+      <a href="textAnalysis.html">Regular Expressions</a>
+    </li>
   </ul>
 </li>
 <li class="dropdown">
@@ -357,6 +365,9 @@ div.tocify {
     </li>
   </ul>
 </li>
+<li>
+  <a href="blog.html">Blog Post</a>
+</li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         
@@ -371,7 +382,7 @@ div.tocify {
 
 <h1 class="title toc-ignore">Data mining</h1>
 <h4 class="author"><em>Aiden Loe</em></h4>
-<h4 class="date"><em>01 December, 2017</em></h4>
+<h4 class="date"><em>29 November, 2018</em></h4>
 
 </div>
 
@@ -424,10 +435,10 @@ tweet_user$created </code></pre>
 <pre><code>## [1] &quot;2009-06-02 20:12:29 UTC&quot;</code></pre>
 <pre class="r"><code>#user&#39;s description
 tweet_user$description </code></pre>
-<pre><code>## [1] &quot;Tesla, SpaceX, OpenAI &amp; Neuralink&quot;</code></pre>
+<pre><code>## [1] &quot;&quot;</code></pre>
 <pre class="r"><code>#how many followers the account has
 tweet_user$followersCount </code></pre>
-<pre><code>## [1] 15723240</code></pre>
+<pre><code>## [1] 23540320</code></pre>
 </div>
 <div id="harvest-data" class="section level2">
 <h2><strong>Harvest data</strong></h2>
@@ -444,7 +455,7 @@ names(tweets) #view tweets</code></pre>
 ##  [9] &quot;replyToUID&quot;    &quot;statusSource&quot;  &quot;screenName&quot;    &quot;retweetCount&quot; 
 ## [13] &quot;isRetweet&quot;     &quot;retweeted&quot;     &quot;longitude&quot;     &quot;latitude&quot;</code></pre>
 <pre class="r"><code>nrow(tweets) #rows of tweets</code></pre>
-<pre><code>## [1] 379</code></pre>
+<pre><code>## [1] 410</code></pre>
 </div>
 <div id="reorganise-data" class="section level2">
 <h2><strong>Reorganise data</strong></h2>
@@ -463,6 +474,28 @@ tweets &lt;- tweets %&gt;%
   filter(source %in% c(&quot;iPhone&quot;)) # select only rows with iphone
 names(tweets)</code></pre>
 <pre><code>## [1] &quot;id&quot;      &quot;source&quot;  &quot;text&quot;    &quot;created&quot;</code></pre>
+<pre class="r"><code>head(tweets)</code></pre>
+<pre><code>##                    id source
+## 1 1068219566679969792 iPhone
+## 2 1068215834877685760 iPhone
+## 3 1068215333159231488 iPhone
+## 4 1068214601370615808 iPhone
+## 5 1068213320589565952 iPhone
+## 6 1068211885487476737 iPhone
+##                                                                                      text
+## 1                                                                  @megnsander Definitely
+## 2 After safety, our goal is to make a Tesla the most fun you could possibly have in a car
+## 3              @rocketisfine @racchava @gwestr We tried. Nintendo won’t license it to us.
+## 4                                                    @racchava @gwestr That would be cool
+## 5                                                      @gwestr Haha kinda true \U0001f600
+## 6                                                         @ArnaoutShady Never heard of it
+##               created
+## 1 2018-11-29 19:06:05
+## 2 2018-11-29 18:51:16
+## 3 2018-11-29 18:49:16
+## 4 2018-11-29 18:46:22
+## 5 2018-11-29 18:41:16
+## 6 2018-11-29 18:35:34</code></pre>
 </div>
 <div id="tweets-most-frequently" class="section level2">
 <h2><strong>Tweets most frequently</strong></h2>
@@ -477,6 +510,8 @@ names(tweets)</code></pre>
 <pre class="r"><code>## Investigate when he tweets the most (time of the day)
 library(&quot;lubridate&quot;)
 library(&quot;scales&quot;)
+library(&#39;dplyr&#39;)
+
 tweets %&gt;%
   count(source, hour = hour(with_tz(created, &quot;EST&quot;))) %&gt;%  #count observations by source.
   mutate(percent = n / sum(n)) %&gt;% #add a new column into the data frame
@@ -487,7 +522,7 @@ tweets %&gt;%
   scale_y_continuous(labels = percent_format()) +
   labs(x = &quot;Hour of day (EST)&quot;,
        y = &quot;% of tweets&quot;,
-       color = &quot;&quot;)</code></pre>
+       color = &quot;&quot;) </code></pre>
 <p><img src="datamining_files/figure-html/Tweets%20most%20frequently-1.png" width="672" /></p>
 </div>
 <div id="average-char-per-tweet" class="section level2">
@@ -497,7 +532,7 @@ tweets %&gt;%
 chars_per_tweet = sapply(tweets$text, nchar) 
 summary(chars_per_tweet) #report average number of characters per tweet</code></pre>
 <pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-##   11.00   44.00   81.00   85.27  138.00  144.00</code></pre>
+##    4.00   32.00   61.00   73.77  124.75  148.00</code></pre>
 <pre class="r"><code>hist(chars_per_tweet, breaks=30) #this is the default R histogram plot</code></pre>
 <p><img src="datamining_files/figure-html/Average%20char%20per%20tweet-1.png" width="672" /></p>
 </div>
@@ -509,12 +544,13 @@ word_list = strsplit(tweets$text, &quot; &quot;) #split the tweets into separate
 words_per_tweet = sapply(word_list, length) #count the number of word elements in each tweet
 summary(words_per_tweet) #report average number of words per tweet</code></pre>
 <pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-##    2.00    6.00   12.00   12.91   19.00   29.00</code></pre>
+##    1.00    4.00    9.00   10.72   18.00   38.00</code></pre>
 <pre class="r"><code># the following uses ggplot2 to do the plot, which is much prettier.
 words_per_tweet_df = as.data.frame(words_per_tweet) #ggplot requires the data to be in a data frame
 ggplot(words_per_tweet_df, aes(x=words_per_tweet, group=words_per_tweet)) + 
   geom_bar(fill=&quot;blue&quot;) + 
   scale_x_continuous(limits=c(0,30))</code></pre>
+<pre><code>## Warning: Removed 2 rows containing non-finite values (stat_count).</code></pre>
 <p><img src="datamining_files/figure-html/Average%20word%20per%20tweet-1.png" width="672" /></p>
 </div>
 <div id="average-hashtags-per-tweet" class="section level2">
@@ -524,11 +560,11 @@ ggplot(words_per_tweet_df, aes(x=words_per_tweet, group=words_per_tweet)) +
 hash_per_tweet = sapply (word_list, function(x) length(grep(&quot;#&quot;,x))) #grep is a function that searches for a certain character or set of characters, in this case the #
 table(hash_per_tweet) #counts</code></pre>
 <pre><code>## hash_per_tweet
-##   0 
-## 350</code></pre>
+##   0   1 
+## 409   1</code></pre>
 <pre class="r"><code>summary(hash_per_tweet) #summary showing mean hashtags</code></pre>
-<pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-##       0       0       0       0       0       0</code></pre>
+<pre><code>##     Min.  1st Qu.   Median     Mean  3rd Qu.     Max. 
+## 0.000000 0.000000 0.000000 0.002439 0.000000 1.000000</code></pre>
 </div>
 <div id="top-hash" class="section level2">
 <h2><strong>Top Hash</strong></h2>
@@ -540,7 +576,8 @@ user_hashtags  = unlist(user_hashtags) #put tags in vector
 user_hashtags_freq &lt;- table(user_hashtags) #calculate hashtag frequencies
 user_hashtags_freq_order &lt;- sort(user_hashtags_freq, decreasing=TRUE) #order the frequencies from most to least
 head(user_hashtags_freq_order,10) #report the 10 most common hashtags</code></pre>
-<pre><code>## integer(0)</code></pre>
+<pre><code>## #OccupyMars 
+##           1</code></pre>
 </div>
 <div id="word-cloud" class="section level2">
 <h2><strong>Word Cloud</strong></h2>
@@ -550,7 +587,7 @@ head(user_hashtags_freq_order,10) #report the 10 most common hashtags</code></pr
 uniq_words_per_tweet = sapply (word_list, function(x) unique(x)) 
 uniq_words = unlist(uniq_words_per_tweet) #they&#39;re in a list, so convert to a huge vector
 length(uniq_words) #shows how many total words we&#39;ve collected from this user</code></pre>
-<pre><code>## [1] 4401</code></pre>
+<pre><code>## [1] 4256</code></pre>
 <pre class="r"><code>uniq_words&lt;- uniq_words[!uniq_words %in% c(&quot;a&quot;, &quot;in&quot;, &quot;to&quot;, &quot;is&quot;, &quot;for&quot;, &quot;but&quot;, &quot;and&quot;, &quot;on&quot;, &quot;the&quot;, &quot;of&quot;)] # remove some stopwords.
 uniq_words_freq = table(uniq_words) #number of times that each word is displayed
 
@@ -598,7 +635,7 @@ companyOne = searchTwitter(companyNameOne, n=extractTweetsNumber, lang=&quot;en&
 companyTwo = searchTwitter(companyNameTwo, n=extractTweetsNumber, lang=&quot;en&quot;)</code></pre>
 <pre><code>## Warning in doRppAPICall(&quot;search/tweets&quot;, n, params = params,
 ## retryOnRateLimit = retryOnRateLimit, : 500 tweets were requested but the
-## API can only return 219</code></pre>
+## API can only return 8</code></pre>
 <pre class="r"><code>companyThree = searchTwitter(companyNameThree, n=extractTweetsNumber, lang=&quot;en&quot;)
 
 # We only want the actual tweets rather than the meta-data, and this function does that.
@@ -722,37 +759,47 @@ pander(with(all.scores,(t.test(score[telecom==&quot;@ThreeUKSupport&quot;],score
 <th align="center">df</th>
 <th align="center">P value</th>
 <th align="center">Alternative hypothesis</th>
+<th align="center">mean of x</th>
+<th align="center">mean of y</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td align="center">1.132</td>
-<td align="center">435.3</td>
-<td align="center">0.2581</td>
+<td align="center">-1.19</td>
+<td align="center">7.366</td>
+<td align="center">0.271</td>
 <td align="center">two.sided</td>
+<td align="center">0.058</td>
+<td align="center">0.375</td>
 </tr>
 </tbody>
 </table>
 <pre class="r"><code>pander(with(all.scores,(t.test(score[telecom==&quot;@ThreeUKSupport&quot;],score[telecom==&quot;@BTcare&quot;]))),style=&quot;simple&quot;)</code></pre>
 <table>
-<caption>Welch Two Sample t-test: <code>score[telecom == &quot;@ThreeUKSupport&quot;]</code> and <code>score[telecom == &quot;@BTcare&quot;]</code></caption>
+<caption>Welch Two Sample t-test: <code>score[telecom == &quot;@ThreeUKSupport&quot;]</code> and <code>score[telecom == &quot;@BTcare&quot;]</code> (continued below)</caption>
 <thead>
 <tr class="header">
 <th align="center">Test statistic</th>
 <th align="center">df</th>
 <th align="center">P value</th>
 <th align="center">Alternative hypothesis</th>
+<th align="center">mean of x</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td align="center">-0.3028</td>
-<td align="center">997</td>
-<td align="center">0.7621</td>
+<td align="center">4.264</td>
+<td align="center">997.4</td>
+<td align="center">2.196e-05 * * *</td>
 <td align="center">two.sided</td>
+<td align="center">0.058</td>
 </tr>
 </tbody>
 </table>
+</div>
+<div id="mean-of-y" class="section level2">
+<h2>mean of y</h2>
+<p>-0.2</p>
 <pre class="r"><code>pander(with(all.scores,(t.test(score[telecom==&quot;@VodafoneUKhelp&quot;],score[telecom==&quot;@BTcare&quot;]))),style=&quot;simple&quot;)</code></pre>
 <table>
 <caption>Welch Two Sample t-test: <code>score[telecom == &quot;@VodafoneUKhelp&quot;]</code> and <code>score[telecom == &quot;@BTcare&quot;]</code></caption>
@@ -762,17 +809,31 @@ pander(with(all.scores,(t.test(score[telecom==&quot;@ThreeUKSupport&quot;],score
 <th align="center">df</th>
 <th align="center">P value</th>
 <th align="center">Alternative hypothesis</th>
+<th align="center">mean of x</th>
+<th align="center">mean of y</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td align="center">-1.387</td>
-<td align="center">422.7</td>
-<td align="center">0.1662</td>
+<td align="center">2.157</td>
+<td align="center">7.385</td>
+<td align="center">0.06591</td>
 <td align="center">two.sided</td>
+<td align="center">0.375</td>
+<td align="center">-0.2</td>
 </tr>
 </tbody>
 </table>
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-98916204-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
 </div>
 </div>
 
@@ -801,7 +862,7 @@ $(document).ready(function () {
   (function () {
     var script = document.createElement("script");
     script.type = "text/javascript";
-    script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
     document.getElementsByTagName("head")[0].appendChild(script);
   })();
 </script>

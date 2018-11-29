@@ -4,7 +4,7 @@
 
 <head>
 
-<meta charset="utf-8">
+<meta charset="utf-8" />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
 
@@ -24,8 +24,8 @@
 <link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
 <script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
-<link href="site_libs/highlightjs-1.1/textmate.css" rel="stylesheet" />
-<script src="site_libs/highlightjs-1.1/highlight.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
 
 <style type="text/css">code{white-space: pre;}</style>
 <style type="text/css">
@@ -34,10 +34,12 @@
   }
 </style>
 <script type="text/javascript">
-if (window.hljs && document.readyState && document.readyState === "complete") {
-   window.setTimeout(function() {
-      hljs.initHighlighting();
-   }, 0);
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
 }
 </script>
 
@@ -92,6 +94,9 @@ img {
 }
 .tabbed-pane {
   padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
 }
 button.code-folding-btn:focus {
   outline: none;
@@ -301,6 +306,9 @@ div.tocify {
     <li>
       <a href="datawrangling.html">Data Wrangling</a>
     </li>
+    <li>
+      <a href="textAnalysis.html">Regular Expressions</a>
+    </li>
   </ul>
 </li>
 <li class="dropdown">
@@ -357,6 +365,9 @@ div.tocify {
     </li>
   </ul>
 </li>
+<li>
+  <a href="blog.html">Blog Post</a>
+</li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         
@@ -371,7 +382,7 @@ div.tocify {
 
 <h1 class="title toc-ignore">CAT simulation</h1>
 <h4 class="author"><em>Aiden Loe</em></h4>
-<h4 class="date"><em>01 December, 2017</em></h4>
+<h4 class="date"><em>29 November, 2018</em></h4>
 
 </div>
 
@@ -427,6 +438,8 @@ res</code></pre>
 ##  
 ##  True ability level: 0 
 ##  
+## No pre-specified minimum CAT length 
+##  
 ##  Starting parameters: 
 ##    Number of early items: 1 
 ##    Early item selection: maximum informative items for starting abilities 
@@ -438,6 +451,8 @@ res</code></pre>
 ##    Provisional ability estimator: Expected a posteriori (EAP) estimator 
 ##      Provisional prior ability distribution: N(0,1) prior 
 ##    Ability estimation adjustment for constant pattern: none 
+##    Type of standard error: asymptotic SE (ASE) 
+##    Type of ASE formula: classic formula 
 ## 
 ##  Stopping rule: 
 ##    Stopping criterion: length of test 
@@ -452,17 +467,18 @@ res</code></pre>
 ## 
 ##  Adaptive test details: 
 ##                                                                     
-## Nr           1        2        3        4        5        6        7
-## Item        21        7       23       22       13       19       20
-## Resp.        0        2        3        3        3        1        2
-## Est.  (-0.711)   -0.419   -0.023    0.218    0.333    0.173    0.154
-## SE     (0.745)    0.562    0.458    0.404    0.378    0.342    0.321
-##                                 
-## Nr           8        9       10
-## Item        17       18       12
-## Resp.        0        2        1
-## Est.    -0.043   -0.049   -0.133
-## SE       0.297    0.284    0.272
+## Nr         1      2      3      4      5      6      7      8      9
+## Item      21      7     23     13     22     19     20     17     18
+## Resp.      0      2      1      2      0      0      1      2      3
+## Est.  -0.711 -0.419 -0.454 -0.334 -0.482 -0.651 -0.666 -0.583 -0.452
+## SE     0.745  0.562  0.478  0.412  0.383  0.369  0.343  0.313  0.288
+##             
+## Nr        10
+## Item      12
+## Resp.      3
+## Est.  -0.354
+## SE     0.273
+## 
 ## 
 ##  Satisfied stopping rule: 
 ##    Length of test 
@@ -471,8 +487,10 @@ res</code></pre>
 ##    Length of adaptive test: 10 items 
 ##    Final ability estimator: Bayes modal (MAP) estimator 
 ##    Final prior distribution: N(0,1) prior 
-##    Final ability estimate (SE): -0.137 (0.266) 
-##    95% confidence interval: [-0.659,0.386] 
+##    Final standard error: asymptotic SE (ASE) 
+##    Type of ASE formula: classic formula 
+##    Final ability estimate (ASE): -0.349 (0.267)
+##    95% confidence interval: [-0.872,0.174] 
 ## 
 ##  Output was not captured!</code></pre>
 <pre class="r"><code>require(catR)</code></pre>
@@ -530,7 +548,7 @@ $(document).ready(function () {
   (function () {
     var script = document.createElement("script");
     script.type = "text/javascript";
-    script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
     document.getElementsByTagName("head")[0].appendChild(script);
   })();
 </script>
