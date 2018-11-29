@@ -234,7 +234,7 @@ One of the first questions I wanted to find out is the competition level of the 
 
 In total, `r sum(table(dat$Funding))` applications were submitted to the ESRC New Investigators Grant. The table and plot below show that the estimated success rate is `r round(prop.table(table(dat$Funding)),2)[1]*100`%, while the failure rate is `r round(prop.table(table(dat$Funding)),2)[2]*100`%. Simplistically speaking, this rate is equivalent to submitting a research paper to a top-tier journal, but not as competitive as a super top-tier journal. Nonetheless, it is fair to say that this scheme is highly competitive given that applications can come from different departments with wide-ranging research topics, researchers who may have experience of up to 4 years (many more publications than a newly PhD grad) and the amount of work the applicant needs to put in to write a potentially successful grant application. 
 
-```{r , echo = F}
+```{r ,fig.align='center', echo = F}
 # respect the col order
 dat$round<- factor(dat$round, levels = unique(dat$round))
 
@@ -274,7 +274,7 @@ The plot below shows the score category of the grant applications in Stage 2. No
 
 From the plot below it is clear that very few proposals, if any, receives an average score between 9-10. Most applications seem to range between 7 to 8.9. All N/As are either the reviewer rejects, office rejects or the RO withdrawals, so they don't matter at this stage. 
 
-```{r , echo = F}
+```{r ,fig.align='center', echo = F}
 # remove N/A
 #datOverAllScore <- dat[dat$Score_Category != "*N/A",]
 
@@ -308,7 +308,7 @@ pander(table(dat$Funding, dat$Score_Category, dat$round), caption='Funding Propo
 
 A clearer picture is painted in the plot below that shows the number of successful proposals funded based on a break down of the score categories. Basically, if you receive a score of 5-6.9, you have no chance of getting funding from the ESRC. You may get funded if you achieve a score of 7-7.9 as seen in July 2017/2018, but that is a precarious position to be in. Thus, one should ideally aim to get a score that is within the score category of 8-8.9, or even better, a score of 9-10 to get a higher chance of getting funded by ESRC.  
 
-```{r , echo = F}
+```{r , fig.align='center', echo = F}
 # keep those only funded
 datFunded <- dat[dat$Funding == 'Funded',]
 ggplot(datFunded) + geom_bar(aes(x= Score_Category, fill=Score_Category))  + facet_grid(.~round)  + 
