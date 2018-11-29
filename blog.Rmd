@@ -9,5 +9,7 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-Here are my blog posts. For example check out my post about esrc new investgiator [grant](https://aidenloe.github.io/esrc_p1.html)
+Here are my blog posts. 
+
+The first post is about some analyses done on the [ESRC New Investigators Grant data](https://aidenloe.github.io/esrc_p1.html).
 
