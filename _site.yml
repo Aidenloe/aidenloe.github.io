@@ -1,5 +1,5 @@
 name: my-website
-#output_dir: '_'
+output_dir: '_site'
 navbar:
   title: Aiden Loe
   left:

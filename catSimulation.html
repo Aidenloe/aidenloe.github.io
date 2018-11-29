@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+<meta name="author" content="Aiden Loe" />
+
+
+<title>CAT simulation</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 51px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+
+.section h2 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h3 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h4 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h5 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h6 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
+
+<!-- code folding -->
+
+
+
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = false;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+  padding-left: 25px;
+  text-indent: 0;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+.tocify-subheader {
+  display: inline;
+}
+.tocify-subheader .tocify-item {
+  font-size: 0.95em;
+}
+
+</style>
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Aiden Loe</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="about.html">About</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    R 4 Social Scientists
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li class="dropdown-header">What is R?</li>
+    <li>
+      <a href="introToR.html">Intro to R</a>
+    </li>
+    <li>
+      <a href="dataVisual.html">Data Visualisation</a>
+    </li>
+    <li>
+      <a href="datawrangling.html">Data Wrangling</a>
+    </li>
+    <li>
+      <a href="textAnalysis.html">Regular Expressions</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Big Data 4 Social Scientists
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li class="dropdown-header">What is ML?</li>
+    <li>
+      <a href="introToML.html">Intro to ML</a>
+    </li>
+    <li>
+      <a href="webscrapping.html">Web Scrapping</a>
+    </li>
+    <li>
+      <a href="datamining.html">Data Mining</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    IRT 4 Social Scientists
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li class="dropdown-header">What is IRT?</li>
+    <li>
+      <a href="introToIRT.html">Intro to IRT</a>
+    </li>
+    <li>
+      <a href="testinfo.html">Test Information</a>
+    </li>
+    <li>
+      <a href="irtplots.html">Plotting to IRT</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    CAT 4 Social Scientists
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li class="dropdown-header">What is CAT?</li>
+    <li>
+      <a href="introToCAT.html">Intro to CAT</a>
+    </li>
+    <li>
+      <a href="catSimulation.html">CAT simulation</a>
+    </li>
+  </ul>
+</li>
+<li>
+  <a href="blog.html">Blog Post</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">CAT simulation</h1>
+<h4 class="author"><em>Aiden Loe</em></h4>
+<h4 class="date"><em>29 November, 2018</em></h4>
+
+</div>
+
+
+<div id="welcome" class="section level1">
+<h1>Welcome</h1>
+<p>This page will give you a general idea of how to simulate a CAT using the <code>catR</code> package.</p>
+<p>The developers has made it really easy for us to run simulations.</p>
+<p>I am still building the content for this page. So please bear with it.</p>
+<p>However, with the limited information you can still run the code and try it yourself.</p>
+<div id="load-catr-package" class="section level2">
+<h2>Load catR package</h2>
+<pre class="r"><code>require(catR)</code></pre>
+</div>
+<div id="run-cat-simulation" class="section level2">
+<h2>Run CAT simulation</h2>
+<p>We will be using a polytomous dataset to run our simulation. There are several models that we can use - Graded Response Model (GRM), Modified Graded Response Model (MGRM), Partial Credit Model (PCM), Generalised Partial Credit Model (GPCM), Rating Scale Model (RSM), and Nominal Response Model (NRM). The ones that are more widely used are the GRM, GPCM, PCM. In our example will be using the PCM model.</p>
+<pre class="r"><code>### Load &#39;polyIQ&#39; item bank
+bank &lt;- read.table(&quot;https://www.dropbox.com/s/ml920oyi1z2npid/polyIQ.txt?raw=1&quot;,header = TRUE)
+bank &lt;- as.matrix(bank)
+head(bank)</code></pre>
+<pre><code>##      lambdaj delta1 delta2 delta3
+## [1,]  -1.732   -1.4    0.3    1.8
+## [2,]  -1.020   -1.4    0.3    1.8
+## [3,]  -2.100   -1.4    0.3    1.8
+## [4,]  -2.535   -1.4    0.3    1.8
+## [5,]  -1.258   -1.4    0.3    1.8
+## [6,]  -1.172   -1.4    0.3    1.8</code></pre>
+<pre class="r"><code>### CAT design:
+#creation of logic for polytomous is exactly the same for dichtomous items.
+## two starting items
+startList &lt;- list(nrItems = 2, theta=0)
+
+## next item selection by &#39;MFI&#39;, EAP ad-interim proficiency estimation
+testList &lt;- list(method = &quot;EAP&quot;, itemSelect = &quot;MFI&quot;)
+
+## stop after 10 items
+stopList &lt;- list(rule = &quot;length&quot;, thr = 10)
+
+## final proficiency estimation using maximum likelihood
+finalList &lt;- list(method = &quot;BM&quot;)
+
+### generation of a CAT response pattern
+res &lt;- randomCAT(trueTheta = 0, itemBank = bank, model=&quot;PCM&quot;,
+                 start = startList, test = testList, stop = stopList, final = finalList)
+
+## display of the output
+res</code></pre>
+<pre><code>## Random generation of a CAT response pattern 
+##   without fixing the random seed 
+##  
+##  Item bank calibrated under Partial Credit Model 
+##  
+##  True ability level: 0 
+##  
+## No pre-specified minimum CAT length 
+##  
+##  Starting parameters: 
+##    Number of early items: 1 
+##    Early item selection: maximum informative items for starting abilities 
+##     Early items not chosen to control for content balancing 
+##    Starting ability: 0 
+## 
+##  Adaptive test parameters: 
+##    Next item selection method: maximum Fisher information 
+##    Provisional ability estimator: Expected a posteriori (EAP) estimator 
+##      Provisional prior ability distribution: N(0,1) prior 
+##    Ability estimation adjustment for constant pattern: none 
+##    Type of standard error: asymptotic SE (ASE) 
+##    Type of ASE formula: classic formula 
+## 
+##  Stopping rule: 
+##    Stopping criterion: length of test 
+##     Maximum test length: 10 
+## 
+##  Randomesque method: 
+##    Number of &#39;randomesque&#39; starting items: 1
+##    Number of &#39;randomesque&#39; test items: 1
+## 
+##  Content balancing control: 
+##    No control for content balancing 
+## 
+##  Adaptive test details: 
+##                                                                  
+## Nr        1     2     3     4     5     6     7     8     9    10
+## Item     21    22    23    13    19    20     7    17    18    12
+## Resp.     2     2     3     2     2     2     2     2     2     2
+## Est.  0.248 0.284 0.471 0.394 0.338 0.295 0.259 0.231 0.201 0.173
+## SE    0.667 0.524 0.463 0.413 0.377 0.349 0.327 0.309 0.295 0.283
+## 
+## 
+##  Satisfied stopping rule: 
+##    Length of test 
+##  
+##  Final results: 
+##    Length of adaptive test: 10 items 
+##    Final ability estimator: Bayes modal (MAP) estimator 
+##    Final prior distribution: N(0,1) prior 
+##    Final standard error: asymptotic SE (ASE) 
+##    Type of ASE formula: classic formula 
+##    Final ability estimate (ASE): 0.157 (0.278)
+##    95% confidence interval: [-0.387,0.701] 
+## 
+##  Output was not captured!</code></pre>
+<pre class="r"><code>require(catR)</code></pre>
+<p>Let’s have a look at the output and discuss a little about what we see.</p>
+<p>The output first tells you which model you have used simulating the CAT. In our case, it is the Partial Credit Model (PCM).</p>
+<p>Then it talks a little bit about the starting parameters. Here we can see that the item with the maximum information at the ability = 0 was used for the first item. We did not control for content balancing. You have to explicitly state that you want to control for content balancing.</p>
+<p>Next the output talks about the adaptive parameters. The MFI was employed for item selection and the EAP was used for the ability estimate. Note that more often than not, the Bayes Modal, which is frequently described as the MAP, often have very similar results with the EAP.</p>
+<p>The Stopping rule section tells us that the criterion is based on the length of items, which in this case we have fixed it to a maximum of 10.</p>
+<p>The Randomesque method is used when you want to select a range of items that is considered as the next items that is best suited for the estimated ability. Within the range of items, say 5, the algorithm will randomly draw out 1. This often used to spread out the exposure and maintain item security. In our case, we did not enforce this method, so the algorithm will always select the next most optimal item for the estimated ability.</p>
+<p>Now we have reached the Adaptive test details. This gives us the information of which 10 items were selected for the simulation. Nr is the index of the item. Item is the question that was given out. For example, item 21 is given in the first instance. The theta estimate (Est.) and the standard error (SE) is also provided for each item. That is the beauty of modern psychometric approaches. Everything is investigated at a item level rather than a scale. level.</p>
+<p>Finally, what we have is the final result of the ability estimate.</p>
+</div>
+<div id="plot-simulation" class="section level2">
+<h2>Plot Simulation</h2>
+<p><img src="catSimulation_files/figure-html/Plot%20CAT-1.png" width="672" /></p>
+<pre><code>## The plot was not captured!</code></pre>
+<p><img src="catSimulation_files/figure-html/Plot%20CAT-2.png" width="672" /></p>
+<pre><code>## The plot was not captured!</code></pre>
+<p>Now we come to plotting and interpreting the plots!</p>
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-98916204-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+</div>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
