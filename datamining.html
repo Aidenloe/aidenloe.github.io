@@ -438,7 +438,7 @@ tweet_user$description </code></pre>
 <pre><code>## [1] &quot;&quot;</code></pre>
 <pre class="r"><code>#how many followers the account has
 tweet_user$followersCount </code></pre>
-<pre><code>## [1] 23558208</code></pre>
+<pre><code>## [1] 23558277</code></pre>
 </div>
 <div id="harvest-data" class="section level2">
 <h2><strong>Harvest data</strong></h2>
@@ -788,9 +788,9 @@ pander(with(all.scores,(t.test(score[telecom==&quot;@ThreeUKSupport&quot;],score
 </thead>
 <tbody>
 <tr class="odd">
-<td align="center">4.837</td>
+<td align="center">4.735</td>
 <td align="center">997.7</td>
-<td align="center">1.525e-06 * * *</td>
+<td align="center">2.511e-06 * * *</td>
 <td align="center">two.sided</td>
 <td align="center">0.1</td>
 </tr>
@@ -799,7 +799,7 @@ pander(with(all.scores,(t.test(score[telecom==&quot;@ThreeUKSupport&quot;],score
 </div>
 <div id="mean-of-y" class="section level2">
 <h2>mean of y</h2>
-<p>-0.184</p>
+<p>-0.178</p>
 <pre class="r"><code>pander(with(all.scores,(t.test(score[telecom==&quot;@VodafoneUKhelp&quot;],score[telecom==&quot;@BTcare&quot;]))),style=&quot;simple&quot;)</code></pre>
 <table>
 <caption>Welch Two Sample t-test: <code>score[telecom == &quot;@VodafoneUKhelp&quot;]</code> and <code>score[telecom == &quot;@BTcare&quot;]</code></caption>
@@ -815,12 +815,12 @@ pander(with(all.scores,(t.test(score[telecom==&quot;@ThreeUKSupport&quot;],score
 </thead>
 <tbody>
 <tr class="odd">
-<td align="center">1.713</td>
+<td align="center">1.689</td>
 <td align="center">7.385</td>
-<td align="center">0.1282</td>
+<td align="center">0.1328</td>
 <td align="center">two.sided</td>
 <td align="center">0.25</td>
-<td align="center">-0.184</td>
+<td align="center">-0.178</td>
 </tr>
 </tbody>
 </table>
