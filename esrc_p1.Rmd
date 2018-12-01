@@ -351,7 +351,7 @@ Disclaimer: Opinions are my own and not the views of my employer.
 
 
 <center> 
-Link to [Part 2](https://aidenloe.github.io/esrc_P2.html) of this post.
+Link to [Part 2](https://aidenloe.github.io/esrc_p2.html) of this post.
 
 Link to my [github page](https://aidenloe.github.io/index.html). 
 
