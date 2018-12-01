@@ -10,7 +10,7 @@ output:
       collapsed: false
 ---
 
-```{r setup, include=FALSE}
+```{r setup, include=FALSE, echo=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
@@ -379,13 +379,13 @@ plot1 <- ggplot(reli, aes(x=reliability, y =se )) + geom_point(size=0.01) + them
   xlim(0,1.0) +
   geom_vline(aes(xintercept=0.9), colour = "green") + 
   geom_hline(aes(yintercept=0.32),colour = "green") +
-  annotate(geom="text", label=0.32, x=0, y=0.32, vjust=-0.5,hjust=-0.1, size=4) +
+  ggplot2::annotate(geom="text", label=0.32, x=0, y=0.32, vjust=-0.5,hjust=-0.1, size=4) +
   geom_vline(aes(xintercept=0.8), colour = "red") + 
   geom_hline(aes(yintercept=0.45),colour = "red") +
-  annotate(geom="text", label=0.45, x=0, y=0.45, vjust=-0.5,hjust=-0.1, size=4) +
+  ggplot2::annotate(geom="text", label=0.45, x=0, y=0.45, vjust=-0.5,hjust=-0.1, size=4) +
   geom_vline(aes(xintercept=0.7),colour = "blue") + 
   geom_hline(aes(yintercept=0.54), colour = "blue") +
-  annotate(geom="text", label=0.54, x=0, y=0.54, vjust=-0.5,hjust=-0.1, size=4) +
+  ggplot2::annotate(geom="text", label=0.54, x=0, y=0.54, vjust=-0.5,hjust=-0.1, size=4) +
   theme(text = element_text(size=14),
         axis.text.x=element_text(colour="black"),
         axis.text.y=element_text(colour="black"))
@@ -398,11 +398,11 @@ plot2 <- ggplot(reli, aes(x=reliability, y = info)) + geom_point(size=0.01) +
   geom_hline(aes(yintercept=5),colour = "red") +
   geom_vline(aes(xintercept=0.7),colour = "blue") + 
   geom_hline(aes(yintercept=3.33), colour = "blue") +
-  annotate(geom="text", label=3.33, x=0, y=3.33, vjust=-0.5,hjust=-0.1, size=4) +
+  ggplot2::annotate(geom="text", label=3.33, x=0, y=3.33, vjust=-0.5,hjust=-0.1, size=4) +
   theme(text = element_text(size=14),
         axis.text.x=element_text(colour="black"),
         axis.text.y=element_text(colour="black"))
-
+plot2
 
 #combine plots together
 plot3 <- ggarrange(plot1, plot2, 

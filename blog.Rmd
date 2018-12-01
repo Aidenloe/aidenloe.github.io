@@ -11,5 +11,5 @@ knitr::opts_chunk$set(echo = TRUE)
 
 Here are my blog posts. 
 
-The first post is about some analyses done on the [ESRC New Investigators Grant data](https://aidenloe.github.io/esrc_p1.html).
-
+1. [What are my chances of getting an ESRC New Investigators Grant?](https://aidenloe.github.io/esrc_p1.html)
+2. [What types of projects are awarded the ESRC New Investigators Grant?](https://aidenloe.github.io/esrc_p2.html)

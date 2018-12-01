@@ -12,7 +12,7 @@ output:
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## ESRC New Investigators Grant
+## ESRC New Investigators Grant (Part 1)
 
 Given my recent grant application experience with ESRC, I wanted to find out the likelihood of my grant application from a data-driven perspective. I was told by grant administrators, friends, colleagues and others that the grant is very competitive, but I wanted a further breakdown of what it means by 'very competitive', and to understand how my chances are like across different rounds. Since the data for decisions made on ESRC research grants is made available [online](https://esrc.ukri.org/about-us/performance-information/application-and-award-data/funding-decisions/), I decided to try and understand this from a data perspective.
 
@@ -347,10 +347,13 @@ There are certain caveats to this post, and I will repeat here again to activate
 
 Nonetheless, these analyses are all speculative (though I do feel much better to have some data to backup what others have said) and I would take the advice from grant advisers in that you should put in the best possible application for your research topic. Accept help from whoever is willing to help you. Challenge yourself to think of creative ways to show how your proposal will stand out from others. Regularly talk to others about your grant application, though I understand you can be seen as being a bit of a narcissist (but that’s okay, it is only temporary!). Plus it will refine your ideas by getting the perspective of others. Give it your best if you have decided to write a grant application and don’t do it just for the sake of doing it. I hope this has been helpful for you. Thanks for reading. 
 
-Disclaimer: Opinions are my own and not the views of my employer
+Disclaimer: Opinions are my own and not the views of my employer.
 
 
-<center> Link to my [github page](https://aidenloe.github.io/index.html). 
+<center> 
+Link to [Part 2](https://aidenloe.github.io/esrc_P2.html) of this post.
+
+Link to my [github page](https://aidenloe.github.io/index.html). 
 
 <p>Copyright &copy; Aiden Loe, Inc. All rights reserved.</p>
 

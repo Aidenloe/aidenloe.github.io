@@ -382,7 +382,7 @@ div.tocify {
 
 <h1 class="title toc-ignore">Data mining</h1>
 <h4 class="author"><em>Aiden Loe</em></h4>
-<h4 class="date"><em>29 November, 2018</em></h4>
+<h4 class="date"><em>01 December, 2018</em></h4>
 
 </div>
 
@@ -438,7 +438,7 @@ tweet_user$description </code></pre>
 <pre><code>## [1] &quot;&quot;</code></pre>
 <pre class="r"><code>#how many followers the account has
 tweet_user$followersCount </code></pre>
-<pre><code>## [1] 23541017</code></pre>
+<pre><code>## [1] 23558208</code></pre>
 </div>
 <div id="harvest-data" class="section level2">
 <h2><strong>Harvest data</strong></h2>
@@ -455,7 +455,7 @@ names(tweets) #view tweets</code></pre>
 ##  [9] &quot;replyToUID&quot;    &quot;statusSource&quot;  &quot;screenName&quot;    &quot;retweetCount&quot; 
 ## [13] &quot;isRetweet&quot;     &quot;retweeted&quot;     &quot;longitude&quot;     &quot;latitude&quot;</code></pre>
 <pre class="r"><code>nrow(tweets) #rows of tweets</code></pre>
-<pre><code>## [1] 410</code></pre>
+<pre><code>## [1] 386</code></pre>
 </div>
 <div id="reorganise-data" class="section level2">
 <h2><strong>Reorganise data</strong></h2>
@@ -476,26 +476,26 @@ names(tweets)</code></pre>
 <pre><code>## [1] &quot;id&quot;      &quot;source&quot;  &quot;text&quot;    &quot;created&quot;</code></pre>
 <pre class="r"><code>head(tweets)</code></pre>
 <pre><code>##                    id source
-## 1 1068266153968001024 iPhone
-## 2 1068219566679969792 iPhone
-## 3 1068215834877685760 iPhone
-## 4 1068215333159231488 iPhone
-## 5 1068214601370615808 iPhone
-## 6 1068213320589565952 iPhone
-##                                                                                      text
-## 1                              Boring breakthrough @BoringCompany https://t.co/pSflhZadwC
-## 2                                                                  @megnsander Definitely
-## 3 After safety, our goal is to make a Tesla the most fun you could possibly have in a car
-## 4              @rocketisfine @racchava @gwestr We tried. Nintendo won’t license it to us.
-## 5                                                    @racchava @gwestr That would be cool
-## 6                                                      @gwestr Haha kinda true \U0001f600
+## 1 1068949982391103488 iPhone
+## 2 1068946077380820992 iPhone
+## 3 1068940753974349824 iPhone
+## 4 1068940292731023360 iPhone
+## 5 1068940024136126464 iPhone
+## 6 1068923831497064448 iPhone
+##                                                                               text
+## 1                                                  @MatZagataMD @Tesla You got it!
+## 2        @dxk_ @ZainRaz4 @Erdayastronaut @SpaceX Three things, one of which is CH4
+## 3                                         @PicklePunchD @Erdayastronaut @SpaceX No
+## 4                                             @ZainRaz4 @Erdayastronaut @SpaceX No
+## 5 @Erdayastronaut @SpaceX Reentry scorchmarks, not simple soot. Can’t wipe it off.
+## 6                                                                 @nichegamer Haha
 ##               created
-## 1 2018-11-29 22:11:13
-## 2 2018-11-29 19:06:05
-## 3 2018-11-29 18:51:16
-## 4 2018-11-29 18:49:16
-## 5 2018-11-29 18:46:22
-## 6 2018-11-29 18:41:16</code></pre>
+## 1 2018-12-01 19:28:30
+## 2 2018-12-01 19:12:59
+## 3 2018-12-01 18:51:50
+## 4 2018-12-01 18:50:00
+## 5 2018-12-01 18:48:56
+## 6 2018-12-01 17:44:35</code></pre>
 </div>
 <div id="tweets-most-frequently" class="section level2">
 <h2><strong>Tweets most frequently</strong></h2>
@@ -532,7 +532,7 @@ tweets %&gt;%
 chars_per_tweet = sapply(tweets$text, nchar) 
 summary(chars_per_tweet) #report average number of characters per tweet</code></pre>
 <pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-##    4.00   31.25   60.00   73.44  123.50  148.00</code></pre>
+##    4.00   31.00   66.50   74.38  121.75  148.00</code></pre>
 <pre class="r"><code>hist(chars_per_tweet, breaks=30) #this is the default R histogram plot</code></pre>
 <p><img src="datamining_files/figure-html/Average%20char%20per%20tweet-1.png" width="672" /></p>
 </div>
@@ -544,13 +544,13 @@ word_list = strsplit(tweets$text, &quot; &quot;) #split the tweets into separate
 words_per_tweet = sapply(word_list, length) #count the number of word elements in each tweet
 summary(words_per_tweet) #report average number of words per tweet</code></pre>
 <pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-##    1.00    4.00    9.00   10.66   18.00   38.00</code></pre>
+##    1.00    4.00    9.50   10.99   18.00   38.00</code></pre>
 <pre class="r"><code># the following uses ggplot2 to do the plot, which is much prettier.
 words_per_tweet_df = as.data.frame(words_per_tweet) #ggplot requires the data to be in a data frame
 ggplot(words_per_tweet_df, aes(x=words_per_tweet, group=words_per_tweet)) + 
   geom_bar(fill=&quot;blue&quot;) + 
   scale_x_continuous(limits=c(0,30))</code></pre>
-<pre><code>## Warning: Removed 2 rows containing non-finite values (stat_count).</code></pre>
+<pre><code>## Warning: Removed 1 rows containing non-finite values (stat_count).</code></pre>
 <p><img src="datamining_files/figure-html/Average%20word%20per%20tweet-1.png" width="672" /></p>
 </div>
 <div id="average-hashtags-per-tweet" class="section level2">
@@ -561,10 +561,10 @@ hash_per_tweet = sapply (word_list, function(x) length(grep(&quot;#&quot;,x))) #
 table(hash_per_tweet) #counts</code></pre>
 <pre><code>## hash_per_tweet
 ##   0   1 
-## 409   1</code></pre>
+## 385   1</code></pre>
 <pre class="r"><code>summary(hash_per_tweet) #summary showing mean hashtags</code></pre>
 <pre><code>##     Min.  1st Qu.   Median     Mean  3rd Qu.     Max. 
-## 0.000000 0.000000 0.000000 0.002439 0.000000 1.000000</code></pre>
+## 0.000000 0.000000 0.000000 0.002591 0.000000 1.000000</code></pre>
 </div>
 <div id="top-hash" class="section level2">
 <h2><strong>Top Hash</strong></h2>
@@ -587,7 +587,7 @@ head(user_hashtags_freq_order,10) #report the 10 most common hashtags</code></pr
 uniq_words_per_tweet = sapply (word_list, function(x) unique(x)) 
 uniq_words = unlist(uniq_words_per_tweet) #they&#39;re in a list, so convert to a huge vector
 length(uniq_words) #shows how many total words we&#39;ve collected from this user</code></pre>
-<pre><code>## [1] 4232</code></pre>
+<pre><code>## [1] 4106</code></pre>
 <pre class="r"><code>uniq_words&lt;- uniq_words[!uniq_words %in% c(&quot;a&quot;, &quot;in&quot;, &quot;to&quot;, &quot;is&quot;, &quot;for&quot;, &quot;but&quot;, &quot;and&quot;, &quot;on&quot;, &quot;the&quot;, &quot;of&quot;)] # remove some stopwords.
 uniq_words_freq = table(uniq_words) #number of times that each word is displayed
 
@@ -635,7 +635,7 @@ companyOne = searchTwitter(companyNameOne, n=extractTweetsNumber, lang=&quot;en&
 companyTwo = searchTwitter(companyNameTwo, n=extractTweetsNumber, lang=&quot;en&quot;)</code></pre>
 <pre><code>## Warning in doRppAPICall(&quot;search/tweets&quot;, n, params = params,
 ## retryOnRateLimit = retryOnRateLimit, : 500 tweets were requested but the
-## API can only return 9</code></pre>
+## API can only return 8</code></pre>
 <pre class="r"><code>companyThree = searchTwitter(companyNameThree, n=extractTweetsNumber, lang=&quot;en&quot;)
 
 # We only want the actual tweets rather than the meta-data, and this function does that.
@@ -765,12 +765,12 @@ pander(with(all.scores,(t.test(score[telecom==&quot;@ThreeUKSupport&quot;],score
 </thead>
 <tbody>
 <tr class="odd">
-<td align="center">-1.191</td>
-<td align="center">8.526</td>
-<td align="center">0.2656</td>
+<td align="center">-0.5918</td>
+<td align="center">7.398</td>
+<td align="center">0.5716</td>
 <td align="center">two.sided</td>
-<td align="center">0.048</td>
-<td align="center">0.3333</td>
+<td align="center">0.1</td>
+<td align="center">0.25</td>
 </tr>
 </tbody>
 </table>
@@ -788,18 +788,18 @@ pander(with(all.scores,(t.test(score[telecom==&quot;@ThreeUKSupport&quot;],score
 </thead>
 <tbody>
 <tr class="odd">
-<td align="center">3.979</td>
-<td align="center">997.2</td>
-<td align="center">7.43e-05 * * *</td>
+<td align="center">4.837</td>
+<td align="center">997.7</td>
+<td align="center">1.525e-06 * * *</td>
 <td align="center">two.sided</td>
-<td align="center">0.048</td>
+<td align="center">0.1</td>
 </tr>
 </tbody>
 </table>
 </div>
 <div id="mean-of-y" class="section level2">
 <h2>mean of y</h2>
-<p>-0.194</p>
+<p>-0.184</p>
 <pre class="r"><code>pander(with(all.scores,(t.test(score[telecom==&quot;@VodafoneUKhelp&quot;],score[telecom==&quot;@BTcare&quot;]))),style=&quot;simple&quot;)</code></pre>
 <table>
 <caption>Welch Two Sample t-test: <code>score[telecom == &quot;@VodafoneUKhelp&quot;]</code> and <code>score[telecom == &quot;@BTcare&quot;]</code></caption>
@@ -815,12 +815,12 @@ pander(with(all.scores,(t.test(score[telecom==&quot;@ThreeUKSupport&quot;],score
 </thead>
 <tbody>
 <tr class="odd">
-<td align="center">2.2</td>
-<td align="center">8.557</td>
-<td align="center">0.05685</td>
+<td align="center">1.713</td>
+<td align="center">7.385</td>
+<td align="center">0.1282</td>
 <td align="center">two.sided</td>
-<td align="center">0.3333</td>
-<td align="center">-0.194</td>
+<td align="center">0.25</td>
+<td align="center">-0.184</td>
 </tr>
 </tbody>
 </table>

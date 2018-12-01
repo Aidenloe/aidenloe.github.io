@@ -1,0 +1,361 @@
+---
+title: "What types of projects are awarded the ESRC New Investigators Grant?"
+author: "Aiden"
+date: "29/11/2018"
+output: 
+  prettydoc::html_pretty:
+    theme: leonids
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r packages, echo=F, warning=F, message=F}
+require(plyr)
+require(dplyr)
+library(data.table)
+require(ggplot2)
+require(pander)
+require(qdap)
+require(tm)
+require(DT)
+require(tidyr)
+require(gridExtra)
+require(lubridate)
+```
+
+## ESRC New Investigators Grant (Part 2)
+
+#### Introduction
+
+In the first part of the post, I wanted to find out what are my chances of securing an ESRC New Investigators grant. Now, using open data from the UK Research and Innovation [website](https://gtr.ukri.org), I wanted to have a further breakdown of the types of applications that were successful and how similar or dissimilar they are from each other. The ESRC grant reference numbers are found in the historical data from the ESRC [website](https://esrc.ukri.org/about-us/performance-information/application-and-award-data/funding-decisions/). That allowed me to search the RCUK website and retrieve information on successful applications. Unfortunately, I couldn't get the data for those grants that were unsuccessful. Anyhow, I did some data mining to extract the data from the RCUK website and managed to obtain additional information on the successful applications, except for 2 that were not found on the website. 
+
+#### A little bit about the data 
+
+The list below shows the type of information that I have extracted and consolidated into a simple data table. I guess the column headings are rather self-explanatory. Perhaps only for the `url`, which is the web link to the project. The `abstract` is the abstract of the project and the `planned impact` is the description of the potential impact this project will have on society. The table below shows 3 web links to 3 different project if you are interested in seeing how it looks on the RCUK web page. Research areas are a combination of both research subjects and research topics. One project may have multiple research subjects and/or research topics. I don't think it is particularly interesting to look at either the research subjects or research topics individually at this stage. Hence, to avoid confusion, I decided to put them all together and rename as research areas. I chose *not to* extract the name of the principal investigator even though it is publicly available because I think it is not necessary to do so. 
+
+```{r pressure, echo=FALSE, fig.align='center'}
+dat <- read.csv('datasets/cdat.csv', stringsAsFactors = F)
+ma <- matrix(, nrow = 6, ncol = 4)
+ma[,] <- names(dat)[2:25]
+pander(ma, caption='Available information taken online' ,justify = "center")
+Project_URL <- head(dat$url, n = 3)
+pander(data.frame(Project_URL = Project_URL), caption='Web link to Projects',justify = "center")
+text <- dat$impact
+abstract <- dat$abstract
+```
+
+#### Quick overview
+
+Okay, given this information let's do some simple analyses and understand how grants are awarded. 
+Firstly, let's find out how many Universities were awarded in the past round. In total, `r length(unique(dat$University))` universities were awarded the grant for the last 5 months, with a total of 49 grants. Unfortunately, I was not able to extract information for two grants (n = 47). For whatever reason, they were not on the website. Perhaps the ESRC reference number did not match the website parameters. **So all analyses are conducted on only 47 grants**. If you want to know more about the success rate, please refer to my other [blog post](https://aidenloe.github.io/esrc_p1.html). In general, the table below shows the number of successful applicants per round (Please note that the two grants that were excluded from these analyses are from the March 2018 and July 2018 rounds).
+
+```{r university, echo=F, fig.align='center'}
+pander(colSums(table(dat$University, dat$round)), caption="Success rates",justify = "center")
+```
+
+## Awards
+#### Frequency of awards
+*Which Universities are doing quite well in the grant?* 
+
+The Universities are shown in the table below and listed in alphabetical order. It would appear that the University College London, University of Exeter, and the University of Cambridge are doing pretty well. Note: We don't know how many applicants applied from each university. It might be the case that these 3 universities had a lot more applicants than the rest. Hence, they tend to do better than others. To reorder the ranking in the table below you can click on the downward arrow located beside the column headings. 
+
+```{r University, echo=F}
+dat$round <- factor(dat$round, levels = unique(dat$round))
+countUni<- as.data.frame(table(dat$University))
+countUni$Percentage <- round(countUni$Freq/sum(countUni$Freq) *100,2)
+
+names(countUni) <- c('University', 'Frequency', "Percentage")
+#pander(head(countUni[order(countUni$Frequency, decreasing = T),], n = 12), caption = "Awarded grant for top 12 Uni")
+
+# helpful link (https://rstudio.github.io/DT/options.html)
+countUni_dt <- datatable(countUni, options = list(pageLength = 5, 
+                                                     autoWidth = TRUE,
+                                                    columnDefs = list(list(width = '50%', targets="0"),
+                                                                      list(className = 'dt-center', targets = 0:3)),
+                                                     lengthMenu = c(5, 10, 20, 30),
+                                                     initComplete = JS(
+                                                       "function(settings, json) {",
+                                                       "$(this.api().table().header()).css({'background-color': '#000', 'color': '#fff'});",
+                                                       "}")
+))
+countUni_dt
+
+uni_per_round <- as.matrix(table(dat$University, dat$round))
+uni_per_round2 <- data.frame(uni_per_round)
+```
+
+#### Frequency of awards in different rounds
+
+*What are the chances of a University being awarded twice in the same round?*
+
+Perhaps the table above does not give sufficient clarity. Researchers might like to see the success rate in each round. The table below shows the distribution of the grants awarded to different universities. We can see that several universities (e.g. University College London, University of Essex University of Cambridge) have been awarded the grant twice in the same round. 
+
+Across all 5 rounds, `r nrow(uni_per_round2[uni_per_round2$Freq == 2,])` Universities were found to be given the grant twice in a round. So by taking the division of `r nrow(uni_per_round2[uni_per_round2$Freq == 2,])` by all universities that applied (n = `r length(unique(dat$University))`) and then multiplying it by 1/5 (5 rounds), the result of a university getting funded twice in a round is `r round(nrow(uni_per_round2[uni_per_round2$Freq == 2,])/length(unique(dat$University))*1/5 * 100,2)`%. 
+
+```{r University per round, echo = F}
+
+uni_per_round3 <- spread(uni_per_round2, key = 'Var2', value = 'Freq')
+
+d = data.frame(uni_per_round3, stringsAsFactors = FALSE)
+colnames(d) <- c('University',names(uni_per_round3)[2:6])
+dt <- datatable(d,  options = list(pageLength = 5, # filter = 'bottom',
+                                                    autoWidth = TRUE,
+                                                    columnDefs = list(list(width = '200px', targets = c(1)),
+                                                                       list(className = 'dt-center', targets = 0:6)),
+                                                    pageLength = 5,
+                                                    lengthMenu = c(5, 10, 20, 30),
+                                                    initComplete = JS(
+                                                       "function(settings, json) {",
+                                                       "$(this.api().table().header()).css({'background-color': '#000', 'color': '#fff'});",
+                                                       "}")
+))
+dt
+
+```
+
+#### Frequency of awards at a department level within a University
+
+*What are the chances of being awarded twice in the same around if the applications came from the same department?* 
+
+Your research centre could be in a position where two applications might be submitted in the same round. Is it then possible that both applications are successful? Well, the short answer is Yes! (because it has happened before) But let's have a look at the likelihood of that happening. With the current data, I can evaluate the information at a departmental level. In this case, only the Epidemiology and Public Health Department from the University of College London has been successfully given the grant twice within the same round. Thus, it is possible for the research department to submit more than one proposal, although the likelihood of such an event happening is really low. By taking the only department to get the grant twice within the same round (n = 1) divided by the number of departments (n = `r length(unique(dat$department))`) and multiplying it by 1/5 (5 rounds), that will give me a `r round(1/length(unique(dat$department)) *100 * 1/5 ,2)`% chance of such an event happening. Chances are slim, but if the research centre staggered the submission back to back, and it just so happen that the earlier application gets pushed back one round and that the evaluation of both proposals will be happening in the same round, at least you know that there is still a minimum chance of both proposals getting awarded the grant. 
+
+```{r department by uni, echo= F}
+dat  %>%
+  select(University,department, round)%>%
+  group_by(University, department, round) %>%
+  count() -> countDepartment_uni
+
+count_dep_uni <- data.frame(countDepartment_uni, stringsAsFactors = F)
+
+count_dep_uni_dt <- datatable(count_dep_uni,  options = list(pageLength = 5, # filter = 'bottom',
+                                                    autoWidth = TRUE,
+                                                    columnDefs = list(list(width = '200px', targets = c(1)),
+                                                                       list(className = 'dt-center', targets = 0:4)),
+                                                    pageLength = 5,
+                                                    lengthMenu = c(5, 10, 20, 30, 40, 50),
+                                                    initComplete = JS(
+                                                       "function(settings, json) {",
+                                                       "$(this.api().table().header()).css({'background-color': '#000', 'color': '#fff'});",
+                                                       "}")
+))                                 
+count_dep_uni_dt
+
+```
+
+#### Frequency of awards at a department level
+*Which department has the highest number of successfully funded projects?*
+
+If you are just interested in looking at the type of departments achieving a successful application, then the data is presented in the table below. It would appear that Economics is the top with a count of 6, followed by psychology which is 5 (I combined psychology and experimental psychology). The rest are on average about 1 or 2 from each department across the 5 rounds. 
+
+
+```{r department level, echo=F}
+dat  %>%
+  select(department, round)%>%
+  group_by(department, round) %>%
+  count() -> countDepartment
+
+dep_per_round <- as.matrix(table(dat$department, dat$round))
+dep_per_round2 <- data.frame(dep_per_round)
+dep_per_round3 <- spread(dep_per_round2, key = 'Var2', value = 'Freq')
+
+dep = data.frame(dep_per_round3, stringsAsFactors = FALSE)
+colnames(dep) <- c('Department',names(dep_per_round3)[2:6])
+dep_dt <- datatable(dep,  options = list(pageLength = 5, # filter = 'bottom',
+                                                    autoWidth = TRUE,
+                                                    columnDefs = list(list(width = '200px', targets = c(1)),
+                                                                       list(className = 'dt-center', targets = 0:6)),
+                                                    pageLength = 5,
+                                                    lengthMenu = c(5, 10, 20, 30),
+                                                    initComplete = JS(
+                                                       "function(settings, json) {",
+                                                       "$(this.api().table().header()).css({'background-color': '#000', 'color': '#fff'});",
+                                                       "}")
+))
+dep_dt
+
+```
+
+## Budget
+
+#### Funds allocation
+
+*What is the average funding per round, and is that consistent across each round?*
+
+According to the [call specification](https://esrc.ukri.org/files/funding/funding-opportunities/new-investigator-grants-call-specification/), it says that the grant annual budget will be around £7.5 million. Thus, they expect to fund about 35 grants a year, with about 10 to 12 proposals each round. So the expected mean value should be about £214,285 (£7.5m / 35) per proposal. My two questions to that are: 1) if one round uses fewer funds because it has a lower number of funded projects, does it mean that a higher budget will be allowed for the following rounds within the year? 2) Or is it the case that every round has a fixed budget and that cannot be changed even though there are leftovers from the money pot?  Looking at the left graph (i.e. Total Funding Value graph) below for the rounds in 2017, I would infer that there is no fixed budget for every round, and the number of projects in each round is variable as long as the total funded projects for that year do not pass the annual budget of £7.5 million. The observed mean funded value for the July and Nov 2017 was above the expected mean funded value, by over £10,000 to £20,000. Such a trend existed probably because only one proposal was funded in March 2017, so given that there was sufficient budget, it was possible to fund more proposals in the following round. So to answer the question above, I would say that the panel tries to be consistent in every round but it is not a set condition. *Those that applied in November 2017, lucky you!*
+
+```{r funding value, echo=F, warning=F, fig.align='center', fig.width=10, fig.height=5}
+combineValue <- aggregate(value ~ round, data = dat, sum)
+meanValue <- aggregate(value ~ round, data = dat, mean)
+combineValue$`mean value` <- meanValue$value
+
+#calculate standard error
+std <- aggregate(value ~ round, data = dat, FUN=sd)
+n <- aggregate(value ~ round, data = dat, length)
+se <- std$value/n$value
+
+combineValue$se <- se
+combineValue$projects <- colSums(table(dat$University, dat$round))
+
+
+plot1 <- ggplot(combineValue, aes(x=round, y=value, group=1)) + 
+    geom_errorbar(aes(ymin=value-se, ymax=value+se), width=.1) +
+    geom_line() +
+    geom_label(label = combineValue$projects) + 
+    ggtitle("Total Funding Value") + theme_test() + theme(text = element_text(size=12)) + ylab("Total Funded Value")
+
+
+plot2 <- ggplot(combineValue, aes(x=round, y=`mean value`, group=1)) + 
+    geom_line() +
+    geom_label(label = combineValue$`mean value`) + 
+    ggtitle("Mean Funding Value") + theme_test() + geom_hline(aes(yintercept=7500000/35), color='blue') + 
+    ggplot2::annotate(geom="text", label="Expected mean value", x=1.2, y = 7500000/35, vjust=-1,hjust=0.45, size=4, color='blue')  + 
+    ggplot2::annotate(geom="text", label=round(7500000/35,2), x=0.9, y = 7500000/35, vjust=+1.2, hjust=0.5, size=4, color='blue')  + 
+  ylab("Mean Funded Value")
+
+ 
+grid.arrange(plot1, plot2, ncol=2, widths = c(1.5,2))
+
+```
+
+*Will we expect a similar trend for November 2018?*
+
+This becomes rather interesting. While November 2017 has a high number of funded proposals, it should not happen for November 2018 because of 2 plausible reasons. 1) If the expected number of grants to fund is 35, then the maximum number of projects that can be funded is 35 - (10 + 10) is 15. To be exact, including the 2 missing projects that are not in the dataset (one in March 2018, and another in July 2018) then only 13 projects can be awarded the grant. 2) The number of awarded projects are capped by the grant annual budget of £7.5 million. Since about £4.5 million is already spent in the first two rounds of 2018 (see table below), there is only a budget of approximately £3 million left. So if we divide £3 million by 13 projects, we would get an approximate of £230769.2 each, which is slightly above the expected mean funding budget (great!, though I doubt the target of the ESRC for giving out awards are dependent on reaching a maximum number of projects). If it is budget dependent, then a maximum of 14 grant (using the expected mean value) would be approved before it crosses what's left in the budget. Either way, to have 16 funded proposals at this stage would be a challenging task, unless all successful proposals for November 2018 request for smaller funding compared to other rounds, which is quite impossible really. Given this reasoning, I would say that ESRC is more likely to select a smaller number of proposals but have a bigger allowance in the budget set for each proposal (I could be wrong), let's see what happens in the Nov 2018 panel. We will have the data soon.  
+
+```{r funded per round, echo=F}
+pander(combineValue[,1:3], caption = 'Funded per round')
+```
+
+
+
+## Time
+*What is the average research period?*
+
+```{r time differences, echo=F, results=F}
+start <- strptime(dat$startDate, format = "%Y-%m-%d")
+end <- strptime(dat$endDate, format = "%Y-%m-%d")
+diff_time <- difftime(end,start, units='days')
+diff_in_years <- as.double(diff_time)/365.25
+dat$research_period <- round(diff_in_years,2)
+
+dat %>%
+  group_by(University, research_period) %>%
+  count() -> count_date
+```
+
+On average, the grants awarded typically lasts for about `r round(mean(count_date$research_period),2)` years with a standard deviation of `r round(sd(count_date$research_period),2)`. I am unsure if it part-time or full-time though. But I would imagine that any project lasting more than 3 years would be part-time since the overhead costs are really high. Plus the fact that if you include research assistants in your application then that would further bring down the grant period since you need to account for their salary and overhead costs as well. You can see the boxplot below for those interested in the quantiles. A breakdown at the university level can be found in the table below. 
+
+```{r median time, echo=F, fig.align='center', fig.width=3, fig.height=4}
+dat %>%
+  group_by(University, research_period) %>%
+  count() %>%
+  as.data.frame()-> count_date
+
+count_date$all_university <- 'Time'
+ggplot(count_date) + geom_boxplot(aes(x = all_university, y =research_period)) + theme_classic() + ggtitle("Median Time")
+```
+```{r research period, echo=F}
+dat %>%
+  select(University, research_period)%>% ## need to have select()!!! 
+  group_by(University, research_period) %>%
+  count() %>%
+  as.data.frame()-> count_date
+
+years_dt <- datatable(count_date,  options = list(pageLength = 5, # filter = 'bottom',
+                                                    autoWidth = TRUE,
+                                                    columnDefs = list(list(width = '200px', targets = c(1)),
+                                                                       list(className = 'dt-center', targets = 0:3)),
+                                                    pageLength = 5,
+                                                    lengthMenu = c(5, 10, 20, 30, 40, 50),
+                                                    initComplete = JS(
+                                                       "function(settings, json) {",
+                                                       "$(this.api().table().header()).css({'background-color': '#000', 'color': '#fff'});",
+                                                       "}")
+))
+years_dt
+```
+
+
+## Research Areas
+
+*What are the types of research areas involved?*
+
+At a department level, economics may have received the most number of awards, followed by psychology. However, if you rank the table below in the order of descending frequency, we find that it is the psychology research area that is the highest, followed by economics, sociology and the rest. This information tells us that many of the economic research is most likely to be behavioural in nature as supposed to the more quantitative aspects such as econometrics research. It is great to see quite a number of research areas that are not directly part of the Social Sciences. *So it would appear that collaborative research across different fields is highly recommended.* I would imagine that it reflects well on the ESRC knowing that the subjects/topics funded are multidisciplinary.  
+
+```{r reserach area, echo= F}
+
+unlist(dat[,17:25]) %>%
+  na.omit() %>%
+  table() %>%
+  as.data.frame() -> research_area
+colnames(research_area) <- c('Research Area','Freq')
+research_dt <- datatable(research_area,  options = list(pageLength = 5, # filter = 'bottom',
+                                                    autoWidth = TRUE,
+                                                    columnDefs = list(list(width = '200px', targets = c(1)),
+                                                                       list(className = 'dt-center', targets = 0:1)),
+                                                    pageLength = 5,
+                                                    lengthMenu = c(5, 10, 20, 30, 40, 50),
+                                                    initComplete = JS(
+                                                       "function(settings, json) {",
+                                                       "$(this.api().table().header()).css({'background-color': '#000', 'color': '#fff'});",
+                                                       "}")
+))
+research_dt
+
+```
+
+## Conclusion
+
+In this post, I break down the data that I gathered from the RCUK website into four main areas: Awards, Budgets, Research Period and Research Areas. The Awards section looked at the frequency of awards at a University and Departmental level, as well as the possibility of getting the award twice in the same round. Whilst it is possible, the likelihood of it happening is less than 5% at a University Level, and even smaller (< 1%) at a departmental level. That’s not too bad if you compare it to winning the jackpot (1 in 292 million chance)!
+
+When it comes to money, people always want to have a good idea of how it works. So from the historical trends, it would appear that each round does not have a fixed budget (i.e. £2.5m each), but rather the cost of all the grants awarded that year is no more than £7.5 million. This indicates that the number of grants given in the last round is highly susceptible to the number of grants awarded in the previous 2 rounds. By comparing the observed mean funding value to the expected mean funding value, it appears that March is typically given less and then the budget is re-adjusted in the July round so it looks rather equalised overall. From an applicant perspective, it would seem like March is perhaps not the best round to submit an application because it has lower acceptance rate (*see [first part](https://aidenloe.github.io/esrc_p1.html) of this post*) and the panel is very strict with the money. This leads me to think that July seems like a good round for applications with larger costs. Bear in mind that I do not have the data for how much money was requested for each grant application, this is just the amount of money awarded in the end. 
+
+From a time period perspective, it would appear that most of the grants awarded are very close to the expected three years. Till date, the longest research period is 4 years from UCL, while the shortest is 5 months from the Manchester Metropolitan Univerisity. So far, no grants with a 5 year time period have been awarded, even though it is stated in the [call specification](https://esrc.ukri.org/files/funding/funding-opportunities/new-investigator-grants-call-specification/) that a maximum research period of 5 years is possible. Again, it does not say whether the researcher applied for a part-time or full-time position. If it is a full-time position, it is probably less than 3 years due to all the other costing involved.
+
+Finally, it is great to see that the research areas stem not only from within the Social Sciences but reaches out to other interesting and fascinating research fields, enabling a collaborative spirit within the academic community.
+
+
+What a potential applicant can take out of this: 
+
+1. Don't worry too much about the research period, as long as you justify the time frame. 
+2. Try and make the project more multidisciplinary, though 50% must relate to the Social Sciences.
+3. July and Nov rounds seem like a good time to submit the grant application if your project costs are higher than the expected mean value.
+4. Having a lower project cost not give you automatically give you a higher score over others. 
+5. Competition levels are stiff and you need to build a convincing case as to why the panel should fund your application over others.
+6. Give yourself ample time to think and draft down ideas as you shape it into an exceptionally strong grant application.
+7. Avoid submitting a proposal in the same round as your colleagues from the same research centre. 
+
+I hope this has been helpful information for potential applicants wanting to apply for to the ESRC New Investigators Grant scheme. 
+
+Disclaimer: Opinions are my own and not the views of my employer.
+
+<center> 
+Link to [Part 1](https://aidenloe.github.io/esrc_p1.html) of this post.
+
+Link to my [github page](https://aidenloe.github.io/index.html). 
+
+<p>Copyright &copy; Aiden Loe, Inc. All rights reserved.</p>
+
+</center>
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-98916204-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+
+
+```{r echo=F}
+# names(dat)
+# dat %>%
+#   select(url, University, department, round, Score_Category, ) %>%
+#   filter(University == "Manchester Metropolitan University")
+```
+
