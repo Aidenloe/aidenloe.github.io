@@ -3,6 +3,7 @@ title: "What types of projects are awarded the ESRC New Investigators Grant?"
 author: "Aiden"
 date: "29/11/2018"
 output: 
+  #html_document
   prettydoc::html_pretty:
     theme: leonids
 ---
@@ -71,7 +72,7 @@ names(countUni) <- c('University', 'Frequency', "Percentage")
 
 # helpful link (https://rstudio.github.io/DT/options.html)
 countUni_dt <- datatable(countUni, options = list(pageLength = 5, 
-                                                     autoWidth = TRUE,
+                                                     autoWidth = FALSE,
                                                     columnDefs = list(list(width = '50%', targets="0"),
                                                                       list(className = 'dt-center', targets = 0:3)),
                                                      lengthMenu = c(5, 10, 20, 30),
@@ -101,7 +102,7 @@ uni_per_round3 <- spread(uni_per_round2, key = 'Var2', value = 'Freq')
 d = data.frame(uni_per_round3, stringsAsFactors = FALSE)
 colnames(d) <- c('University',names(uni_per_round3)[2:6])
 dt <- datatable(d,  options = list(pageLength = 5, # filter = 'bottom',
-                                                    autoWidth = TRUE,
+                                                    autoWidth = FALSE,
                                                     columnDefs = list(list(width = '200px', targets = c(1)),
                                                                        list(className = 'dt-center', targets = 0:6)),
                                                     pageLength = 5,
@@ -130,7 +131,7 @@ dat  %>%
 count_dep_uni <- data.frame(countDepartment_uni, stringsAsFactors = F)
 
 count_dep_uni_dt <- datatable(count_dep_uni,  options = list(pageLength = 5, # filter = 'bottom',
-                                                    autoWidth = TRUE,
+                                                    autoWidth = FALSE,
                                                     columnDefs = list(list(width = '200px', targets = c(1)),
                                                                        list(className = 'dt-center', targets = 0:4)),
                                                     pageLength = 5,
@@ -163,7 +164,7 @@ dep_per_round3 <- spread(dep_per_round2, key = 'Var2', value = 'Freq')
 dep = data.frame(dep_per_round3, stringsAsFactors = FALSE)
 colnames(dep) <- c('Department',names(dep_per_round3)[2:6])
 dep_dt <- datatable(dep,  options = list(pageLength = 5, # filter = 'bottom',
-                                                    autoWidth = TRUE,
+                                                    autoWidth = FALSE,
                                                     columnDefs = list(list(width = '200px', targets = c(1)),
                                                                        list(className = 'dt-center', targets = 0:6)),
                                                     pageLength = 5,
@@ -246,24 +247,13 @@ dat %>%
 
 On average, the grants awarded typically lasts for about `r round(mean(count_date$research_period),2)` years with a standard deviation of `r round(sd(count_date$research_period),2)`. I am unsure if it part-time or full-time though. But I would imagine that any project lasting more than 3 years would be part-time since the overhead costs are really high. Plus the fact that if you include research assistants in your application then that would further bring down the grant period since you need to account for their salary and overhead costs as well. You can see the boxplot below for those interested in the quantiles. A breakdown at the university level can be found in the table below. 
 
-```{r median time, echo=F, fig.align='center', fig.width=3, fig.height=4}
-dat %>%
-  group_by(University, research_period) %>%
-  count() %>%
-  as.data.frame()-> count_date
-
+```{r research period, echo=F, fig.align='center', fig.width=3, fig.height=4}
 count_date$all_university <- 'Time'
 ggplot(count_date) + geom_boxplot(aes(x = all_university, y =research_period)) + theme_classic() + ggtitle("Median Time")
-```
-```{r research period, echo=F}
-dat %>%
-  select(University, research_period)%>% ## need to have select()!!! 
-  group_by(University, research_period) %>%
-  count() %>%
-  as.data.frame()-> count_date
 
+count_date <- count_date[,-c(4)]
 years_dt <- datatable(count_date,  options = list(pageLength = 5, # filter = 'bottom',
-                                                    autoWidth = TRUE,
+                                                    autoWidth = FALSE,
                                                     columnDefs = list(list(width = '200px', targets = c(1)),
                                                                        list(className = 'dt-center', targets = 0:3)),
                                                     pageLength = 5,
@@ -274,6 +264,7 @@ years_dt <- datatable(count_date,  options = list(pageLength = 5, # filter = 'bo
                                                        "}")
 ))
 years_dt
+
 ```
 
 
@@ -291,7 +282,7 @@ unlist(dat[,17:25]) %>%
   as.data.frame() -> research_area
 colnames(research_area) <- c('Research Area','Freq')
 research_dt <- datatable(research_area,  options = list(pageLength = 5, # filter = 'bottom',
-                                                    autoWidth = TRUE,
+                                                    autoWidth = FALSE,
                                                     columnDefs = list(list(width = '200px', targets = c(1)),
                                                                        list(className = 'dt-center', targets = 0:1)),
                                                     pageLength = 5,
