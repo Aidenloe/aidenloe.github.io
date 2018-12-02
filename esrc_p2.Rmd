@@ -34,12 +34,12 @@ In the first part of the post, I wanted to find out what are my chances of secur
 
 #### A little bit about the data 
 
-The list below shows the type of information that I have extracted and consolidated into a simple data table. I guess the column headings are rather self-explanatory. Perhaps only for the `url`, which is the web link to the project. The `abstract` is the abstract of the project and the `planned impact` is the description of the potential impact this project will have on society. The table below shows 3 web links to 3 different project if you are interested in seeing how it looks on the RCUK web page. Research areas are a combination of both research subjects and research topics. One project may have multiple research subjects and/or research topics. I don't think it is particularly interesting to look at either the research subjects or research topics individually at this stage. Hence, to avoid confusion, I decided to put them all together and rename as research areas. I chose *not to* extract the name of the principal investigator even though it is publicly available because I think it is not necessary to do so. 
+The list below shows the type of information that I have extracted and consolidated into a simple data table. I guess the column headings are rather self-explanatory. Perhaps only for the `url`, which is the web link to the project. The `abstract` is the abstract of the project and the `planned impact` is the description of the potential impact this project will have on society. The table below shows 3 web links to 3 different project if you are interested in seeing how it looks on the RCUK web page. Research areas are a combination of both research subjects and research topics. One project may have multiple research subjects and/or research topics. I don't think it is particularly interesting to look at either the research subjects or research topics individually at this stage. Hence, to avoid confusion, I decided to put them all together and rename as research areas. 
 
 ```{r pressure, echo=FALSE, fig.align='center'}
 dat <- read.csv('datasets/cdat.csv', stringsAsFactors = F)
-ma <- matrix(, nrow = 6, ncol = 4)
-ma[,] <- names(dat)[2:25]
+ma <- matrix(, nrow = 5, ncol = 5)
+ma[,] <- names(dat)[2:26]
 pander(ma, caption='Available information taken online' ,justify = "center")
 Project_URL <- head(dat$url, n = 3)
 pander(data.frame(Project_URL = Project_URL), caption='Web link to Projects',justify = "center")
