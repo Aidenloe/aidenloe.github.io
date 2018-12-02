@@ -241,7 +241,8 @@ diff_in_years <- as.double(diff_time)/365.25
 dat$research_period <- round(diff_in_years,2)
 
 dat %>%
-  group_by(University, research_period) %>%
+  select(University,research_period) %>% # need to have this for datatables()
+   group_by(University, research_period) %>%
   count() -> count_date
 ```
 
