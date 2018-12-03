@@ -53,6 +53,7 @@ Okay, given this information let's do some simple analyses and understand how gr
 Firstly, let's find out how many Universities were awarded in the past round. In total, `r length(unique(dat$University))` universities were awarded the grant for the last 5 months, with a total of 49 grants. Unfortunately, I was not able to extract information for two grants (n = 47). For whatever reason, they were not on the website. Perhaps the ESRC reference number did not match the website parameters. **So all analyses are conducted on only 47 grants**. If you want to know more about the success rate, please refer to my other [blog post](https://aidenloe.github.io/esrc_p1.html). In general, the table below shows the number of successful applicants per round (Please note that the two grants that were excluded from these analyses are from the March 2018 and July 2018 rounds).
 
 ```{r university, echo=F, fig.align='center'}
+dat$round <- factor(dat$round, levels=unique(dat$round))
 pander(colSums(table(dat$University, dat$round)), caption="Success rates",justify = "center")
 ```
 
