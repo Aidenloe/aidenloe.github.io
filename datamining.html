@@ -438,7 +438,7 @@ tweet_user$description </code></pre>
 <pre><code>## [1] &quot;&quot;</code></pre>
 <pre class="r"><code>#how many followers the account has
 tweet_user$followersCount </code></pre>
-<pre><code>## [1] 23745346</code></pre>
+<pre><code>## [1] 23745367</code></pre>
 </div>
 <div id="harvest-data" class="section level2">
 <h2><strong>Harvest data</strong></h2>
@@ -455,7 +455,7 @@ names(tweets) #view tweets</code></pre>
 ##  [9] &quot;replyToUID&quot;    &quot;statusSource&quot;  &quot;screenName&quot;    &quot;retweetCount&quot; 
 ## [13] &quot;isRetweet&quot;     &quot;retweeted&quot;     &quot;longitude&quot;     &quot;latitude&quot;</code></pre>
 <pre class="r"><code>nrow(tweets) #rows of tweets</code></pre>
-<pre><code>## [1] 251</code></pre>
+<pre><code>## [1] 252</code></pre>
 </div>
 <div id="reorganise-data" class="section level2">
 <h2><strong>Reorganise data</strong></h2>
@@ -476,26 +476,26 @@ names(tweets)</code></pre>
 <pre><code>## [1] &quot;id&quot;      &quot;source&quot;  &quot;text&quot;    &quot;created&quot;</code></pre>
 <pre class="r"><code>head(tweets)</code></pre>
 <pre><code>##                    id source
-## 1 1075471709224849408 iPhone
-## 2 1075470694568288256 iPhone
-## 3 1075469603503915008 iPhone
-## 4 1075468125221441536 iPhone
-## 5 1075238526566916101 iPhone
-## 6 1075238045731811328 iPhone
+## 1 1075472770358697984 iPhone
+## 2 1075471897775681536 iPhone
+## 3 1075471709224849408 iPhone
+## 4 1075470694568288256 iPhone
+## 5 1075469603503915008 iPhone
+## 6 1075468125221441536 iPhone
 ##                                                                                                                                           text
-## 1 @realkrauswife I know that area well. Best would be to add ramps into the tunnel system from the basement levels of… https://t.co/ww5mmqPStS
-## 2 If all vehicles were densely seated buses, throughput in excess of 100,000 people per hour per lane is possible, bu… https://t.co/JvBqbDLo4g
-## 3       A variety of vehicles, like normal roads, from a small car to a densely seated bus. Must be seated &amp;amp; belted for high speed safety.
-## 4          Next step for @BoringCompany Loop is demonstrating high throughput at high speed. Target is 4000 vehicles/hour at 155mph (250km/h).
-## 5                                                                                                 @joshjob42 @flaneur @boringcompany Precisely
-## 6                                                                                                                Presentation starting at 8:15
+## 1 @FredericLambert @boringcompany You’re right. We did have a sim ready, but it was confusing, so I didn’t include it… https://t.co/Afwlxo2uGo
+## 2                                                                                                        @realkrauswife Pop up, park and walk!
+## 3 @realkrauswife I know that area well. Best would be to add ramps into the tunnel system from the basement levels of… https://t.co/ww5mmqPStS
+## 4 If all vehicles were densely seated buses, throughput in excess of 100,000 people per hour per lane is possible, bu… https://t.co/JvBqbDLo4g
+## 5       A variety of vehicles, like normal roads, from a small car to a densely seated bus. Must be seated &amp;amp; belted for high speed safety.
+## 6          Next step for @BoringCompany Loop is demonstrating high throughput at high speed. Target is 4000 vehicles/hour at 155mph (250km/h).
 ##               created
-## 1 2018-12-19 19:23:31
-## 2 2018-12-19 19:19:29
-## 3 2018-12-19 19:15:09
-## 4 2018-12-19 19:09:16
-## 5 2018-12-19 03:56:56
-## 6 2018-12-19 03:55:01</code></pre>
+## 1 2018-12-19 19:27:44
+## 2 2018-12-19 19:24:16
+## 3 2018-12-19 19:23:31
+## 4 2018-12-19 19:19:29
+## 5 2018-12-19 19:15:09
+## 6 2018-12-19 19:09:16</code></pre>
 </div>
 <div id="tweets-most-frequently" class="section level2">
 <h2><strong>Tweets most frequently</strong></h2>
@@ -532,7 +532,7 @@ tweets %&gt;%
 chars_per_tweet = sapply(tweets$text, nchar) 
 summary(chars_per_tweet) #report average number of characters per tweet</code></pre>
 <pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-##    8.00   37.00   80.00   81.91  136.50  144.00</code></pre>
+##    8.00   36.00   76.50   80.69  136.00  144.00</code></pre>
 <pre class="r"><code>hist(chars_per_tweet, breaks=30) #this is the default R histogram plot</code></pre>
 <p><img src="datamining_files/figure-html/Average%20char%20per%20tweet-1.png" width="672" /></p>
 </div>
@@ -544,7 +544,7 @@ word_list = strsplit(tweets$text, &quot; &quot;) #split the tweets into separate
 words_per_tweet = sapply(word_list, length) #count the number of word elements in each tweet
 summary(words_per_tweet) #report average number of words per tweet</code></pre>
 <pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-##    1.00    5.00   12.00   12.16   19.00   29.00</code></pre>
+##    1.00    5.00   11.00   12.03   19.00   29.00</code></pre>
 <pre class="r"><code># the following uses ggplot2 to do the plot, which is much prettier.
 words_per_tweet_df = as.data.frame(words_per_tweet) #ggplot requires the data to be in a data frame
 ggplot(words_per_tweet_df, aes(x=words_per_tweet, group=words_per_tweet)) + 
@@ -560,7 +560,7 @@ hash_per_tweet = sapply (word_list, function(x) length(grep(&quot;#&quot;,x))) #
 table(hash_per_tweet) #counts</code></pre>
 <pre><code>## hash_per_tweet
 ##   0 
-## 251</code></pre>
+## 252</code></pre>
 <pre class="r"><code>summary(hash_per_tweet) #summary showing mean hashtags</code></pre>
 <pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
 ##       0       0       0       0       0       0</code></pre>
@@ -585,7 +585,7 @@ head(user_hashtags_freq_order,10) #report the 10 most common hashtags</code></pr
 uniq_words_per_tweet = sapply (word_list, function(x) unique(x)) 
 uniq_words = unlist(uniq_words_per_tweet) #they&#39;re in a list, so convert to a huge vector
 length(uniq_words) #shows how many total words we&#39;ve collected from this user</code></pre>
-<pre><code>## [1] 2967</code></pre>
+<pre><code>## [1] 2946</code></pre>
 <pre class="r"><code>uniq_words&lt;- uniq_words[!uniq_words %in% c(&quot;a&quot;, &quot;in&quot;, &quot;to&quot;, &quot;is&quot;, &quot;for&quot;, &quot;but&quot;, &quot;and&quot;, &quot;on&quot;, &quot;the&quot;, &quot;of&quot;)] # remove some stopwords.
 uniq_words_freq = table(uniq_words) #number of times that each word is displayed
 
@@ -765,11 +765,11 @@ pander(with(all.scores,(t.test(score[telecom==&quot;@ThreeUKSupport&quot;],score
 </thead>
 <tbody>
 <tr class="odd">
-<td align="center">2.459</td>
+<td align="center">2.108</td>
 <td align="center">499</td>
-<td align="center">0.01427 *</td>
+<td align="center">0.03555 *</td>
 <td align="center">two.sided</td>
-<td align="center">0.094</td>
+<td align="center">0.082</td>
 <td align="center">0</td>
 </tr>
 </tbody>
@@ -788,11 +788,11 @@ pander(with(all.scores,(t.test(score[telecom==&quot;@ThreeUKSupport&quot;],score
 </thead>
 <tbody>
 <tr class="odd">
-<td align="center">5.08</td>
-<td align="center">892.7</td>
-<td align="center">4.606e-07 * * *</td>
+<td align="center">4.847</td>
+<td align="center">899.8</td>
+<td align="center">1.473e-06 * * *</td>
 <td align="center">two.sided</td>
-<td align="center">0.094</td>
+<td align="center">0.082</td>
 </tr>
 </tbody>
 </table>
