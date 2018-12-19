@@ -63,6 +63,51 @@ Here are some useful tips to know more about regular expressions.
 + [:cntrl:]: control characters, like \n or \r, [\x00-\x1F\x7F].
 
 
+#### Some stuff worth remembering. 
+
+
+If you want to find out if multiple strings exists.
+
+```{r}
+Text <- c('I went out to meet some friends')
+words <- unlist(strsplit(Text, split = " "))
+grep('to|meet', words, value=T) # actual matches
+grepl('to|meet', words) # logical 
+
+```
+
+If you want to remove the rest of a string after a specific character, you can use the `gsub()` function
+
++ `.` matches any single character after the specific character 
++ `*` matches at least 0 times. 
++ `\` suppress the special meaning of metacharacters in regular expression. It has to be double backslash (i.e. `\\`) since `\` itself needs to be escaped in R. 
+
+```{r}
+
+text <- c('dd1 =~aaa', 'dd2 =~`bbb')
+trimws(gsub("\\=~.*", "", text)) 
+
+```
+
+If you want to replace multiple patterns in a single string,
+
+```{r}
+text <- c('I am having a lot of fun')
+gsub('having|fun','cool' ,text)
+```
+
+
+If you want to keep everything within the special characters only. It doesn't work if you have special characters before or after the opening and closing brackets though.
+
+```{r}
+item <- 'I like to [A1], [A2], [A3], [K1] fun'
+words <- unlist(strsplit(item, split= ' '))
+position <- (grep(c('\\['), words))
+features_special_characters <- words[position]
+(features <- gsub('\\[|\\]', "", features_special_characters))
+
+```
+
 
 #### Citations
 

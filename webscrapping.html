@@ -382,7 +382,7 @@ div.tocify {
 
 <h1 class="title toc-ignore">Web Scrapping</h1>
 <h4 class="author"><em>Aiden Loe</em></h4>
-<h4 class="date"><em>03 December, 2018</em></h4>
+<h4 class="date"><em>19 December, 2018</em></h4>
 
 </div>
 
@@ -530,15 +530,17 @@ us_states = read_html(&quot;https://en.wikipedia.org/wiki/List_of_U.S._states_an
 <pre class="r"><code>######################
 url &lt;- &quot;http://apps.saferoutesinfo.org/legislation_funding/state_apportionment.cfm&quot;
 funding&lt;-htmlParse(url) #get the data
+
 # find the table on the page and read it into a list object
-funding&lt;- readHTMLTable(funding,stringsAsFactors = FALSE)
+funding&lt;- XML::readHTMLTable(funding,stringsAsFactors = FALSE)
+
 funding.df &lt;- do.call(&quot;rbind&quot;, funding) #flatten data
 # Contain empty spaces previously.
 colnames(funding.df)[1]&lt;- c(&quot;State&quot;) # shorten colname to just State. 
 
 # Match up the tables by State/Territory names
 # so we have two data frames, x and y, and we&#39;re setting the columns we want to do the matching on by setting by.x and by.y
-mydata = merge(us_states, funding.df, by.x=&quot;State or territory&quot;, by.y=&quot;State&quot;)
+mydata = merge(us_states, funding.df, by.x=&quot;State, federal district, or territory&quot;, by.y=&quot;State&quot;)
 # it looks pretty good, but note that we&#39;re down to 50 US States, because the others didn&#39;t match up by name
 # e.g. &quot;District of Columbia&quot; in the us_states data, doesn&#39;t match &quot;Dist. of Col.&quot; in the funding data
 
@@ -560,7 +562,7 @@ plot(mydata[,&quot;Population estimate, July 1, 2017[4]&quot;], mydata[,&quot;to
 <p><img src="webscrapping_files/figure-html/Scrape%20Table%20(non-wiki)-1.png" width="672" /></p>
 <pre class="r"><code>## What&#39;s does the correlation between state funding and state population look like?
 cor(mydata[,&quot;Population estimate, July 1, 2017[4]&quot;], mydata[,&quot;total_spend&quot;]) # 0.9924265 - big correlation!</code></pre>
-<pre><code>## [1] 0.9890088</code></pre>
+<pre><code>## [1] 0.9885666</code></pre>
 </div>
 <div id="plot-funding-data-on-map" class="section level2">
 <h2><strong>Plot funding data on map</strong></h2>

@@ -382,7 +382,7 @@ div.tocify {
 
 <h1 class="title toc-ignore">Text Analysis</h1>
 <h4 class="author"><em>Aiden Loe</em></h4>
-<h4 class="date"><em>03 December, 2018</em></h4>
+<h4 class="date"><em>19 December, 2018</em></h4>
 
 </div>
 
@@ -415,6 +415,36 @@ div.tocify {
 <li><p>[:print:]: printable characters, equivalent to [[:alnum:][:punct:]\s].</p></li>
 <li><p>[:cntrl:]: control characters, like or , [00-1F7F].</p></li>
 </ul>
+<div id="some-stuff-worth-remembering." class="section level4">
+<h4>Some stuff worth remembering.</h4>
+<p>If you want to find out if multiple strings exists.</p>
+<pre class="r"><code>Text &lt;- c(&#39;I went out to meet some friends&#39;)
+words &lt;- unlist(strsplit(Text, split = &quot; &quot;))
+grep(&#39;to|meet&#39;, words, value=T) # actual matches</code></pre>
+<pre><code>## [1] &quot;to&quot;   &quot;meet&quot;</code></pre>
+<pre class="r"><code>grepl(&#39;to|meet&#39;, words) # logical </code></pre>
+<pre><code>## [1] FALSE FALSE FALSE  TRUE  TRUE FALSE FALSE</code></pre>
+<p>If you want to remove the rest of a string after a specific character, you can use the <code>gsub()</code> function</p>
+<ul>
+<li><code>.</code> matches any single character after the specific character</li>
+<li><code>*</code> matches at least 0 times.</li>
+<li><code>\</code> suppress the special meaning of metacharacters in regular expression. It has to be double backslash (i.e. <code>\\</code>) since <code>\</code> itself needs to be escaped in R.</li>
+</ul>
+<pre class="r"><code>text &lt;- c(&#39;dd1 =~aaa&#39;, &#39;dd2 =~`bbb&#39;)
+trimws(gsub(&quot;\\=~.*&quot;, &quot;&quot;, text)) </code></pre>
+<pre><code>## [1] &quot;dd1&quot; &quot;dd2&quot;</code></pre>
+<p>If you want to replace multiple patterns in a single string,</p>
+<pre class="r"><code>text &lt;- c(&#39;I am having a lot of fun&#39;)
+gsub(&#39;having|fun&#39;,&#39;cool&#39; ,text)</code></pre>
+<pre><code>## [1] &quot;I am cool a lot of cool&quot;</code></pre>
+<p>If you want to keep everything within the special characters only. It doesn’t work if you have special characters before or after the opening and closing brackets though.</p>
+<pre class="r"><code>item &lt;- &#39;I like to [A1], [A2], [A3], [K1] fun&#39;
+words &lt;- unlist(strsplit(item, split= &#39; &#39;))
+position &lt;- (grep(c(&#39;\\[&#39;), words))
+features_special_characters &lt;- words[position]
+(features &lt;- gsub(&#39;\\[|\\]&#39;, &quot;&quot;, features_special_characters))</code></pre>
+<pre><code>## [1] &quot;A1,&quot; &quot;A2,&quot; &quot;A3,&quot; &quot;K1&quot;</code></pre>
+</div>
 <div id="citations" class="section level4">
 <h4>Citations</h4>
 <ul>
