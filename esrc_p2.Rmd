@@ -277,8 +277,7 @@ years_dt
 At a department level, economics may have received the most number of awards, followed by psychology. However, if you rank the table below in the order of descending frequency, we find that it is the psychology research area that is the highest, followed by economics, sociology and the rest. This information tells us that many of the economic research is most likely to be behavioural in nature as supposed to the more quantitative aspects such as econometrics research. It is great to see quite a number of research areas that are not directly part of the Social Sciences. *So it would appear that collaborative research across different fields is highly recommended.* I would imagine that it reflects well on the ESRC knowing that the subjects/topics funded are multidisciplinary.  
 
 ```{r reserach area, echo= F}
-
-unlist(dat[,17:25]) %>%
+unlist(dat[,18:26]) %>%
   na.omit() %>%
   table() %>%
   as.data.frame() -> research_area
@@ -314,7 +313,7 @@ What a potential applicant can take out of this:
 1. Don't worry too much about the research period, as long as you justify the time frame. 
 2. Try and make the project more multidisciplinary, though 50% must relate to the Social Sciences.
 3. July and Nov rounds seem like a good time to submit the grant application if your project costs are higher than the expected mean value.
-4. Having a lower project cost not give you automatically give you a higher score over others. 
+4. Having a lower project cost does not you automatically give you a higher score over others. 
 5. Competition levels are stiff and you need to build a convincing case as to why the panel should fund your application over others.
 6. Give yourself ample time to think and draft down ideas as you shape it into an exceptionally strong grant application.
 7. Avoid submitting a proposal in the same round as your colleagues from the same research centre. 
