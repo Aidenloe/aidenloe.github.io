@@ -89,7 +89,7 @@ Ii <- NULL
 for(i in 1:1000){
   P[i] <- 1/(1+ exp (-D*a*(θ[i] - b)))
   Q[i]= 1-P[i]
-  Ii[i] =(D^2*Q[i]*(P[i]-c)^2)/(P[i]*((1-c)^2)) # (3PL)
+  Ii[i] =(D^2*a*Q[i]*(P[i]-c)^2)/(P[i]*((1-c)^2)) # (3PL)
    }
 return(Ii)
 }
@@ -104,25 +104,31 @@ Now we have the item information for a single item along the theta range of -4 t
 
 We want to calculate the item information for all items. 
 
-```{r all item information function}
+```{r all item information function, warning=FALSE, echo=FALSE, message=FALSE}
+require(ggplot2)
 
 # Given that the difficulty parameter for two items are -1.5, 0.5
 b <- c(-1.5,0.5)
-
+a <- rep(1, length(b))
 # Function to get all item information
-item_info <- function(b){
+item_info <- function(b,a=1){
 item <- NULL
   for(i in 1:length(b)){
-  item[[i]] <- i_info(b[i])
+  item[[i]] <- i_info(b[i],a[i])
   }
 return(item)
 }
 
 # Get all item information
-c <- item_info(b)
+c <- item_info(b,a)
 
 # Inspect first 5 item information values for second item 
 c[[2]][1:5]
+
+# plot item info
+Theta <- matrix(seq(-4,4, length.out=1000))
+check=cbind.data.frame(Theta, item_info=c[[1]])
+ggplot(check) + geom_line(aes(Theta, item_info)) + theme_classic()
 ```
 <br/>
 
@@ -137,13 +143,18 @@ The formula looks like this:
 
 This is how it looks like in R once you have your item information: 
 
-```{r Test information}
+```{r Test information, echo=FALSE, message=FALSE}
 # combind the item information column wise
 d <- do.call('cbind',c)
 
 # Then calculate the test information
 test_info <- rowSums(d)
 head(test_info)
+
+# Test info
+Theta <- matrix(seq(-4,4, length.out=1000))
+check=cbind.data.frame(Theta, test_info)
+ggplot(check) + geom_line(aes(Theta, test_info)) + theme_classic()
 ```
 
 Now you essential have the test information that ranges from the $\theta$ value of -4 to 4. 
@@ -173,7 +184,7 @@ head(se)
 Given that you have all the test information and the SE. You can plot it nicely. The R code can be taken [here](https://aidenloe.github.io/irtplots.html#test_information_plot). 
 
 <br/>
-```{r plot, echo=FALSE, message=FALSE,fig.width=8, fig.height=8}
+```{r plot, echo=FALSE, message=FALSE,fig.width=8, fig.height=8, warning=FALSE}
 require(ggplot2)
 require(gtable)
 require(grid)
