@@ -470,7 +470,30 @@ itemInfo[1:5]</code></pre>
 <pre><code>## [1] 0.03997190 0.04050487 0.04104474 0.04159158 0.04214549</code></pre>
 <p>Now we have the item information for a single item along the theta range of -4 to 4.</p>
 <p>We want to calculate the item information for all items.</p>
+<pre class="r"><code>require(ggplot2)
+
+# Given that the difficulty parameter for two items are -1.5, 0.5
+b &lt;- c(-1.5,0.5)
+a &lt;- rep(1, length(b))
+# Function to get all item information
+item_info &lt;- function(b,a=1){
+item &lt;- NULL
+  for(i in 1:length(b)){
+  item[[i]] &lt;- i_info(b[i],a[i])
+  }
+return(item)
+}
+
+# Get all item information
+c &lt;- item_info(b,a)
+
+# Inspect first 5 item information values for second item 
+c[[2]][1:5]</code></pre>
 <pre><code>## [1] 0.001365363 0.001384081 0.001403057 0.001422292 0.001441790</code></pre>
+<pre class="r"><code># plot item info
+Theta &lt;- matrix(seq(-4,4, length.out=1000))
+check=cbind.data.frame(Theta, item_info=c[[1]])
+ggplot(check) + geom_line(aes(Theta, item_info)) + theme_classic()</code></pre>
 <p><img src="testinfo_files/figure-html/all%20item%20information%20function-1.png" width="672" /> <br/></p>
 </div>
 <div id="test-information" class="section level3">
@@ -483,7 +506,17 @@ itemInfo[1:5]</code></pre>
 </center>
 <p><br/></p>
 <p>This is how it looks like in R once you have your item information:</p>
+<pre class="r"><code># combind the item information column wise
+d &lt;- do.call(&#39;cbind&#39;,c)
+
+# Then calculate the test information
+test_info &lt;- rowSums(d)
+head(test_info)</code></pre>
 <pre><code>## [1] 0.04133726 0.04188895 0.04244780 0.04301387 0.04358728 0.04416809</code></pre>
+<pre class="r"><code># Test info
+Theta &lt;- matrix(seq(-4,4, length.out=1000))
+check=cbind.data.frame(Theta, test_info)
+ggplot(check) + geom_line(aes(Theta, test_info)) + theme_classic()</code></pre>
 <p><img src="testinfo_files/figure-html/Test%20information-1.png" width="672" /></p>
 <p>Now you essential have the test information that ranges from the <span class="math inline">\(\theta\)</span> value of -4 to 4.</p>
 <p><br/></p>

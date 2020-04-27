@@ -104,7 +104,7 @@ Now we have the item information for a single item along the theta range of -4 t
 
 We want to calculate the item information for all items. 
 
-```{r all item information function, warning=FALSE, echo=FALSE, message=FALSE}
+```{r all item information function, warning=FALSE,  message=FALSE}
 require(ggplot2)
 
 # Given that the difficulty parameter for two items are -1.5, 0.5
@@ -143,7 +143,7 @@ The formula looks like this:
 
 This is how it looks like in R once you have your item information: 
 
-```{r Test information, echo=FALSE, message=FALSE}
+```{r Test information, message=FALSE}
 # combind the item information column wise
 d <- do.call('cbind',c)
 
