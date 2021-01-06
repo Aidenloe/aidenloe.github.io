@@ -23,8 +23,8 @@ navbar:
     - text: What is ML?
     - text: Intro to ML
       href: introToML.html
-    - text: Web Scrapping
-      href: webscrapping.html
+    - text: Web Scraping
+      href: webscraping.html
     - text: Data Mining
       href: datamining.html
   - text: IRT 4 Social Scientists
