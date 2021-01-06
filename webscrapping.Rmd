@@ -1,5 +1,5 @@
 ---
-title: "Web Scrapping"
+title: "Web scraping"
 author: "Aiden Loe"
 date: "`r format(Sys.time(), '%d %B, %Y')`"
 output:
@@ -14,15 +14,15 @@ output:
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-# **Web Scrapping (Part 1)**
+# **Web Scraping (Part 1)**
 
-Scrapping viewership is one area of web scrapping, but perhaps you might be interested in doing sentiment analysis on content. 
+Scraping viewership is one area of web scraping, but perhaps you might be interested in doing sentiment analysis on content. 
 
 So we want to extract the contents of the web pages rather than number of times someone viewed the web page. 
 
 ## **Scrape content (Wiki)**
 
-We will be using the `RCurl` and `XML` package to help us with the scrapping. 
+We will be using the `RCurl` and `XML` package to help us with the scraping. 
 
 Let's use the Eurovision_Song_Contest as an example. 
 
@@ -32,7 +32,7 @@ Usually we are extracting information based on the tags of the web pages.
 
 
 ```{r Scrape Content (wiki), message=FALSE, results='hide', warning=FALSE}
-##### SCRAPPING CONTENT OFF WEBSITES ######
+##### scraping CONTENT OFF WEBSITES ######
 require(RCurl)
 require(XML)
 # XPath is a language for querying XML 
@@ -113,7 +113,12 @@ BBCscrapper1<- function(url){
   title <- xpathSApply(PARSED, "//h1", xmlValue) # h1 tag
   paragraph <- xpathSApply(PARSED, "//p", xmlValue) # p tag
   date <- xpathSApply(PARSED, "//div[@class='date date--v2']",xmlValue) # date, only the first is enough
-  date <- date[1]
+  if(length(date) == 0){
+    date = NA
+  }else{
+    date <- date[1]  
+  }
+  
   return(cbind(title,date))
   #return(as.matrix(c(title,date)))
 }
@@ -121,6 +126,7 @@ BBCscrapper1<- function(url){
 
 # Use function that was just created. 
 BBCscrapper1("https://www.bbc.co.uk/news/education-46382919")
+
 ```
 
 ## **Keeping it neat**
@@ -139,7 +145,7 @@ ldply(url,BBCscrapper1)
 
 
 
-# **Web Scrapping (Part 2)**
+# **Web scraping (Part 2)**
 This example below is taken from code kindly written by David stillwell. 
 
 Some editing has been made to the original code. 
@@ -148,7 +154,7 @@ Some editing has been made to the original code.
 
 You have learned how to scrape viewership on wikipedia and content on web pages. 
 
-This section is about scrapping data tables online. 
+This section is about scraping data tables online. 
 
 ```{r Scrape Table (Wiki), message=FALSE}
 # Install the packages that you don't have first. 
@@ -164,7 +170,13 @@ us_states = read_html("https://en.wikipedia.org/wiki/List_of_U.S._states_and_ter
   # then extract the first node with class of wikitable
   html_node(".wikitable") %>% 
   # then convert the HTML table into a data frame
-  html_table()
+  html_table(fill = TRUE)
+
+# rename
+names(us_states)<- c('current rank', '2010 rank', 'state', 'census_population_07_2019', 'census_population_04_2010', 'change_in_percentage', 'change in absolute', "total_US_House_of_Representative_seats", "est_population_per_electoral_vote_2019")
+
+# remove first row
+us_states=us_states[-1,]
 
 ```
 
@@ -183,36 +195,39 @@ url <- "http://apps.saferoutesinfo.org/legislation_funding/state_apportionment.c
 funding<-htmlParse(url) #get the data
 
 # find the table on the page and read it into a list object
-funding<- XML::readHTMLTable(funding,stringsAsFactors = FALSE)
-
+funding<- readHTMLTable(funding,stringsAsFactors = FALSE)
 funding.df <- do.call("rbind", funding) #flatten data
+
 # Contain empty spaces previously.
-colnames(funding.df)[1]<- c("State") # shorten colname to just State. 
+colnames(funding.df)[1]<- c("state") # shorten colname to just State.
 
 # Match up the tables by State/Territory names
 # so we have two data frames, x and y, and we're setting the columns we want to do the matching on by setting by.x and by.y
-mydata = merge(us_states, funding.df, by.x="State, federal district, or territory", by.y="State")
-# it looks pretty good, but note that we're down to 50 US States, because the others didn't match up by name
+mydata = merge(us_states, funding.df, by.x="state", by.y="state")
+
+dim(mydata) # it looks pretty good, but note that we're down to 50 US States, because the others didn't match up by name
+
 # e.g. "District of Columbia" in the us_states data, doesn't match "Dist. of Col." in the funding data
+us_states[!us_states$state %in% funding.df$state,]$state
 
 #Replace the total spend column name with a name that's easier to use.
-colnames(mydata)[18] = "total_spend"
+names(mydata)
+colnames(mydata)[18] = "total_spend" # year of 2010
+names(mydata)
+head(mydata)
+# We need to remove commas so that R can treat it as a number.
+mydata[,"census_population_04_2010"] = gsub(",", "", mydata[,"census_population_04_2010"]) # removes all commas
+(mydata[,"census_population_04_2010"] = as.numeric(mydata[,"census_population_04_2010"])) # converts to number data type
 
-#  We need to remove commas so that R can treat it as a number.
-mydata[,"Population estimate, July 1, 2017[4]"] = gsub(",", "", mydata[,"Population estimate, July 1, 2017[4]"]) 
-mydata[,"Population estimate, July 1, 2017[4]"] = as.numeric(mydata[,"Population estimate, July 1, 2017[4]"]) #this converts it to a number data type
-
-# Now we have to do the same thing with the funding totals, which are in a format like this: $17,309,568
+# Now we have to do the same thing with the funding totals
 mydata[,"total_spend"] = gsub(",", "", mydata[,"total_spend"]) #this removes all commas
 mydata[,"total_spend"] = gsub("\\$", "", mydata[,"total_spend"]) #this removes all dollar signs. We have a \\ because the dollar sign is a special character.
-mydata[,"total_spend"] = as.numeric(mydata[,"total_spend"]) #this converts it to a number data type
+(mydata[,"total_spend"] = as.numeric(mydata[,"total_spend"])) #this converts it to a number data type
 
 # Now we can do the plotting
 options(scipen=9999) #stop it showing scientific notation
-plot(mydata[,"Population estimate, July 1, 2017[4]"], mydata[,"total_spend"])
-
-## What's does the correlation between state funding and state population look like?
-cor(mydata[,"Population estimate, July 1, 2017[4]"], mydata[,"total_spend"]) # 0.9924265 - big correlation!
+plot(x=mydata[,"census_population_04_2010"], y=mydata[,"total_spend"], xlab = 'Population', ylab='Total Spending')
+cor.test(mydata[,"census_population_04_2010"], mydata[,"total_spend"]) # 0.9810979 - big correlation!
 
 ```
 
@@ -247,7 +262,7 @@ ggplot() +
 ```
 
 
-# **Web Scrapping (Part 3)**
+# **Web scraping (Part 3)**
 ## **Scrape from discussion forums**
 
 Coming soon..
