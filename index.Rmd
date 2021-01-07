@@ -11,7 +11,13 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## Howdy
 
-My name is Aiden loe and I am a PhD candidate at the University of Cambridge.
+My name is Aiden loe and I am a psychometrician at the University of Cambridge.
+
+I completed my undergraduate joint degree in psychology/business at the University of Glasgow. 
+
+I pursued my Masters (social and development psychology) and PhD (psychometrics) at the University of Cambridge. 
+
+My PhD supervisor was Professor John Rust. 
 
 I like to keep things simple and neat. 
 
@@ -20,9 +26,6 @@ That makes learning easier.
 Here we cover basic R and stats for our workshop. 
  
 But I also add things that I pick up along the way. 
-
-For more about me, please go to http://aidenloe.com 
-
 
 
 <script>
