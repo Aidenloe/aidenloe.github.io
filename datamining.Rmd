@@ -1,0 +1,509 @@
+---
+title: "Data mining"
+author: "Aiden Loe"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output:
+  html_document:
+    toc: true
+    toc_depth: 3
+    toc_float: 
+      collapsed: false
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# **Data Mining (Twitter)**
+
+Data mining is slightly different from web scrapping. It concerns itself with the data that is scraped, but it invovles the process of discovering patterns in large data sets. 
+
+We are going to extract twitter data through their API. 
+
+First of all, you need to create a twitter app before you can have access to the data through their API. 
+
+We start off with loading the relevant packages.
+
+```{r Packages,, message=FALSE}
+library("twitteR")
+library("ggplot2")
+library("slam") 
+library("wordcloud") # depends on slam to work
+library("stringr")
+library("pander")
+```
+
+## **Important keys**
+The four main things you will need are:
+
++ consumer_key
++ consumer secret
++ access_token
++ access_secret
+
+```{r access keys, echo=FALSE, message=FALSE}
+consumer_key = '7cvNGBgXex6LVNaONCRvR37kU'
+consumer_secret = 'Kv2sH5HsSKau743LQ0oei2jHDb7FXSInW7TGT75ZrwriUSjeLu'
+access_token = '523172873-PHBjDyiZS5eq3yGzWXCLq6UsqBItdVbt6yafS3vX'
+access_secret = 'HjIq8YtNweO8LdraVq2PcVjxQqyNqUfcsxjpljRUJVvAJ'
+```
+
+```{r Set up API, message=FALSE}
+## Set up the Twitter API session
+options(httr_oauth_cache=F) #set oauth cacheing to false so that it doesn't bring up a prompt.
+setup_twitter_oauth(consumer_key=consumer_key, 
+                    consumer_secret=consumer_secret, 
+                    access_token=access_token, 
+                    access_secret=access_secret)
+```
+
+## **Get data**
+
+```{r Get data}
+## Get data for a specific Twitter username
+tweet_user = getUser('elonmusk') #will get user info from the @david_stillwell account
+
+## Explore our new data
+ls(tweet_user) #see the elements in the new list variable
+#how long the account has been a Twitter user for
+tweet_user$created 
+#user's description
+tweet_user$description 
+#how many followers the account has
+tweet_user$followersCount 
+
+
+```
+
+## **Harvest data**
+
+Here we want to extract at most up to 3200 tweets. This is the limit anyway so you can't cross it. 
+
+However, more often than not, you will not get the full 3200 tweets. It will always be less than that. 
+
+We want to convert it into a data frame so we can use the data easily in R. 
+
+```{r Harvest data, message = FALSE}
+library("twitteR")
+## harvest tweets from user (usually return fewer)
+tweets.1 = userTimeline('elonmusk', n=3200, includeRts=FALSE)  # no re-tweets. 
+tweets = twListToDF(tweets.1) #put the Tweets in a data frame
+names(tweets) #view tweets
+nrow(tweets) #rows of tweets
+
+```
+
+## **Reorganise data**
+
+Here we want to reorganise data to use the columns we are interested in. 
+
+* source = application the tweet came from (i.e. iphone or android)
+
+* text = the tweet
+
+* created = time of which the tweet was created
+
+```{r reorganise data, message=FALSE}
+## reorganise data
+library("tidyr")
+library("dplyr")
+tweets <- tweets %>% 
+  select(id, statusSource, text, created) %>% ## select these 4 columns
+  extract(statusSource, "source", "Twitter for (.*?)<") %>% #strip html code and rename
+  filter(source %in% c("iPhone")) # select only rows with iphone
+names(tweets)
+
+head(tweets)
+```
+
+## **Tweets most frequently**
+
+Let's find out at what point of time he tweets the most. 
+
+We will use the data frame that we just cleaned. 
+
+It only contains:
+
+* source = application the tweet came from (i.e. iphone or android)
+
+* text = the tweets
+
+* created = time of which the tweet was created
+
+
+```{r Tweets most frequently, message= FALSE}
+## Investigate when he tweets the most (time of the day)
+library("lubridate")
+library("scales")
+library('dplyr')
+
+tweets %>%
+  count(source, hour = hour(with_tz(created, "EST"))) %>%  #count observations by source.
+  mutate(percent = n / sum(n)) %>% #add a new column into the data frame
+  
+  # plot it
+  ggplot(aes(hour, percent, color = source)) + 
+  geom_line() +
+  scale_y_continuous(labels = percent_format()) +
+  labs(x = "Hour of day (EST)",
+       y = "% of tweets",
+       color = "") 
+
+```
+
+## **Average char per tweet**
+
+What is the average number of characters per tweet?
+
+```{r Average char per tweet}
+#apply the nchar function (number of characters) to the text column of every row of the dataset
+chars_per_tweet = sapply(tweets$text, nchar) 
+summary(chars_per_tweet) #report average number of characters per tweet
+hist(chars_per_tweet, breaks=30) #this is the default R histogram plot
+```
+
+## **Average word per tweet**
+
+What is the average number of words per tweet?
+
+```{r Average word per tweet}
+## What is the average number of words per tweet?
+word_list = strsplit(tweets$text, " ") #split the tweets into separate words by using spaces
+words_per_tweet = sapply(word_list, length) #count the number of word elements in each tweet
+summary(words_per_tweet) #report average number of words per tweet
+
+# the following uses ggplot2 to do the plot, which is much prettier.
+words_per_tweet_df = as.data.frame(words_per_tweet) #ggplot requires the data to be in a data frame
+ggplot(words_per_tweet_df, aes(x=words_per_tweet, group=words_per_tweet)) + 
+  geom_bar(fill="blue") + 
+  scale_x_continuous(limits=c(0,30))
+
+```
+
+
+## **Average hashtags per tweet**
+
+Clearly he does not hash much in his tweets. 
+
+```{r Average hash per tweet}
+## how many hashtags per tweet?
+hash_per_tweet = sapply (word_list, function(x) length(grep("#",x))) #grep is a function that searches for a certain character or set of characters, in this case the #
+table(hash_per_tweet) #counts
+summary(hash_per_tweet) #summary showing mean hashtags
+
+
+```
+
+## **Top Hash**
+
+What are the top 10 most commonly used hashtags?
+```{r Top 10 most common hash}
+# get the hashtags. This function looks for anything that starts with a # and is followed by text
+user_hashtags <- str_extract_all(tweets$text, "#\\S+") 
+user_hashtags  = unlist(user_hashtags) #put tags in vector
+
+user_hashtags_freq <- table(user_hashtags) #calculate hashtag frequencies
+user_hashtags_freq_order <- sort(user_hashtags_freq, decreasing=TRUE) #order the frequencies from most to least
+head(user_hashtags_freq_order,10) #report the 10 most common hashtags
+
+```
+
+
+## **Word Cloud**
+
+Usually, you would have to remove important stopwords before creating a word cloud. 
+
+Here we are just using some stopwords. 
+
+```{r Word Cloud, warning=FALSE, fig.width=15, fig.height=15}
+
+#counts unique words from each tweet (so if you use the same word twice in a tweet it'll only be counted once)
+uniq_words_per_tweet = sapply (word_list, function(x) unique(x)) 
+uniq_words = unlist(uniq_words_per_tweet) #they're in a list, so convert to a huge vector
+length(uniq_words) #shows how many total words we've collected from this user
+uniq_words<- uniq_words[!uniq_words %in% c("a", "in", "to", "is", "for", "but", "and", "on", "the", "of")] # remove some stopwords.
+uniq_words_freq = table(uniq_words) #number of times that each word is displayed
+
+wordcloud(names(uniq_words_freq),scale=c(8,1.5), min.freq=3, uniq_words_freq, random.order=FALSE, colors= "#1B9E77") #Produces the word cloud
+title("words in Tweets",cex.main=3, col.main="gray51") #gives the word cloud a title
+
+```
+
+# *Sentiment Analysis* 
+
+This is a simple example of how one can conduct a simple sentiment analysis. 
+
+We will be mining twitter data of 3 UK telecommunication companies.
+
+The tweets will be taken from the customer support accounts. 
+
+We will then evaluate the sentiment of these tweets. 
+
+We will plot it and then compare the sentiment score between the companies. 
+
+You may begin going through the code from there. 
+
+But you must first get your consumer and secret keys to access the Twitter API. 
+
+## **Load Dictionaries**
+
+The first thing to do is to load the dictionaries of positive and negative words. 
+
+We are using the [Sentiment Lexicon](https://www.cs.uic.edu/~liub/FBS/sentiment-analysis.html). 
+
+It has around 6800 words [Hu and Lui, KDD-2004](https://www.cs.uic.edu/~liub/publications/kdd04-revSummary.pdf).
+
+
+```{r dictionaries}
+## Positive and negative word dictionaries
+# Make sure you have positive_words.txt and negative_words.txt in your working directory
+# You can open the files in Notepad to see what's in them.
+pos = readLines("datasets/positive_words.txt")
+neg = readLines("datasets/negative_words.txt")
+```
+
+## **Search data**
+
+We are going to search the twitter data of 3 UK telecommunication companies. 
+
+Then we clean the tweets of things we don't want in it.
+
+This can be punctuations, numbers, html links etc.. 
+
+```{r score sentiment, echo=FALSE, message=FALSE}
+require(plyr)
+#Function to score sentiment
+score.sentiment = function(sentences, pos.words, neg.words, .progress='none')
+{
+  # Parameters
+  # sentences: vector of text to score
+  # pos.words: vector of words of postive sentiment
+  # neg.words: vector of words of negative sentiment
+  # .progress: passed to laply() to control of progress bar
+
+  # create simple array of scores with laply
+  scores = laply(sentences,
+                 function(sentence, pos.words, neg.words)
+                 {
+                   # remove punctuation
+                   sentence = gsub("[[:punct:]]", "", sentence)
+                   # remove control characters
+                   sentence = gsub("[[:cntrl:]]", "", sentence)
+                   # remove digits?
+                   sentence = gsub('\\d+', '', sentence)
+
+                   # define error handling function when trying tolower
+                   tryTolower = function(x)
+                   {
+                     # create missing value
+                     y = NA
+                     # tryCatch error
+                     try_error = tryCatch(tolower(x), error=function(e) e)
+                     # if not an error
+                     if (!inherits(try_error, "error"))
+                       y = tolower(x)
+                     # result
+                     return(y)
+                   }
+                   # use tryTolower with sapply
+                   sentence = sapply(sentence, tryTolower)
+
+                   # split sentence into words with str_split (stringr package)
+                   word.list = str_split(sentence, "\\s+")
+                   words = unlist(word.list)
+
+                   # compare words to the dictionaries of positive & negative terms
+                   pos.matches = match(words, pos.words)
+                   neg.matches = match(words, neg.words)
+
+                   # get the position of the matched term or NA
+                   # we just want a TRUE/FALSE
+                   pos.matches = !is.na(pos.matches)
+                   neg.matches = !is.na(neg.matches)
+
+                   # final score
+                   score = sum(pos.matches) - sum(neg.matches)
+                   return(score)
+                 }, pos.words, neg.words, .progress=.progress )
+
+  # data frame with scores for each sentence
+  scores.df = data.frame(text=sentences, score=scores)
+  return(scores.df)
+}
+
+
+# Takes away all the special characters for each tweet group to provide a word cloud
+try.error = function(x)
+{
+  # create missing value
+  y = NA
+  # tryCatch error
+  try_error = tryCatch(tolower(x), error=function(e) e)
+  # if not an error
+  if (!inherits(try_error, "error"))
+    y = tolower(x)
+  # result
+  return(y)
+}
+
+```
+
+
+```{r search data}
+
+## Get tweets mentioning 3 UK companies
+# name the companies
+companyNameOne <- "@ThreeUKSupport"
+companyNameTwo <- "@VodafoneUKhelp"
+companyNameThree <- "@BTcare"
+extractTweetsNumber <- 500 #get the 500 most recent Tweets about each
+
+# Notice we're using searchTwitter function. We didn't use this function before in the previous Twitter API lecture.
+# It uses a different Twitter API end point. Rather than getting the tweets from a certain account,
+# it gets the Tweets that contain a certain text string.
+companyOne = searchTwitter(companyNameOne, n=extractTweetsNumber, lang="en")
+companyTwo = searchTwitter(companyNameTwo, n=extractTweetsNumber, lang="en")
+companyThree = searchTwitter(companyNameThree, n=extractTweetsNumber, lang="en")
+
+# We only want the actual tweets rather than the meta-data, and this function does that.
+companyOne =  sapply(companyOne, function(x) x$getText())
+companyTwo =  sapply(companyTwo, function(x) x$getText())
+companyThree  =  sapply(companyThree, function(x) x$getText())
+
+## Clean the Tweets
+companies = list(companyOne, companyTwo, companyThree) #create a list with the three companies in it
+
+compan2 <- NULL
+for (i in 1:length(companies)) { #set up a loop to do all three companies
+  #remove retweet entities
+  companies[i] = lapply(X = companies[i], gsub,
+                        pattern="(RT|via)((?:\\b\\W*@\\w+)+)", replacement="")
+
+  #remove at people
+  (companies[i] = lapply(X = companies[i], gsub,
+                         pattern="@\\w+", replacement=""))
+  # remove punctuation
+  (companies[i] = lapply(X = companies[i], gsub,
+                         pattern="[[:punct:]]", replacement=""))
+  # remove numbers
+  (companies[i] = lapply(X = companies[i], gsub,
+                         pattern="[[:digit:]]", replacement=""))
+  # remove html links
+  (companies[i] = lapply(X = companies[i], gsub,
+                         pattern="http\\w+", replacement=""))
+  # remove new lines and replace with a space
+  (companies[i] = lapply(X = companies[i], gsub,
+                         pattern="\\n", replacement=""))
+  # remove unnecessary spaces
+  #anything with 2 or more spaces, replace with 1
+  (companies[i] = lapply(X = companies[i], gsub,
+                         pattern="[ \t]{2,}", replacement="")) 
+  #remove any spaces at the beginning of tweets
+  (companies[i] = lapply(X = companies[i], gsub,
+                         pattern="^\\s+|\\s+$", replacement="")) 
+
+  # remove NAs in each specific  txt to setup for Corpus and score_sentiment
+  companies[i] = companies[i][!is.na(companies[i])]
+
+  #unlist
+  compan <- unlist(companies[i])
+  # makes everything lower case
+  (compan2[[i]] = sapply(X = compan, try.error))
+
+}
+
+#put the data back in the companyOne/Two/Three variables, just for ease of use
+companyOne = companies[[1]]
+companyTwo = companies[[2]]
+companyThree = companies[[3]]
+
+```
+
+
+## **Sentiment score**
+
+Code for sentiment analysis was copied heavily from [here](https://github.com/jeffreybreen/twitter-sentiment-analysis-tutorial-201107/blob/master/R/sentiment.R)
+
+We derive a sentiment score for every tweet. 
+
+The idea is that every word in a tweet will be compared to the positive and negative dictionary. For every positive word found, a score of +1 is given, and a score of -1 is given for every negative word found in the sentence.
+
+```{r run sentiment function, message=FALSE, results="hide"}
+
+# apply function score.sentiment and add new variable in column
+companyOne.score = score.sentiment(companyOne, .progress="text", pos, neg)
+
+companyTwo.score = score.sentiment(companyTwo, .progress="text", pos, neg)
+
+companyThree.score = score.sentiment(companyThree, .progress="text", pos, neg)
+
+# have a look at what Tweets are labeled positive and negative:
+#head(companyOne.score)
+```
+
+## **Plot Sentiment score**
+
+Once we have the score for every sentence, we can then plot it on a bar chart. 
+
+```{r plot barchart}
+## Produce a bar graph showing which companies are on average more positively/negatively rated.
+
+# name the companies
+companyOne.score$telecom = companyNameOne
+companyTwo.score$telecom = companyNameTwo
+companyThree.score$telecom = companyNameThree
+
+# combine all scores into a single variable
+all.scores = rbind(companyOne.score, companyTwo.score, companyThree.score)
+all.scores <- all.scores[,c(1,3,2)] #reorder the columns
+
+# Gives you the average of each of the three categories
+meanscore = tapply(all.scores$score, all.scores$telecom, mean) 
+
+#### sem
+# first calculate sd
+# then use sd to calculate se
+sdscore = tapply(all.scores$score, all.scores$telecom, sd) 
+companyOne.SEm <- sdscore[1]/sqrt(nrow(companyOne.score))
+companyTwo.SEm <- sdscore[2]/sqrt(nrow(companyThree.score))
+companyThree.SEm <- sdscore[3]/sqrt(nrow(companyThree.score))
+sem <- c(companyOne.SEm,companyTwo.SEm,companyThree.SEm) # put them back
+
+# create a data frame to be plotted
+df = data.frame(telecom=names(meanscore), meanscore=meanscore, sem=sem)
+
+values = c("red","blue", "green") #bar colours in the plot
+limits <- aes(ymax = df$meanscore + df$sem, # setting the upper and lower limits
+              ymin = df$meanscore - df$sem) # setting the upper and lower limits
+
+#do the plot
+ggplot(df, aes(x=telecom, y=meanscore, fill=factor(telecom))) +
+  geom_bar(data=df,stat="identity") +
+  geom_errorbar(limits, position = position_dodge(width = 0.9), width = 0.25) +
+  ggtitle("Average Sentiment Score") +
+  scale_fill_discrete(guide = guide_legend(title = "Companies")) # title text
+```
+
+## **T test for sentiment score**
+
+We can further confirm our visual result by running a simple pair-wise t-test. 
+
+```{r Run t test}
+# t.test between the groups
+pander(with(all.scores,(t.test(score[telecom=="@ThreeUKSupport"],score[telecom=="@VodafoneUKhelp"]))),style="simple")
+pander(with(all.scores,(t.test(score[telecom=="@ThreeUKSupport"],score[telecom=="@BTcare"]))),style="simple")
+pander(with(all.scores,(t.test(score[telecom=="@VodafoneUKhelp"],score[telecom=="@BTcare"]))),style="simple")
+```
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-98916204-1', 'auto');
+  ga('send', 'pageview');
+
+</script>

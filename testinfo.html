@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+<meta name="author" content="Aiden Loe" />
+
+
+<title>Test Information</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 51px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+
+.section h2 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h3 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h4 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h5 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h6 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
+
+<!-- code folding -->
+
+
+
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = false;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+  padding-left: 25px;
+  text-indent: 0;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+.tocify-subheader {
+  display: inline;
+}
+.tocify-subheader .tocify-item {
+  font-size: 0.95em;
+}
+
+</style>
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Aiden Loe</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="about.html">About</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    R 4 Social Scientists
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li class="dropdown-header">What is R?</li>
+    <li>
+      <a href="introToR.html">Intro to R</a>
+    </li>
+    <li>
+      <a href="dataVisual.html">Data Visualisation</a>
+    </li>
+    <li>
+      <a href="datawrangling.html">Data Wrangling</a>
+    </li>
+    <li>
+      <a href="textAnalysis.html">Regular Expressions</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Big Data 4 Social Scientists
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li class="dropdown-header">What is ML?</li>
+    <li>
+      <a href="introToML.html">Intro to ML</a>
+    </li>
+    <li>
+      <a href="webscrapping.html">Web Scrapping</a>
+    </li>
+    <li>
+      <a href="datamining.html">Data Mining</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    IRT 4 Social Scientists
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li class="dropdown-header">What is IRT?</li>
+    <li>
+      <a href="introToIRT.html">Intro to IRT</a>
+    </li>
+    <li>
+      <a href="testinfo.html">Test Information</a>
+    </li>
+    <li>
+      <a href="irtplots.html">Plotting to IRT</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    CAT 4 Social Scientists
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li class="dropdown-header">What is CAT?</li>
+    <li>
+      <a href="introToCAT.html">Intro to CAT</a>
+    </li>
+    <li>
+      <a href="catSimulation.html">CAT simulation</a>
+    </li>
+  </ul>
+</li>
+<li>
+  <a href="blog.html">Blog Post</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Test Information</h1>
+<h4 class="author"><em>Aiden Loe</em></h4>
+<h4 class="date"><em>27 April, 2020</em></h4>
+
+</div>
+
+
+<div id="item-and-test-information" class="section level2">
+<h2><strong>Item and Test information</strong></h2>
+<p>This section covers the area of item and test information. The test information is calculated based on the summation of all the item information. So what you ideally want is to have high item information. It is not possible in some instances such as the Rasch model, where the item information is fixed to 0.25 under the logistic distribution because the discrimination for all items are fixed at 1, where the difficulty of the item will be at the point of 0.5, giving equal likelihood for the test taker to get an item right or wrong.</p>
+<p><br/></p>
+<div id="pl-item-information-function" class="section level3">
+<h3><strong>1PL Item Information function</strong></h3>
+<p>Now, bear in mind that a D constant is added to these formulaes to allow for the logistic distribution to approximate to a normal distribution. If you wish to base your calculations on a logistic distribution instead, remove the constant <span class="math inline">\(D\)</span> in the formulas.</p>
+<p>Under a 1PL (Rasch) model, the item information is defined as:</p>
+<br/>
+<center>
+<span class="math inline">\(\large{I_i(\theta) = D^2P_i(\theta)Q_i(\theta)}\)</span>
+</center>
+<p><br/></p>
+<p><span class="math inline">\(P_i(\theta) = 1/(1+ EXP(-D*a_i(\theta - b_i)))\)</span>,</p>
+<p><span class="math inline">\(Q_i(\theta) = 1- P_i(\theta)\)</span></p>
+<p><span class="math inline">\(\theta\)</span> is the ability level of interest.</p>
+<p><span class="math inline">\(D\)</span> is the constant of 1.702 <br/></p>
+<p><br/></p>
+</div>
+<div id="pl-item-information-function-1" class="section level3">
+<h3><strong>2PL Item Information function</strong></h3>
+<p>Under a 2PL model, the item information function is defined as:</p>
+<br/>
+<center>
+<span class="math inline">\(\large{I_i(\theta) =D^2a_i^2P_i(\theta) Q_i(\theta)}\)</span>
+</center>
+<p><br/></p>
+<p>where <span class="math inline">\(a_i\)</span> is the discrimination parameter for item <span class="math inline">\(i\)</span>.</p>
+<p>You can see that the 1PL is exactly the same as a 2PL model when the value of the discrimination (<span class="math inline">\(a\)</span> parameter) is set to 1.</p>
+<p><br/></p>
+</div>
+<div id="pl-item-information-function-2" class="section level3">
+<h3><strong>3PL Item Information function</strong></h3>
+<p>Under a 3PL model, the item information function is defined as:</p>
+<br/>
+<center>
+<span class="math inline">\(\large{I_{i\theta} = \frac{D^2a_i^2Q_{i\theta}[P_{i\theta}-c_i]^2}{P_{i\theta}(1-c_i)^2}}\)</span>
+</center>
+<p><br/></p>
+<p>where <span class="math inline">\(c_i\)</span> is the guessing parameter for item <span class="math inline">\(i\)</span>.</p>
+<p>You can observe that the formula is a little bit more complex, but it really only introduces one new <strong><span class="math inline">\(c\)</span> parameter</strong> in the equation. The <span class="math inline">\(c\)</span> parameter aka <strong>guessing parameter</strong> is typically fixed to 0 in both the 1PL and the 2PL model. <br/></p>
+<br/>
+<center>
+Let’s attempt an example to calculate item and test information based on the <span style="color:red"> 1PL (Rasch) model</span> in R.
+</center>
+<p><br/></p>
+<center>
+<em>The created function can also be used for 2PL, 3PL and for results under the logistic or approximate normal distribution.</em>
+</center>
+<p><br/></p>
+<pre class="r"><code># difficulty parameter for an item is -1.5
+b &lt;- -1.5
+
+# discrimination parameter
+a &lt;- 1
+
+# guessing parameter
+c &lt;- 0
+
+# Create item information function
+i_info &lt;- function(b, a=1,c=0, D=T, θ=seq(-4,4,length.out=1000)){
+
+if(D == T) {D &lt;- 1.702} else {D &lt;- 1}
+ 
+P &lt;- NULL 
+Q &lt;- NULL
+Ii &lt;- NULL
+
+for(i in 1:1000){
+  P[i] &lt;- 1/(1+ exp (-D*a*(θ[i] - b)))
+  Q[i]= 1-P[i]
+  Ii[i] =(D^2*a*Q[i]*(P[i]-c)^2)/(P[i]*((1-c)^2)) # (3PL)
+   }
+return(Ii)
+}
+
+# Get a single item information  based on a rasch model
+itemInfo&lt;- i_info(b = b, a = 1,c=0, θ=seq(-4,4,length.out=1000))
+
+itemInfo[1:5]</code></pre>
+<pre><code>## [1] 0.03997190 0.04050487 0.04104474 0.04159158 0.04214549</code></pre>
+<p>Now we have the item information for a single item along the theta range of -4 to 4.</p>
+<p>We want to calculate the item information for all items.</p>
+<pre class="r"><code>require(ggplot2)
+
+# Given that the difficulty parameter for two items are -1.5, 0.5
+b &lt;- c(-1.5,0.5)
+a &lt;- rep(1, length(b))
+# Function to get all item information
+item_info &lt;- function(b,a=1){
+item &lt;- NULL
+  for(i in 1:length(b)){
+  item[[i]] &lt;- i_info(b[i],a[i])
+  }
+return(item)
+}
+
+# Get all item information
+c &lt;- item_info(b,a)
+
+# Inspect first 5 item information values for second item 
+c[[2]][1:5]</code></pre>
+<pre><code>## [1] 0.001365363 0.001384081 0.001403057 0.001422292 0.001441790</code></pre>
+<pre class="r"><code># plot item info
+Theta &lt;- matrix(seq(-4,4, length.out=1000))
+check=cbind.data.frame(Theta, item_info=c[[1]])
+ggplot(check) + geom_line(aes(Theta, item_info)) + theme_classic()</code></pre>
+<p><img src="testinfo_files/figure-html/all%20item%20information%20function-1.png" width="672" /> <br/></p>
+</div>
+<div id="test-information" class="section level3">
+<h3><strong>Test information</strong></h3>
+<p>Now that we have our item information. We can calculate test information. Because the item information calculation is indepedent from each other, the test information is calculated by summing all the item information together.</p>
+<p>The formula looks like this:</p>
+<br/>
+<center>
+<span class="math inline">\(\large{IT_\theta = \sum_{i=1}^{n}I_{i\theta}}\)</span>
+</center>
+<p><br/></p>
+<p>This is how it looks like in R once you have your item information:</p>
+<pre class="r"><code># combind the item information column wise
+d &lt;- do.call(&#39;cbind&#39;,c)
+
+# Then calculate the test information
+test_info &lt;- rowSums(d)
+head(test_info)</code></pre>
+<pre><code>## [1] 0.04133726 0.04188895 0.04244780 0.04301387 0.04358728 0.04416809</code></pre>
+<pre class="r"><code># Test info
+Theta &lt;- matrix(seq(-4,4, length.out=1000))
+check=cbind.data.frame(Theta, test_info)
+ggplot(check) + geom_line(aes(Theta, test_info)) + theme_classic()</code></pre>
+<p><img src="testinfo_files/figure-html/Test%20information-1.png" width="672" /></p>
+<p>Now you essential have the test information that ranges from the <span class="math inline">\(\theta\)</span> value of -4 to 4.</p>
+<p><br/></p>
+</div>
+</div>
+<div id="standard-error" class="section level2">
+<h2><strong>Standard Error </strong></h2>
+<p>To translate the amount of information into a standard error of estimation, you only need to take the reciprocal of the square root of the amount of test information.</p>
+<p>So it looks like this:</p>
+<br/>
+<center>
+<span class="math inline">\(\large{SE(\theta) = \frac{1}{\sqrt{I(\theta)}}}\)</span>
+</center>
+<p><br/></p>
+<pre class="r"><code>#get the standard error
+se&lt;- 1/(sqrt(test_info)) 
+
+head(se)</code></pre>
+<pre><code>## [1] 4.918460 4.885964 4.853694 4.821650 4.789830 4.758233</code></pre>
+<p><br/></p>
+<div id="se-plot" class="section level3">
+<h3><strong>SE Plot</strong></h3>
+<p>Given that you have all the test information and the SE. You can plot it nicely. The R code can be taken <a href="https://aidenloe.github.io/irtplots.html#test_information_plot">here</a>.</p>
+<p><br/> <img src="testinfo_files/figure-html/plot-1.png" width="768" /></p>
+<p>You will notice that the SE values on the right y-axis are extremely high. In fact, they are higher than the test information values on the left y-axis (how strange!). This is expected since we are only using two items to calculate test information. As the number of items increase, more test information is provided, and the resulting SE will becoming smaller and smaller. In most (if not all) published papers, the left-axis values (test information) will always be higher than the right-axis values (SE).</p>
+<p>A test information peaks at some point along the ability <span class="math inline">\(\theta\)</span> scale with unequal precision (see plot). Such a test would be best for estimating the ability of test takers whose abilities fall near the peak of the test information function. Thus, a test would be desirable if the test takers’ abilities falls in the given range that has greater precision.</p>
+<p><br/></p>
+</div>
+</div>
+<div id="test-info-to-reliability" class="section level2">
+<h2><strong>Test info to Reliability</strong></h2>
+<p><strong>2 step process</strong> for information to be directly related to reliability; <br/></p>
+<center>
+<span class="math inline">\(\large{1 - SE^2}\)</span>
+</center>
+<p><br/></p>
+where,
+<center>
+<span class="math inline">\(\large{SE = \frac{1}{sqrt(info)}}\)</span>
+</center>
+<p><br/></p>
+<p>So given that you have an test information value, you must first calculate the SE and then follow by the reliability.</p>
+<p>Alternatively, <strong>1 step process</strong> for information to be directly related to reliability: <br/></p>
+<center>
+<span class="math inline">\(\large{1 - (1/info)}\)</span>
+</center>
+<p><br/></p>
+<pre class="r"><code>#Test information to Reliability (2 step)
+info &lt;- 10
+se &lt;- 1/sqrt(10)
+reliability &lt;- 1-se^2
+
+# Reliability to Test information (2 step)
+reliability &lt;- 0.9
+se &lt;- sqrt(1-reliability)
+Information&lt;- (1/se)^2
+
+#Test information to Reliability (1 step)
+info &lt;- 10
+reliability &lt;- 1-1/info
+
+# Reliability to Test information (1 step)
+reliability &lt;- 0.9
+info &lt;- 1/(1-reliability)</code></pre>
+<p><br/></p>
+<div id="inforeliability-plot" class="section level3">
+<h3><strong>Info/Reliability Plot</strong></h3>
+<p>To see how this reliability changes over a range of test information values.</p>
+<p>From the <strong>SE plot</strong> you can see that:</p>
+<ul>
+<li><p>SE of 0.32 is evaluate to reliability of 0.9.</p></li>
+<li><p>SE of 0.45 is evaluate to reliability of 0.8.</p></li>
+<li><p>SE of 0.54 is evaluate to reliability of 0.7.</p></li>
+</ul>
+<p>From the <strong>Test information plot</strong> you can see that:</p>
+<ul>
+<li><p>Information of 10 is equivalent to reliability of 0.9.</p></li>
+<li><p>Information of 5 is equivalent to reliability of 0.8.</p></li>
+<li><p>Information of 3.33 is equivalent to reliability of 0.7.</p></li>
+</ul>
+<p>The R code can be taken <a href="https://aidenloe.github.io/irtplots.html#inforeliability_plot">here</a>.</p>
+<p><img src="testinfo_files/figure-html/test%20info%20plot-1.png" width="576" style="display: block; margin: auto;" /></p>
+<p><br/> <br/></p>
+<div id="acknowledgement" class="section level4">
+<h4>Acknowledgement</h4>
+<p>Would like to thank <a href="http://www.uni-muenster.de/PsyIFP/AEHolling/de/blum/personen/">Diego Blum</a> for working through the item and test information function with me.</p>
+</div>
+<div id="citations" class="section level4">
+<h4>Citations</h4>
+<ul>
+<li><p>Martínez Arias, M.R., Hernández Lloreda, M.V., &amp; Hernández Lloreda, M.J. (2006). <em>Psicometría.</em> Madrid: Alianza.</p></li>
+<li><p>Muñiz, J., Fidalgo, A.M., García-Cueto, E., Martínez, R., &amp; Moreno, R. (2005). <em>Análisis de los ítems.</em> Madrid: La Muralla.</p></li>
+<li><p><a href="http://echo.edres.org:8080/irt/baker/chapter6.pdf" class="uri">http://echo.edres.org:8080/irt/baker/chapter6.pdf</a></p></li>
+</ul>
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-98916204-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+</div>
+</div>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

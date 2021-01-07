@@ -1,0 +1,15 @@
+---
+title: "Blog Post"
+author: "Aiden"
+date: "29/11/2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Here are my blog posts. 
+
+1. [What are my chances of getting an ESRC New Investigators Grant?](https://aidenloe.github.io/esrc_p1.html)
+2. [What types of projects are awarded the ESRC New Investigators Grant?](https://aidenloe.github.io/esrc_p2.html)

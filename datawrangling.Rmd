@@ -1,0 +1,28 @@
+---
+title: "Data wrangling"
+author: "Aiden"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output:
+  html_document:
+    toc: true
+    toc_depth: 3
+    toc_float: 
+      collapsed: false
+---
+
+## **Data wrangling**
+
+[Kaggle](https://www.kaggle.com) is a pretty great place to evaluate your R or Python skills with tons of datasets for you to explore.
+
+You can also sign up to data science competitions.
+
+In terms of data wrangling in R, I used the [Global Terrorism Database](https://www.kaggle.com/START-UMD/gtd) dataset that can be found on Kaggle. 
+
+You will have to sign up to Kaggle in order to use the dataset. 
+
+I have written the code [here](https://www.kaggle.com/aidenloe/data-exploration-using-r) with tons and tons of comments.
+
+The code is written such that it is easy for people to follow. 
+
+Let me know (via email) if you prefer to have the dataset on your local computer instead when working through the code. 
+

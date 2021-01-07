@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+<meta name="author" content="Aiden" />
+
+
+<title>Data Visualisation</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 51px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+
+.section h2 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h3 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h4 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h5 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h6 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
+
+<!-- code folding -->
+
+
+
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+  padding-left: 25px;
+  text-indent: 0;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Aiden Loe</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="about.html">About</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    R 4 Social Scientists
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li class="dropdown-header">What is R?</li>
+    <li>
+      <a href="introToR.html">Intro to R</a>
+    </li>
+    <li>
+      <a href="dataVisual.html">Data Visualisation</a>
+    </li>
+    <li>
+      <a href="datawrangling.html">Data Wrangling</a>
+    </li>
+    <li>
+      <a href="textAnalysis.html">Regular Expressions</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Big Data 4 Social Scientists
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li class="dropdown-header">What is ML?</li>
+    <li>
+      <a href="introToML.html">Intro to ML</a>
+    </li>
+    <li>
+      <a href="webscrapping.html">Web Scrapping</a>
+    </li>
+    <li>
+      <a href="datamining.html">Data Mining</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    IRT 4 Social Scientists
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li class="dropdown-header">What is IRT?</li>
+    <li>
+      <a href="introToIRT.html">Intro to IRT</a>
+    </li>
+    <li>
+      <a href="testinfo.html">Test Information</a>
+    </li>
+    <li>
+      <a href="irtplots.html">Plotting to IRT</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    CAT 4 Social Scientists
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li class="dropdown-header">What is CAT?</li>
+    <li>
+      <a href="introToCAT.html">Intro to CAT</a>
+    </li>
+    <li>
+      <a href="catSimulation.html">CAT simulation</a>
+    </li>
+  </ul>
+</li>
+<li>
+  <a href="blog.html">Blog Post</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Data Visualisation</h1>
+<h4 class="author"><em>Aiden</em></h4>
+<h4 class="date"><em>19 December, 2018</em></h4>
+
+</div>
+
+
+<div id="intro-to-visualisation" class="section level2">
+<h2><strong>Intro to visualisation</strong></h2>
+<p>There are tons of different packages that can be used to visualise data. I will be covering a couple of these packages. These should be good enough to get you started on your own. First we will start using the functions that are provided by base R. These plotting functions do not rely on any packages. Sort of like a quick dirty way to see your data. The plotting capabilities are super flexible, but we want to keep it simple and straightforward for our audience to understand. Then we will use the ggplot2 package to help us do more plotting. As usual, there are questions at the end for you to complete. In this case, we will only test you on ggplot2.</p>
+</div>
+<div id="dataset" class="section level2">
+<h2><strong>Dataset</strong></h2>
+<p>So let’s use the bfi dataset from the <code>psych</code> package. If you want to see what is in the bfi dataset, all you need to do is to</p>
+<ol style="list-style-type: decimal">
+<li>Install psych package <code>install.packages()</code></li>
+<li>Load psych package <code>require()</code></li>
+<li>load dataset <code>data()</code></li>
+<li>See what is in the dataset <code>str()</code></li>
+</ol>
+<p>To make things easy. I will quick a quick brief introduction to the data. For more information please see the documentation <code>?bfi</code>.</p>
+<ul>
+<li><p>Five Personality Factors</p>
+<ul>
+<li>28 variables in total</li>
+<li>25 personality items</li>
+<li>5 items per factor</li>
+<li>2800 observations</li>
+<li>Includes gender, edu and age.</li>
+</ul></li>
+</ul>
+</div>
+<div id="generic-plotting" class="section level2">
+<h2><strong>Generic Plotting</strong></h2>
+<p>We can immediately start plotting to get a generate sense of the data we have.</p>
+<p>Here are some questions you might want to ask at the beginning.</p>
+<ol style="list-style-type: decimal">
+<li>How does the distribution of my items look like? <em>(histogram)</em></li>
+<li>Is there a relationship between openness and extraversion? <em>(scatterplot)</em></li>
+<li>Are there differences in item scores between gender? <em>(boxplot)</em></li>
+</ol>
+<div id="histogram" class="section level3">
+<h3><strong>Histogram</strong></h3>
+<p>To address the first question: <em>How does the distribution of my items look like?</em></p>
+<p>We use the <code>hist</code> function.</p>
+<p>You can try changing the variables in the dataset to see how the histogram changes.</p>
+<pre class="r"><code>hist(bfi$A1)</code></pre>
+<p><img src="dataVisual_files/figure-html/histogram-1.png" width="576" /></p>
+<p>Here are the few more arguments which you might want to use to beautify the plot before you show someone else.</p>
+<p>This is usually good enough to show your colleagues what your data looks like.</p>
+<pre class="r"><code>r &lt;- hist(bfi$A1,  
+          main= &quot;Histogram&quot;,     # title
+          xlab=&quot;Likert scale&quot;,   # x-axis label
+          ylab=&quot;Frequency&quot;,      # y-axis label
+          col=&#39;green&#39;,           # colour of bins
+          ylim=c(0,1000),        # y-axis limits
+          xlim=c(0,7))           # x-axis limits</code></pre>
+<p><img src="dataVisual_files/figure-html/histogram2-1.png" width="576" /></p>
+</div>
+<div id="scatterplot" class="section level3">
+<h3><strong>Scatterplot</strong></h3>
+<p>To address the second question: <em>Is there a relationship between openness and extraversion??</em></p>
+<p>We will use the <code>plot</code> function.</p>
+<p>First, we need to get the average scores of each person per factor.</p>
+<pre class="r"><code>names(bfi) #names
+E &lt;- bfi[,11:15] #Extraversion
+O &lt;- bfi[,21:25] #Openness
+
+E_means &lt;- rowMeans(E) # mean score of each person for extraversion
+O_means &lt;- rowMeans(O) # mean score of each person for openness</code></pre>
+<p>Given that we have the mean scores of each participant for both factors. We can see if the factors do in fact have a relationship via visualisation.</p>
+<p>You can change the arguments in the <code>plot</code> function so that it will display what you want. This is just a simple example.</p>
+<p>Here you can see that there is a positive relationship between the scores.</p>
+<p>What happens then? You normally test for significant relationship. But this give you quick a good idea of your data.</p>
+<pre class="r"><code>plot(x = E_means,  
+     y = O_means,
+     pch= 3,         # the design of the points 
+     cex = 0.5,      # size of the points
+     col=&quot;dark red&quot;) # the colour of the points 
+
+abline(lm(E_means~O_means), col=&quot;blue&quot;) # adds a regression line (y~x), aka the best fit line. The abline draws the best fit line. The best fit line is derived from using the lm(), which is the linear regression function. Using just the lm function will give you the beta estimates and the significance of the relationship between the IVs and DVs. </code></pre>
+<p><img src="dataVisual_files/figure-html/scatterplot-1.png" width="576" /></p>
+</div>
+<div id="boxplot" class="section level3">
+<h3><strong>Boxplot</strong></h3>
+<p>To finally address the third question: <em>Are there differences in item scores between gender?</em></p>
+<p>We will use the <code>boxplot</code> function.</p>
+<p>We can see that most people in the sample are scoring at the upper bound of the response scale.</p>
+<pre class="r"><code>boxplot(A4~gender,           # variable ~ group
+        data=bfi,            # dataset
+        main=&quot;BFI Data&quot;,     # title
+        xlab=&quot;Gender&quot;,       # x-axis label
+        ylab=&quot;Likert Scale&quot;) # y-axis label</code></pre>
+<p><img src="dataVisual_files/figure-html/boxplot%20item%20scores-1.png" width="576" /></p>
+<p><strong>What happens if you are interested in differences in scores between gender for a factor instead of an item?</strong></p>
+<p>Then you need to first get the average score of each participant for the specific factor.</p>
+<pre class="r"><code>E &lt;- bfi[,11:15] #Extraversion items
+E_means &lt;- rowMeans(E) # mean score of each person for extraversion
+bfi$E_Means &lt;- E_means #Put it into a new column in the dataset
+
+boxplot(E_Means ~gender,             # variable ~ group
+        col=(c(&quot;gold&quot;,&quot;darkgreen&quot;)), # colour between boxplots
+        data=bfi,                    # dataset
+        main=&quot;BFI Data&quot;,             # title
+        xlab=&quot;Gender&quot;,               # x-axis label
+        ylab=&quot;Likert Scale&quot;,         # y-axis label
+        notch=TRUE)                  # include notch</code></pre>
+<p><img src="dataVisual_files/figure-html/boxplot%20factor%20scores-1.png" width="576" /></p>
+<p><em>One thing to note is: There is ‘strong evidence’ that their medians differ if the two boxes’ notches do not overlap (Chambers et al., 1983, p. 62).</em></p>
+<p>This can be followed up by running t-test.</p>
+</div>
+</div>
+<div id="ggplot2" class="section level2">
+<h2><strong>GGPLOT2</strong></h2>
+<p>GGPLOT2 is perhaps one of the most widely used visualisation package. There are many resources out there to help you achieve what you need in order to use ggplot2.</p>
+<p>If you want Books about ggplot2:</p>
+<ul>
+<li><p>The <a href="https://www.amazon.com/dp/1449316956/ref=cm_sw_su_dp?tag=ggplot2-20">R Graphics Cookbook</a> by Winston Chang.</p></li>
+<li><p><a href="https://www.amazon.com/dp/0387981403/ref=cm_sw_su_dp?tag=ggplot2-20">ggplot2: Elegant Graphics for Data Analysis</a> by Hadley Wickham describes the theoretical underpinnings of ggplot2 and shows you how all the pieces fit together.</p></li>
+</ul>
+<p>If you want online resources about ggplot2:</p>
+<ul>
+<li><p><a href="http://ggplot2.org" class="uri">http://ggplot2.org</a></p></li>
+<li><p><a href="https://groups.google.com/forum/#!forum/ggplot2" class="uri">https://groups.google.com/forum/#!forum/ggplot2</a></p></li>
+<li><p><a href="http://www.cookbook-r.com/Graphs/" class="uri">http://www.cookbook-r.com/Graphs/</a></p></li>
+<li><p><a href="http://stackoverflow.com" class="uri">http://stackoverflow.com</a></p></li>
+<li><p><a href="http://ouzor.github.io/blog/2014/11/21/interactive-visualizations.html" class="uri">http://ouzor.github.io/blog/2014/11/21/interactive-visualizations.html</a></p></li>
+</ul>
+<p>Here I will just describe the very basic of ggplot2. It is based on the grammar of graphics. Imagine that you want to form a sentence. You need to first know how you want to express yourself, then you find the words to say it. The words will only make sense if they are constructed correctly. If not, it is just jibberish. Similar to plotting using ggplot2. You need to have some idea of what you are trying to plot, then you add the pieces bit by bit in order to achieve the final look.</p>
+<p>First, you need to install and load the package:</p>
+<pre class="r"><code>#install.packages(&#39;ggplot2&#39;)
+library(ggplot2)</code></pre>
+<p>The basic generic code of ggplot is like this:</p>
+<p><strong>ggplot(dataset,aes(x,y)) + geom_type() + gg.title()</strong></p>
+<p>You can see that the <code>aes()</code> is embedded within the <code>ggplot()</code>. Anything that goes into the <code>aes()</code> means that you are trying to use some variable in your dataset and convert it into a graphical form.</p>
+<p>You need to:</p>
+<ol style="list-style-type: decimal">
+<li>Think about what you are trying to plot and how you want it to look.</li>
+<li>Think about the variables that becomes the x and y variables.<br />
+</li>
+<li>Think about the type of geometric object that exist in ggplot2 and can be used.</li>
+<li>Think about the aesthetics (i.e. title, colour, font size, background etc. )</li>
+</ol>
+<pre class="r"><code># read dataset from dropbox
+# big 5 scores with some demographics data
+big5 &lt;- read.csv(&#39;https://www.dropbox.com/s/xhhes7eu8nozvn2/big5.csv?raw=1&#39;)</code></pre>
+<div id="histogram-1" class="section level3">
+<h3><strong>Histogram</strong></h3>
+<p>For example, I would like to see the distribution for the conscientiousness variable.</p>
+<ol style="list-style-type: decimal">
+<li>I want to plot a histogram</li>
+<li>I only need the conscientiousness variable (con) as the x variable. So con goes inside the <code>aes()</code></li>
+<li>I can use the <code>geom_histogram()</code> to map the data values into a histogram</li>
+</ol>
+<pre class="r"><code>ggplot(big5, aes(x = con)) + # base
+  geom_histogram(binwidth=0.2, colour=&quot;black&quot;, fill=&quot;white&quot;)  # geometric object to represent the data</code></pre>
+<p><img src="dataVisual_files/figure-html/ggplot2%20histogram-1.png" width="672" /></p>
+<p>Now, what if I want to add a vertical line that represents the mean score of con?</p>
+<p>You simple use the ‘+’ sign and include a new geometric object that will represent the vertical line.</p>
+<p>The <code>geom_vline()</code> can be used to represent the vertical line. Since we are manipulating a specific variable in the dataset, we need to put <code>aes()</code> inside the <code>geom_vline()</code>.</p>
+<pre class="r"><code>ggplot(big5, aes(x = con)) +
+  geom_histogram(binwidth=0.2, colour=&quot;black&quot;, fill=&quot;white&quot;) +
+  geom_vline(aes(xintercept=mean(con, na.rm=T)), colour=&quot;red&quot;, size=1, linetype=&quot;dashed&quot;)</code></pre>
+<p><img src="dataVisual_files/figure-html/ggplot2%20histogram%20with%20vertical%20line-1.png" width="672" /></p>
+</div>
+<div id="scatterplot-1" class="section level3">
+<h3><strong>Scatterplot</strong></h3>
+<p>Say your lecturer/line manager asks you to show them the relationship between 2 continuous variables - age and conscientiousness.</p>
+<p>How would you plot that relationship using ggplot2?</p>
+<pre class="r"><code>ggplot(big5, aes(x = age, y = con)) +   # x variable is age, y variable is conscientiousness
+  geom_point() +  # object to represent points in the scatter plot
+  geom_smooth(method=&quot;lm&quot;) # to draw the best fit line</code></pre>
+<p><img src="dataVisual_files/figure-html/ggplot2%20scatterplot-1.png" width="672" /></p>
+<p>Now let’s spice it up a little bit.</p>
+<p><strong>What if your lecturer/line manager asks you to differentiate the dots between gender? Would that be possible?</strong></p>
+<p>Of course! Remember, if you want to manipulate a specific component within the plot, you make changes to that specific part. Since we know that we want to differentiate the data points by gender, we put the <code>aes()</code> inside the <code>geom_point()</code> with <code>aes(color=gender)</code>. This means that ggplot2 will look into the dataset, search for the gender column, and differentiate by the numeric values. In this case, male = 0, and female = 1. Of course if you coded gender by another name, say sex, then it will be <code>aes(color=sex)</code></p>
+<p>In this case, you see a third variable NA. This happens because in the dataset there are missing data for the gender column. Hence, to make your graph look neater, you can always first remove all missing data before plotting.</p>
+<pre class="r"><code>ggplot(big5, aes(x = age, y = con)) +   # x variable is age, y variable is conscientiousness
+  geom_point(aes(color=gender)) +  # object to represent points in the scatter plot. 
+  geom_smooth(method=&quot;lm&quot;) # to draw the best fit line</code></pre>
+<p><img src="dataVisual_files/figure-html/ggplot2%20scatterplot%20with%20gender-1.png" width="672" /></p>
+</div>
+<div id="aesthetics" class="section level3">
+<h3><strong>Aesthetics</strong></h3>
+<p>So this will cover some of the aesthetics that you can design for your plot.</p>
+<div id="naming-x-and-y-axis" class="section level4">
+<h4><strong>Naming x and y axis</strong></h4>
+<pre class="r"><code>p &lt;- ggplot(big5, aes(x = age, y= con)) +   # x variable is age, y variable is conscientiousness
+  geom_point(aes(color=gender)) +  # object to represent points in the scatter plot. 
+  geom_smooth(method=&quot;lm&quot;) # to draw the best fit line
+
+
+p &lt;- p + scale_x_continuous(name=&quot;age&quot;)  #,limits=c(0,7), breaks=0:7
+p &lt;- p + scale_y_continuous(name=&quot;conscientiousness&quot;)
+p</code></pre>
+<p><img src="dataVisual_files/figure-html/aesthetics%20(axis)-1.png" width="672" /></p>
+</div>
+<div id="theme-manipulation" class="section level4">
+<h4><strong>Theme manipulation</strong></h4>
+<pre class="r"><code>p &lt;- p + ggtitle(&quot;Scatterplot&quot;)
+p &lt;- p + theme (plot.title=element_text(lineheight=.8, face=&quot;bold&quot;, size=18))
+p &lt;- p + theme(axis.title.x = element_text(size=17, face=&quot;bold&quot;))
+p &lt;- p + theme(axis.title.y = element_text(size=17, face=&quot;bold&quot;, color=&quot;red&quot;))
+p</code></pre>
+<p><img src="dataVisual_files/figure-html/aesthetics%20(theme)-1.png" width="672" /></p>
+</div>
+<div id="changing-the-background-colour" class="section level4">
+<h4><strong>Changing the background colour</strong></h4>
+<pre class="r"><code>p &lt;- p + theme(panel.background = element_rect(fill = &#39;white&#39;, colour = &#39;red&#39;))
+p &lt;- p + theme(plot.background = element_rect(fill = &#39;white&#39;, colour = &#39;red&#39;))
+p</code></pre>
+<p><img src="dataVisual_files/figure-html/aesthetics%20(background)-1.png" width="672" /></p>
+<p><br></p>
+</div>
+</div>
+</div>
+<div id="questions" class="section level2">
+<h2><strong>Questions</strong></h2>
+<p>Okay. This is the basic principle of ggplot2. If you have gotten this far, then you are good to go for the exercises. These exercises below will be challenging if you are completely new to R but nevertheless, possible.</p>
+<p>You will need the help of google for some of the exericses. The idea is to basically recreate the plots you see below. This should take about an hour if you already know R, but perhaps 2 hours if you are new to R.</p>
+<p>To ease the workload, I have written the structure of the code for you. In the script, you will see many XXXXs and your job is to remove the XXXXs and fill it in with the correct code in order for the graph to be displayed.</p>
+<p>You can get the <a href="https://www.dropbox.com/s/77a1hqup3eek74s/Exercise%20%281-10%29.R?dl=0">script here</a>. You can use the <a href="https://www.dropbox.com/s/xhhes7eu8nozvn2/big5.csv?dl=0">dataset here</a>.</p>
+<p>Don’t fret. Everyone’s been there.</p>
+<div id="exercise-1" class="section level3">
+<h3>Exercise 1</h3>
+<p><img src="dataVisual_files/figure-html/Exercise%201-1.png" width="672" /></p>
+</div>
+<div id="exercise-2" class="section level3">
+<h3>Exercise 2</h3>
+<p><img src="dataVisual_files/figure-html/Exercise%202-1.png" width="672" /></p>
+</div>
+<div id="exercise-3" class="section level3">
+<h3>Exercise 3</h3>
+<p><img src="dataVisual_files/figure-html/Exercise%203-1.png" width="672" /></p>
+</div>
+<div id="exercise-4" class="section level3">
+<h3>Exercise 4</h3>
+<p><img src="dataVisual_files/figure-html/Exercise%204-1.png" width="672" /></p>
+</div>
+<div id="exercise-5" class="section level3">
+<h3>Exercise 5</h3>
+<p><img src="dataVisual_files/figure-html/Exercise%205-1.png" width="672" /></p>
+</div>
+<div id="exercise-6" class="section level3">
+<h3>Exercise 6</h3>
+<p><img src="dataVisual_files/figure-html/Exercise61-1.png" width="672" /></p>
+</div>
+<div id="exercise-7" class="section level3">
+<h3>Exercise 7</h3>
+<p><img src="dataVisual_files/figure-html/Exercise%207-1.png" width="672" /></p>
+</div>
+<div id="exercise-8" class="section level3">
+<h3>Exercise 8</h3>
+<p><img src="dataVisual_files/figure-html/Exercise%208-1.png" width="672" /></p>
+</div>
+<div id="exercise-9" class="section level3">
+<h3>Exercise 9</h3>
+<p><img src="dataVisual_files/figure-html/Exercise%209-1.png" width="672" /></p>
+</div>
+<div id="exercise-10" class="section level3">
+<h3>Exercise 10</h3>
+<p><img src="dataVisual_files/figure-html/Exercise%2010-1.png" width="672" /></p>
+<hr />
+<center>
+<strong>Congratulations on completing the 10 exercises!</strong>
+</center>
+<center>
+As usual, never stop learning. You are doing really well!
+</center>
+<p><br> <img src="images/gj1.gif" alt="Drawing" style="width: 150px;"/></p>
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-98916204-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+</div>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

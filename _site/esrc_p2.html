@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<meta name="author" content="Aiden" />
+
+
+<title>What types of projects are awarded the ESRC New Investigators Grant?</title>
+
+<script src="site_libs/htmlwidgets-1.3/htmlwidgets.js"></script>
+<script src="site_libs/jquery-1.12.4/jquery.min.js"></script>
+<link href="site_libs/datatables-css-0.0.0/datatables-crosstalk.css" rel="stylesheet" />
+<script src="site_libs/datatables-binding-0.5/datatables.js"></script>
+<link href="site_libs/dt-core-1.10.16/css/jquery.dataTables.min.css" rel="stylesheet" />
+<link href="site_libs/dt-core-1.10.16/css/jquery.dataTables.extra.css" rel="stylesheet" />
+<script src="site_libs/dt-core-1.10.16/js/jquery.dataTables.min.js"></script>
+<link href="site_libs/crosstalk-1.0.0/css/crosstalk.css" rel="stylesheet" />
+<script src="site_libs/crosstalk-1.0.0/js/crosstalk.min.js"></script>
+
+
+
+
+
+<link rel="stylesheet" href="esrc_p2_files/style.css" type="text/css" />
+
+</head>
+
+<body>
+
+
+
+
+<div class="row">
+<div class="col s12 m3">
+<div class="table cover">
+<div class="cover-card table-cell table-middle">
+<span class="author_name">What types of projects are awarded the ESRC New Investigators Grant?</span>
+<span class="author_bio mbm">Aiden</span>
+<span class="author_bio mbm">29/11/2018</span>
+</div>
+</div>
+</div>
+
+
+<div class="col s12 m9">
+<div class="post-listing">
+
+<div id="post">
+<article class="post-content">
+<div id="esrc-new-investigators-grant-part-2" class="section level2">
+<h2>ESRC New Investigators Grant (Part 2)</h2>
+<div id="introduction" class="section level4">
+<h4>Introduction</h4>
+<p>In the first part of the post, I wanted to find out what are my chances of securing an ESRC New Investigators grant. Now, using open data from the UK Research and Innovation <a href="https://gtr.ukri.org">website</a>, I wanted to have a further breakdown of the types of applications that were successful and how similar or dissimilar they are from each other. The ESRC grant reference numbers are found in the historical data from the ESRC <a href="https://esrc.ukri.org/about-us/performance-information/application-and-award-data/funding-decisions/">website</a>. That allowed me to search the RCUK website and retrieve information on successful applications. Unfortunately, I couldn’t get the data for those grants that were unsuccessful. Anyhow, I did some data mining to extract the data from the RCUK website and managed to obtain additional information on the successful applications, except for 2 that were not found on the website.</p>
+</div>
+<div id="a-little-bit-about-the-data" class="section level4">
+<h4>A little bit about the data</h4>
+<p>The list below shows the type of information that I have extracted and consolidated into a simple data table. I guess the column headings are rather self-explanatory. Perhaps only for the <code>url</code>, which is the web link to the project. The <code>abstract</code> is the abstract of the project and the <code>planned impact</code> is the description of the potential impact this project will have on society. The table below shows 3 web links to 3 different project if you are interested in seeing how it looks on the RCUK web page. Research areas are a combination of both research subjects and research topics. One project may have multiple research subjects and/or research topics. I don’t think it is particularly interesting to look at either the research subjects or research topics individually at this stage. Hence, to avoid confusion, I decided to put them all together and rename as research areas.</p>
+<table>
+<caption>Available information taken online</caption>
+<colgroup>
+<col width="22%" />
+<col width="16%" />
+<col width="15%" />
+<col width="22%" />
+<col width="22%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="center">Grant_Reference</td>
+<td align="center">country</td>
+<td align="center">startDate</td>
+<td align="center">PI</td>
+<td align="center">Research.Area_5</td>
+</tr>
+<tr class="even">
+<td align="center">Funding</td>
+<td align="center">University</td>
+<td align="center">endDate</td>
+<td align="center">Research.Area_1</td>
+<td align="center">Research.Area_6</td>
+</tr>
+<tr class="odd">
+<td align="center">Score_Category</td>
+<td align="center">department</td>
+<td align="center">title</td>
+<td align="center">Research.Area_2</td>
+<td align="center">Research.Area_7</td>
+</tr>
+<tr class="even">
+<td align="center">round</td>
+<td align="center">city</td>
+<td align="center">abstract</td>
+<td align="center">Research.Area_3</td>
+<td align="center">Research.Area_8</td>
+</tr>
+<tr class="odd">
+<td align="center">url</td>
+<td align="center">value</td>
+<td align="center">impact</td>
+<td align="center">Research.Area_4</td>
+<td align="center">Research.Area_9</td>
+</tr>
+</tbody>
+</table>
+<table style="width:72%;">
+<caption>Web link to Projects</caption>
+<colgroup>
+<col width="72%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="center">Project_URL</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center"><a href="https://gtr.ukri.org/projects?ref=ES%2FP010148%2F1">https://gtr.ukri.org/projects?ref=ES%2FP010148%2F1</a></td>
+</tr>
+<tr class="even">
+<td align="center"><a href="https://gtr.ukri.org/projects?ref=ES%2FP011705%2F1">https://gtr.ukri.org/projects?ref=ES%2FP011705%2F1</a></td>
+</tr>
+<tr class="odd">
+<td align="center"><a href="https://gtr.ukri.org/projects?ref=ES%2FR003254%2F1">https://gtr.ukri.org/projects?ref=ES%2FR003254%2F1</a></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="quick-overview" class="section level4">
+<h4>Quick overview</h4>
+<p>Okay, given this information let’s do some simple analyses and understand how grants are awarded. Firstly, let’s find out how many Universities were awarded in the past round. In total, 30 universities were awarded the grant for the last 5 months, with a total of 49 grants. Unfortunately, I was not able to extract information for two grants (n = 47). For whatever reason, they were not on the website. Perhaps the ESRC reference number did not match the website parameters. <strong>So all analyses are conducted on only 47 grants</strong>. If you want to know more about the success rate, please refer to my other <a href="https://aidenloe.github.io/esrc_p1.html">blog post</a>. In general, the table below shows the number of successful applicants per round (Please note that the two grants that were excluded from these analyses are from the March 2018 and July 2018 rounds).</p>
+<table style="width:79%;">
+<colgroup>
+<col width="16%" />
+<col width="15%" />
+<col width="13%" />
+<col width="16%" />
+<col width="16%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="center">March2017</th>
+<th align="center">July2017</th>
+<th align="center">Nov2017</th>
+<th align="center">March2018</th>
+<th align="center">July2018</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center">1</td>
+<td align="center">10</td>
+<td align="center">16</td>
+<td align="center">10</td>
+<td align="center">10</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="awards" class="section level2">
+<h2>Awards</h2>
+<div id="frequency-of-awards" class="section level4">
+<h4>Frequency of awards</h4>
+<p><em>Which Universities are doing quite well in the grant?</em></p>
+<p>The Universities are shown in the table below and listed in alphabetical order. It would appear that the University College London, University of Exeter, and the University of Cambridge are doing pretty well. Note: We don’t know how many applicants applied from each university. It might be the case that these 3 universities had a lot more applicants than the rest. Hence, they tend to do better than others. To reorder the ranking in the table below you can click on the downward arrow located beside the column headings.</p>
+<div id="htmlwidget-4560358b825de73a2c18" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-4560358b825de73a2c18">{"x":{"filter":"none","data":[["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30"],["Aston University","Bath Spa University","Birkbeck College","Cardiff University","Institute of Development Studies","Keele University","King's College London","Loughborough University","Manchester Metropolitan University","Queen's University of Belfast","Royal Holloway, University of London","University College London","University of Bath","University of Birmingham","University of Bristol","University of Cambridge","University of Essex","University of Exeter","University of Glasgow","University of Huddersfield","University of Leeds","University of Liverpool","University of Manchester","University of Oxford","University of Reading","University of Salford","University of Sheffield","University of Southampton","University of Surrey","University of York"],[1,1,1,1,2,1,2,1,2,1,1,5,1,2,2,3,2,4,1,1,2,1,2,1,1,1,1,1,1,1],[2.13,2.13,2.13,2.13,4.26,2.13,4.26,2.13,4.26,2.13,2.13,10.64,2.13,4.26,4.26,6.38,4.26,8.51,2.13,2.13,4.26,2.13,4.26,2.13,2.13,2.13,2.13,2.13,2.13,2.13]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>University<\/th>\n      <th>Frequency<\/th>\n      <th>Percentage<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"pageLength":5,"autoWidth":false,"columnDefs":[{"width":"50%","targets":"0"},{"className":"dt-center","targets":[0,1,2,3]},{"orderable":false,"targets":0}],"lengthMenu":[5,10,20,30],"initComplete":"function(settings, json) {\n$(this.api().table().header()).css({'background-color': '#000', 'color': '#fff'});\n}","order":[],"orderClasses":false}},"evals":["options.initComplete"],"jsHooks":[]}</script>
+</div>
+<div id="frequency-of-awards-in-different-rounds" class="section level4">
+<h4>Frequency of awards in different rounds</h4>
+<p><em>What are the chances of a University being awarded twice in the same round?</em></p>
+<p>Perhaps the table above does not give sufficient clarity. Researchers might like to see the success rate in each round. The table below shows the distribution of the grants awarded to different universities. We can see that several universities (e.g. University College London, University of Essex University of Cambridge) have been awarded the grant twice in the same round.</p>
+<p>Across all 5 rounds, 7 Universities were found to be given the grant twice in a round. So by taking the division of 7 by all universities that applied (n = 30) and then multiplying it by 1/5 (5 rounds), the result of a university getting funded twice in a round is 4.67%.</p>
+<div id="htmlwidget-f4aa0c0fa45f499a22ee" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-f4aa0c0fa45f499a22ee">{"x":{"filter":"none","data":[["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30"],["Aston University","Bath Spa University","Birkbeck College","Cardiff University","Institute of Development Studies","Keele University","King's College London","Loughborough University","Manchester Metropolitan University","Queen's University of Belfast","Royal Holloway, University of London","University College London","University of Bath","University of Birmingham","University of Bristol","University of Cambridge","University of Essex","University of Exeter","University of Glasgow","University of Huddersfield","University of Leeds","University of Liverpool","University of Manchester","University of Oxford","University of Reading","University of Salford","University of Sheffield","University of Southampton","University of Surrey","University of York"],[1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,1,1,0,0,0,0,0,0,0,1,2,0,0,1,0,0,0,0,0,2,1,0,0,0,0,0,1,0,0],[0,0,0,0,1,1,1,0,1,1,0,0,0,1,1,1,2,2,0,0,0,0,0,0,0,1,1,0,1,1],[0,0,0,1,1,0,1,0,1,0,0,1,0,0,0,0,0,1,0,1,0,0,2,1,0,0,0,0,0,0],[0,0,0,0,0,0,0,1,0,0,0,2,1,1,0,2,0,1,1,0,0,0,0,0,1,0,0,0,0,0]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>University<\/th>\n      <th>March2017<\/th>\n      <th>July2017<\/th>\n      <th>Nov2017<\/th>\n      <th>March2018<\/th>\n      <th>July2018<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"pageLength":5,"autoWidth":false,"columnDefs":[{"width":"200px","targets":1},{"className":"dt-center","targets":[0,1,2,3,4,5,6]},{"orderable":false,"targets":0}],"lengthMenu":[5,10,20,30],"initComplete":"function(settings, json) {\n$(this.api().table().header()).css({'background-color': '#000', 'color': '#fff'});\n}","order":[],"orderClasses":false}},"evals":["options.initComplete"],"jsHooks":[]}</script>
+</div>
+<div id="frequency-of-awards-at-a-department-level-within-a-university" class="section level4">
+<h4>Frequency of awards at a department level within a University</h4>
+<p><em>What are the chances of being awarded twice in the same around if the applications came from the same department?</em></p>
+<p>Your research centre could be in a position where two applications might be submitted in the same round. Is it then possible that both applications are successful? Well, the short answer is Yes! (because it has happened before) But let’s have a look at the likelihood of that happening. With the current data, I can evaluate the information at a departmental level. In this case, only the Epidemiology and Public Health Department from the University of College London has been successfully given the grant twice within the same round. Thus, it is possible for the research department to submit more than one proposal, although the likelihood of such an event happening is really low. By taking the only department to get the grant twice within the same round (n = 1) divided by the number of departments (n = 35) and multiplying it by 1/5 (5 rounds), that will give me a 0.57% chance of such an event happening. Chances are slim, but if the research centre staggered the submission back to back, and it just so happen that the earlier application gets pushed back one round and that the evaluation of both proposals will be happening in the same round, at least you know that there is still a minimum chance of both proposals getting awarded the grant.</p>
+<div id="htmlwidget-dd83ad30f2f85cba1de4" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-dd83ad30f2f85cba1de4">{"x":{"filter":"none","data":[["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31","32","33","34","35","36","37","38","39","40","41","42","43","44","45","46"],["Aston University","Bath Spa University","Birkbeck College","Cardiff University","Institute of Development Studies","Institute of Development Studies","Keele University","King's College London","King's College London","Loughborough University","Manchester Metropolitan University","Manchester Metropolitan University","Queen's University of Belfast","Royal Holloway, University of London","University College London","University College London","University College London","University College London","University of Bath","University of Birmingham","University of Birmingham","University of Bristol","University of Bristol","University of Cambridge","University of Cambridge","University of Cambridge","University of Essex","University of Essex","University of Exeter","University of Exeter","University of Exeter","University of Exeter","University of Glasgow","University of Huddersfield","University of Leeds","University of Leeds","University of Liverpool","University of Manchester","University of Manchester","University of Oxford","University of Reading","University of Salford","University of Sheffield","University of Southampton","University of Surrey","University of York"],["Aston Business School","Sch of Society Enterprise and Env","Psychological Sciences","Sch of Social Sciences","Research Department","Research Department","Faculty of Natural Sciences","Education and Professional Studies","Health Service and Population Research","Social Sciences","Politics, Philosophy &amp; History","Sociology","Sch of Hist, Anthrop, Philos &amp; Politics","Economics","Bartlett Sch of Const &amp; Proj Management","Economics","Economics","Epidemiology and Public Health","Education","Economics","School of Psychology","Experimental Psychology","Politics","Faculty of Education","Geography","MRC Cognition and Brain Sciences Unit","Economics","Psychology","Psychology","Psychology","School of Law","University of Exeter Medical School","College of Medical, Veterinary &amp;Life Sci","Sch of Human and Health Sciences","Politics and International Studies","Sch of Languages, Cultures and Societies","Communication and Media","Environment, Education and Development","Social Sciences","Economics","Sch of Psychology and Clinical Lang Sci","Sch of Health Sciences","Information School","School of Social Sciences","Politics","Psychology"],["March2017","July2017","July2017","March2018","Nov2017","March2018","Nov2017","Nov2017","March2018","July2018","Nov2017","March2018","Nov2017","July2017","July2018","March2018","July2018","July2017","July2018","Nov2017","July2018","July2017","Nov2017","July2018","Nov2017","July2018","Nov2017","Nov2017","March2018","July2018","Nov2017","Nov2017","July2018","March2018","July2017","July2017","July2017","March2018","March2018","March2018","July2018","Nov2017","Nov2017","July2017","Nov2017","Nov2017"],[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>University<\/th>\n      <th>department<\/th>\n      <th>round<\/th>\n      <th>freq<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"pageLength":5,"autoWidth":false,"columnDefs":[{"width":"200px","targets":1},{"className":"dt-center","targets":[0,1,2,3,4]},{"orderable":false,"targets":0}],"lengthMenu":[5,10,20,30,40,50],"initComplete":"function(settings, json) {\n$(this.api().table().header()).css({'background-color': '#000', 'color': '#fff'});\n}","order":[],"orderClasses":false}},"evals":["options.initComplete"],"jsHooks":[]}</script>
+</div>
+<div id="frequency-of-awards-at-a-department-level" class="section level4">
+<h4>Frequency of awards at a department level</h4>
+<p><em>Which department has the highest number of successfully funded projects?</em></p>
+<p>If you are just interested in looking at the type of departments achieving a successful application, then the data is presented in the table below. It would appear that Economics is the top with a count of 6, followed by psychology which is 5 (I combined psychology and experimental psychology). The rest are on average about 1 or 2 from each department across the 5 rounds.</p>
+<div id="htmlwidget-77f1b38c7f3775009fc6" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-77f1b38c7f3775009fc6">{"x":{"filter":"none","data":[["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31","32","33","34","35"],["Aston Business School","Bartlett Sch of Const &amp; Proj Management","College of Medical, Veterinary &amp;Life Sci","Communication and Media","Economics","Education","Education and Professional Studies","Environment, Education and Development","Epidemiology and Public Health","Experimental Psychology","Faculty of Education","Faculty of Natural Sciences","Geography","Health Service and Population Research","Information School","MRC Cognition and Brain Sciences Unit","Politics","Politics and International Studies","Politics, Philosophy &amp; History","Psychological Sciences","Psychology","Research Department","Sch of Health Sciences","Sch of Hist, Anthrop, Philos &amp; Politics","Sch of Human and Health Sciences","Sch of Languages, Cultures and Societies","Sch of Psychology and Clinical Lang Sci","Sch of Social Sciences","Sch of Society Enterprise and Env","School of Law","School of Psychology","School of Social Sciences","Social Sciences","Sociology","University of Exeter Medical School"],[1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,1,1,0,0,0,2,1,0,0,0,0,0,0,0,1,0,1,0,0,0,0,0,1,0,0,1,0,0,1,0,0,0],[0,0,0,0,2,0,1,0,0,0,0,1,1,0,1,0,2,0,1,0,2,1,1,1,0,0,0,0,0,1,0,0,0,0,1],[0,0,0,0,2,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,1,1,0,0,1,0,0,1,0,0,0,0,1,1,0],[0,1,1,0,1,1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,0,1,0,0,0,1,0,1,0,0]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>Department<\/th>\n      <th>March2017<\/th>\n      <th>July2017<\/th>\n      <th>Nov2017<\/th>\n      <th>March2018<\/th>\n      <th>July2018<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"pageLength":5,"autoWidth":false,"columnDefs":[{"width":"200px","targets":1},{"className":"dt-center","targets":[0,1,2,3,4,5,6]},{"orderable":false,"targets":0}],"lengthMenu":[5,10,20,30],"initComplete":"function(settings, json) {\n$(this.api().table().header()).css({'background-color': '#000', 'color': '#fff'});\n}","order":[],"orderClasses":false}},"evals":["options.initComplete"],"jsHooks":[]}</script>
+</div>
+</div>
+<div id="budget" class="section level2">
+<h2>Budget</h2>
+<div id="funds-allocation" class="section level4">
+<h4>Funds allocation</h4>
+<p><em>What is the average funding per round, and is that consistent across each round?</em></p>
+<p>According to the <a href="https://esrc.ukri.org/files/funding/funding-opportunities/new-investigator-grants-call-specification/">call specification</a>, it says that the grant annual budget will be around £7.5 million. Thus, they expect to fund about 35 grants a year, with about 10 to 12 proposals each round. So the expected mean value should be about £214,285 (£7.5m / 35) per proposal. My two questions to that are: 1) if one round uses fewer funds because it has a lower number of funded projects, does it mean that a higher budget will be allowed for the following rounds within the year? 2) Or is it the case that every round has a fixed budget and that cannot be changed even though there are leftovers from the money pot? Looking at the left graph (i.e. Total Funding Value graph) below for the rounds in 2017, I would infer that there is no fixed budget for every round, and the number of projects in each round is variable as long as the total funded projects for that year do not pass the annual budget of £7.5 million. The observed mean funded value for the July and Nov 2017 was above the expected mean funded value, by over £10,000 to £20,000. Such a trend existed probably because only one proposal was funded in March 2017, so given that there was sufficient budget, it was possible to fund more proposals in the following round. So to answer the question above, I would say that the panel tries to be consistent in every round but it is not a set condition. <em>Those that applied in November 2017, lucky you!</em></p>
+<p><img src="esrc_p2_files/figure-html/funding%20value-1.png" style="display: block; margin: auto;" /></p>
+<p><em>Will we expect a similar trend for November 2018?</em></p>
+<p>This becomes rather interesting. While November 2017 has a high number of funded proposals, it should not happen for November 2018 because of 2 plausible reasons. 1) If the expected number of grants to fund is 35, then the maximum number of projects that can be funded is 35 - (10 + 10) is 15. To be exact, including the 2 missing projects that are not in the dataset (one in March 2018, and another in July 2018) then only 13 projects can be awarded the grant. 2) The number of awarded projects are capped by the grant annual budget of £7.5 million. Since about £4.5 million is already spent in the first two rounds of 2018 (see table below), there is only a budget of approximately £3 million left. So if we divide £3 million by 13 projects, we would get an approximate of £230769.2 each, which is slightly above the expected mean funding budget (great!, though I doubt the target of the ESRC for giving out awards are dependent on reaching a maximum number of projects). If it is budget dependent, then a maximum of 14 grant (using the expected mean value) would be approved before it crosses what’s left in the budget. Either way, to have 16 funded proposals at this stage would be a challenging task, unless all successful proposals for November 2018 request for smaller funding compared to other rounds, which is quite impossible really. Given this reasoning, I would say that ESRC is more likely to select a smaller number of proposals but have a bigger allowance in the budget set for each proposal (I could be wrong), let’s see what happens in the Nov 2018 panel. We will have the data soon.</p>
+<table style="width:47%;">
+<caption>Funded per round</caption>
+<colgroup>
+<col width="16%" />
+<col width="13%" />
+<col width="16%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="center">round</th>
+<th align="center">value</th>
+<th align="center">mean value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center">March2017</td>
+<td align="center">205262</td>
+<td align="center">205262</td>
+</tr>
+<tr class="even">
+<td align="center">July2017</td>
+<td align="center">2296128</td>
+<td align="center">229613</td>
+</tr>
+<tr class="odd">
+<td align="center">Nov2017</td>
+<td align="center">3639389</td>
+<td align="center">227462</td>
+</tr>
+<tr class="even">
+<td align="center">March2018</td>
+<td align="center">2116431</td>
+<td align="center">211643</td>
+</tr>
+<tr class="odd">
+<td align="center">July2018</td>
+<td align="center">2333817</td>
+<td align="center">233382</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="time" class="section level2">
+<h2>Time</h2>
+<p><em>What is the average research period?</em></p>
+<p>On average, the grants awarded typically lasts for about 2.62 years with a standard deviation of 0.71. I am unsure if it part-time or full-time though. But I would imagine that any project lasting more than 3 years would be part-time since the overhead costs are really high. Plus the fact that if you include research assistants in your application then that would further bring down the grant period since you need to account for their salary and overhead costs as well. You can see the boxplot below for those interested in the quantiles. A breakdown at the university level can be found in the table below.</p>
+<p><img src="esrc_p2_files/figure-html/research%20period-1.png" style="display: block; margin: auto;" /><div id="htmlwidget-5a8cd2ee04aa91ecafc8" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-5a8cd2ee04aa91ecafc8">{"x":{"filter":"none","data":[["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31","32","33","34","35","36","37","38","39"],["Aston University","Bath Spa University","Birkbeck College","Cardiff University","Institute of Development Studies","Keele University","King's College London","King's College London","Loughborough University","Manchester Metropolitan University","Manchester Metropolitan University","Queen's University of Belfast","Royal Holloway, University of London","University College London","University College London","University College London","University College London","University of Bath","University of Birmingham","University of Bristol","University of Bristol","University of Cambridge","University of Cambridge","University of Essex","University of Exeter","University of Exeter","University of Glasgow","University of Huddersfield","University of Leeds","University of Liverpool","University of Manchester","University of Manchester","University of Oxford","University of Reading","University of Salford","University of Sheffield","University of Southampton","University of Surrey","University of York"],[3,2.16,3,2,3,3,3,3.18,2,0.42,3,3,3,2,3,3.58,4,2.5,2,2.08,2.5,2.49,3,3,2.5,3,2,3,3,3,2,3.49,3,2.66,3,2,2.49,0.5,2.5],[1,1,1,1,2,1,1,1,1,1,1,1,1,1,2,1,1,1,2,1,1,1,2,2,2,2,1,1,2,1,1,1,1,1,1,1,1,1,1]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>University<\/th>\n      <th>research_period<\/th>\n      <th>freq<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"pageLength":5,"autoWidth":false,"columnDefs":[{"width":"200px","targets":1},{"className":"dt-center","targets":[0,1,2,3]},{"orderable":false,"targets":0}],"lengthMenu":[5,10,20,30,40,50],"initComplete":"function(settings, json) {\n$(this.api().table().header()).css({'background-color': '#000', 'color': '#fff'});\n}","order":[],"orderClasses":false}},"evals":["options.initComplete"],"jsHooks":[]}</script></p>
+</div>
+<div id="research-areas" class="section level2">
+<h2>Research Areas</h2>
+<p><em>What are the types of research areas involved?</em></p>
+<p>At a department level, economics may have received the most number of awards, followed by psychology. However, if you rank the table below in the order of descending frequency, we find that it is the psychology research area that is the highest, followed by economics, sociology and the rest. This information tells us that many of the economic research is most likely to be behavioural in nature as supposed to the more quantitative aspects such as econometrics research. It is great to see quite a number of research areas that are not directly part of the Social Sciences. <em>So it would appear that collaborative research across different fields is highly recommended.</em> I would imagine that it reflects well on the ESRC knowing that the subjects/topics funded are multidisciplinary.</p>
+<div id="htmlwidget-a73e8d95e880924ecf52" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-a73e8d95e880924ecf52">{"x":{"filter":"none","data":[["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31","32","33","34","35","36","37","38","39","40","41","42","43","44","45","46","47","48","49","50","51","52","53","54","55","56","57","58","59","60","61","62","63","64","65","66","67","68","69","70","71","72","73","74","75","76","77","78","79","80","81","82","83","84","85","86","87","88","89","90","91","92","93","94","95","96","97","98","99","100","101","102","103","104","105"],["African Studies","Anthropology and Development","Applied Arts HTP","Area Studies","Artificial Intelligence","Behavioural &amp; experimental eco","Cartography and GIS","Child Psychology","Children and Families","Cognitive Psychology","Conflict/War Studies","Conservation Ecology","Criminal Law &amp; Criminology","Criminology","Cultural Studies","Curriculum areas","Demography","Demography (General)","Demography/Pop Geography","Development Geography","Development studies","Developmental psychology","Diplomacy &amp; Internat Relations","Ecol, biodivers. &amp; systematics","Econometrics","Economic &amp; Social History","Economic Sociology","Economics","Education","Elements of Education","Environmental economics","Environmental Geography","European Studies","Experimental Psychology","Financial economics","Geography and Development","Global Health and Medicine","Health Psychology","History","History of Sci./Med./Technol.","Human Geography","Human Geography (General)","Human Rights","Human-Computer Interactions","Industrial Organisation (R&amp;D)","Industrial-Org/Occupational","Info. &amp; commun. Technol.","Innovation","Internat Education and Dev","Internat Political Economy","Internat. Studies &amp; Relations","International economics","International Law","International Relations Theory","Knowledge Management","Labour economics","Language Acquisition","Law &amp; legal studies","Leadership","Linguistics","Macroeconomics","Management &amp; Business Studies","Manufact. Business Strategy","Manufact. Enterprise Ops&amp; Mgmt","Manufacturing","Med Soc/Soc Health &amp; Illness","Media","Medical &amp; health interface","Medical science &amp; disease","Mental Health","Microeconomic theory","Nat Resources, Env &amp; Rural Dev","New Media/Web-Based Studies","Organisational Studies","Peace Studies","Phases of education","Pol. sci. &amp; internat. studies","Pol.,International Rel.&amp;Dev.","Political Geography","Political Science","Political Sociology","Politics","Psycholinguistics","Psychology","Psychology of Education","Public economics","Recreation/Tourism Geography","Rural Geography","Science and Technology Studies","Security Studies","Semantics &amp; Pragmatics","Social Anthropology","Social Geography","Social Policy","Social Psychology","Social Theory","Social Work","Socio Legal Studies","Sociology","Sociology and Development","Sociology of Education","Stratification","Urban Geography","Visual arts","Womens and Gender Studies"],[1,1,2,2,1,2,1,1,2,9,1,1,1,2,4,2,2,2,1,1,5,3,1,1,2,3,2,13,4,1,1,1,1,5,2,1,1,4,4,1,6,2,1,1,2,2,2,2,1,1,1,2,1,1,1,2,2,2,1,2,1,3,2,1,1,3,1,2,1,1,2,1,1,1,1,1,6,1,1,2,1,2,1,19,1,3,1,1,4,1,1,2,1,8,4,1,2,1,12,1,3,1,1,2,1]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>Research Area<\/th>\n      <th>Freq<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"pageLength":5,"autoWidth":false,"columnDefs":[{"width":"200px","targets":1},{"className":"dt-center","targets":[0,1]},{"className":"dt-right","targets":2},{"orderable":false,"targets":0}],"lengthMenu":[5,10,20,30,40,50],"initComplete":"function(settings, json) {\n$(this.api().table().header()).css({'background-color': '#000', 'color': '#fff'});\n}","order":[],"orderClasses":false}},"evals":["options.initComplete"],"jsHooks":[]}</script>
+</div>
+<div id="conclusion" class="section level2">
+<h2>Conclusion</h2>
+<p>In this post, I break down the data that I gathered from the RCUK website into four main areas: Awards, Budgets, Research Period and Research Areas. The Awards section looked at the frequency of awards at a University and Departmental level, as well as the possibility of getting the award twice in the same round. Whilst it is possible, the likelihood of it happening is less than 5% at a University Level, and even smaller (&lt; 1%) at a departmental level. That’s not too bad if you compare it to winning the jackpot (1 in 292 million chance)!</p>
+<p>When it comes to money, people always want to have a good idea of how it works. So from the historical trends, it would appear that each round does not have a fixed budget (i.e. £2.5m each), but rather the cost of all the grants awarded that year is no more than £7.5 million. This indicates that the number of grants given in the last round is highly susceptible to the number of grants awarded in the previous 2 rounds. By comparing the observed mean funding value to the expected mean funding value, it appears that March is typically given less and then the budget is re-adjusted in the July round so it looks rather equalised overall. From an applicant perspective, it would seem like March is perhaps not the best round to submit an application because it has lower acceptance rate (<em>see <a href="https://aidenloe.github.io/esrc_p1.html">first part</a> of this post</em>) and the panel is very strict with the money. This leads me to think that July seems like a good round for applications with larger costs. Bear in mind that I do not have the data for how much money was requested for each grant application, this is just the amount of money awarded in the end.</p>
+<p>From a time period perspective, it would appear that most of the grants awarded are very close to the expected three years. Till date, the longest research period is 4 years from UCL, while the shortest is 5 months from the Manchester Metropolitan Univerisity. So far, no grants with a 5 year time period have been awarded, even though it is stated in the <a href="https://esrc.ukri.org/files/funding/funding-opportunities/new-investigator-grants-call-specification/">call specification</a> that a maximum research period of 5 years is possible. Again, it does not say whether the researcher applied for a part-time or full-time position. If it is a full-time position, it is probably less than 3 years due to all the other costing involved.</p>
+<p>Finally, it is great to see that the research areas stem not only from within the Social Sciences but reaches out to other interesting and fascinating research fields, enabling a collaborative spirit within the academic community.</p>
+<p>What a potential applicant can take out of this:</p>
+<ol style="list-style-type: decimal">
+<li>Don’t worry too much about the research period, as long as you justify the time frame.</li>
+<li>Try and make the project more multidisciplinary, though 50% must relate to the Social Sciences.</li>
+<li>July and Nov rounds seem like a good time to submit the grant application if your project costs are higher than the expected mean value.</li>
+<li>Having a lower project cost does not automatically give you a higher score over others.</li>
+<li>Competition levels are stiff and you need to build a convincing case as to why the panel should fund your application over others.</li>
+<li>Give yourself ample time to think and draft down ideas as you shape it into an exceptionally strong grant application.</li>
+<li>Avoid submitting a proposal in the same round as your colleagues from the same research centre.</li>
+</ol>
+<p>I hope this has been helpful information for potential applicants wanting to apply for to the ESRC New Investigators Grant scheme.</p>
+<p>Disclaimer: Opinions are my own and not the views of my employer.</p>
+<center>
+<p>Link to <a href="https://aidenloe.github.io/esrc_p1.html">Part 1</a> of this post.</p>
+<p>Link to my <a href="https://aidenloe.github.io/index.html">github page</a>.</p>
+<p>
+Copyright © Aiden Loe, Inc. All rights reserved.
+</p>
+</center>
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-98916204-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+</div>
+</article>
+</div>
+</div>
+</div>
+</div>
+
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

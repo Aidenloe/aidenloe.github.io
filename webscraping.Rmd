@@ -1,0 +1,281 @@
+---
+title: "Web scraping"
+author: "Aiden Loe"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output:
+  html_document:
+    toc: true
+    toc_depth: 3
+    toc_float: 
+      collapsed: false
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# **Web Scraping (Part 1)**
+
+Scraping viewership is one area of web scraping, but perhaps you might be interested in doing sentiment analysis on content. 
+
+So we want to extract the contents of the web pages rather than number of times someone viewed the web page. 
+
+## **Scrape content (Wiki)**
+
+We will be using the `RCurl` and `XML` package to help us with the scraping. 
+
+Let's use the Eurovision_Song_Contest as an example. 
+
+The `XML` package has plenty functions that can allow us to scrape the data. 
+
+Usually we are extracting information based on the tags of the web pages. 
+
+
+```{r Scrape Content (wiki), message=FALSE, results='hide', warning=FALSE}
+##### scraping CONTENT OFF WEBSITES ######
+require(RCurl)
+require(XML)
+# XPath is a language for querying XML 
+# //Select anywhere in the document
+# /Select from root
+# @select attributes. Used in [] brackets
+
+#### Wikipedia Example ####
+url <- "https://en.wikipedia.org/wiki/Eurovision_Song_Contest"
+txt = getURL(url) # get the URL html code
+
+# parsing html code into readable format
+PARSED <- htmlParse(txt)
+
+# Parsing code using tags
+xpathSApply(PARSED, "//h1")
+
+# strops code and return content of the tag
+xpathSApply(PARSED, "//h1", xmlValue) # h1 tag
+xpathSApply(PARSED, "//h3", xmlValue) # h3 tag
+xpathSApply(PARSED, "//a[@href]") # a tag with href attribute
+
+
+# Go to url 
+# Highlight references
+# right click, inspect element
+# Search for tags
+xpathSApply(PARSED, "//span[@class='reference-text']",xmlValue) # parse notes and citations
+xpathSApply(PARSED, "//cite[@class='citation news']",xmlValue) # parse citation news
+xpathSApply(PARSED, "//span[@class='mw-headline']",xmlValue) # parse headlines
+xpathSApply(PARSED, "//p",xmlValue) # parsing contents in p tag
+xpathSApply(PARSED, "//cite[@class='citation news']/a/@href") # parse links under citation. xmlValue not needed. 
+xpathSApply(PARSED, "//p/a/@href") # parse href links under all p tags
+xpathSApply(PARSED, "//p/a/@*") # parse all atributes under all p tags
+
+# Partial matches - subtle variations within or between pages. 
+xpathSApply(PARSED, "//cite[starts-with(@class, 'citation news')]",xmlValue) # parse citataion news that starts with..
+xpathSApply(PARSED, "//cite[contains(@class, 'citation news')]",xmlValue) # parse citataion news that contains.
+
+# Parsing tree like structure
+parsed<-   htmlTreeParse(txt, asText = TRUE)
+
+```
+
+## **Scrape content (BBC)**
+
+When you know the structure of the data. 
+
+All you need to do is to find the correct function to scrape. 
+
+```{r Scrape Content (BBC), message=FALSE, results='hide', warning=FALSE}
+
+
+##### BBC Example ####
+url <- "https://www.bbc.co.uk/news/uk-england-london-46387998"
+url <- "https://www.bbc.co.uk/news/education-46382919"
+txt = getURL(url) # get the URL html code
+
+# parsing html code into readable format
+PARSED <- htmlParse(txt)
+xpathSApply(PARSED, "//h1", xmlValue) # h1 tag
+xpathSApply(PARSED, "//p", xmlValue) # p tag
+xpathSApply(PARSED, "//p[@class='story-body__introduction']", xmlValue) # p tag body
+xpathSApply(PARSED, "//div[@class='date date--v2']",xmlValue) # date, only the first is enough
+xpathSApply(PARSED, "//meta[@name='OriginalPublicationDate']/@content") # sometimes there is meta data. 
+```
+
+## **Create simple BBC scrapper**
+
+Sometimes, creating a function will make your life better and make your script look simpler.  
+
+```{r Plot BBC scrapper}
+##### Create simple BBC scrapper #####
+# scrape title, date and content
+BBCscrapper1<- function(url){
+  txt = getURL(url) # get the URL html code
+  PARSED <- htmlParse(txt) # Parse code into readable format
+  title <- xpathSApply(PARSED, "//h1", xmlValue) # h1 tag
+  paragraph <- xpathSApply(PARSED, "//p", xmlValue) # p tag
+  date <- xpathSApply(PARSED, "//div[@class='date date--v2']",xmlValue) # date, only the first is enough
+  if(length(date) == 0){
+    date = NA
+  }else{
+    date <- date[1]  
+  }
+  
+  return(cbind(title,date))
+  #return(as.matrix(c(title,date)))
+}
+
+
+# Use function that was just created. 
+BBCscrapper1("https://www.bbc.co.uk/news/education-46382919")
+
+```
+
+## **Keeping it neat**
+
+Using the `plyr` package helps to arrange the data in an organised way. 
+```{r Keeping it neat, message=FALSE}
+## Putting the title and date into a dataframe
+require(plyr)
+#url
+url<- c("https://www.bbc.co.uk/news/uk-england-london-46387998", "https://www.bbc.co.uk/news/education-46382919")
+## ldply: For each element of a list, apply function then combine results into a data frame
+#put into a dataframe
+ldply(url,BBCscrapper1)
+
+```
+
+
+
+# **Web scraping (Part 2)**
+This example below is taken from code kindly written by David stillwell. 
+
+Some editing has been made to the original code. 
+
+## **Scrape from Wiki tables**
+
+You have learned how to scrape viewership on wikipedia and content on web pages. 
+
+This section is about scraping data tables online. 
+
+```{r Scrape Table (Wiki), message=FALSE}
+# Install the packages that you don't have first. 
+library("RCurl") # Good package for getting things from URLs, including https
+library("XML") # Has a good function for parsing HTML data
+library("rvest") #another package that is good for web scraping. We use it in the Wikipedia example
+
+#####################
+### Get a table of data from Wikipedia
+## all of this happens because of the read_html function in the rvest package
+# First, grab the page source
+us_states = read_html("https://en.wikipedia.org/wiki/List_of_U.S._states_and_territories_by_population") %>% # piping
+  # then extract the first node with class of wikitable
+  html_node(".wikitable") %>% 
+  # then convert the HTML table into a data frame
+  html_table(fill = TRUE)
+
+# rename
+names(us_states)<- c('current rank', '2010 rank', 'state', 'census_population_07_2019', 'census_population_04_2010', 'change_in_percentage', 'change in absolute', "total_US_House_of_Representative_seats", "est_population_per_electoral_vote_2019")
+
+# remove first row
+us_states=us_states[-1,]
+
+```
+
+## **Scrape from online tables**
+
+If we can have two data tables that have at least one column with the same name, then we can merge them together. 
+
+The main idea is to link the data together to run simple analysis.
+
+In this case we can get data about [funding](http://apps.saferoutesinfo.org/legislation_funding/state_apportionment.cfm) given to various US states to support building infrastructure to improve students' ability to walk and bike to school. 
+
+```{r Scrape Table (non-wiki)}
+
+######################
+url <- "http://apps.saferoutesinfo.org/legislation_funding/state_apportionment.cfm"
+funding<-htmlParse(url) #get the data
+
+# find the table on the page and read it into a list object
+funding<- readHTMLTable(funding,stringsAsFactors = FALSE)
+funding.df <- do.call("rbind", funding) #flatten data
+
+# Contain empty spaces previously.
+colnames(funding.df)[1]<- c("state") # shorten colname to just State.
+
+# Match up the tables by State/Territory names
+# so we have two data frames, x and y, and we're setting the columns we want to do the matching on by setting by.x and by.y
+mydata = merge(us_states, funding.df, by.x="state", by.y="state")
+
+dim(mydata) # it looks pretty good, but note that we're down to 50 US States, because the others didn't match up by name
+
+# e.g. "District of Columbia" in the us_states data, doesn't match "Dist. of Col." in the funding data
+us_states[!us_states$state %in% funding.df$state,]$state
+
+#Replace the total spend column name with a name that's easier to use.
+names(mydata)
+colnames(mydata)[18] = "total_spend" # year of 2010
+names(mydata)
+head(mydata)
+# We need to remove commas so that R can treat it as a number.
+mydata[,"census_population_04_2010"] = gsub(",", "", mydata[,"census_population_04_2010"]) # removes all commas
+(mydata[,"census_population_04_2010"] = as.numeric(mydata[,"census_population_04_2010"])) # converts to number data type
+
+# Now we have to do the same thing with the funding totals
+mydata[,"total_spend"] = gsub(",", "", mydata[,"total_spend"]) #this removes all commas
+mydata[,"total_spend"] = gsub("\\$", "", mydata[,"total_spend"]) #this removes all dollar signs. We have a \\ because the dollar sign is a special character.
+(mydata[,"total_spend"] = as.numeric(mydata[,"total_spend"])) #this converts it to a number data type
+
+# Now we can do the plotting
+options(scipen=9999) #stop it showing scientific notation
+plot(x=mydata[,"census_population_04_2010"], y=mydata[,"total_spend"], xlab = 'Population', ylab='Total Spending')
+cor.test(mydata[,"census_population_04_2010"], mydata[,"total_spend"]) # 0.9810979 - big correlation!
+
+```
+
+## **Plot funding data on map**
+
+Perhaps it might be more interesting to see how the data is like on a map. 
+
+We can utilise `map_data` function in the `ggplot` package to help us with that. 
+
+Again, with a bit of data manipulation, we can merge the data table that contains the longitude and latitude information together with the funding data across different states.
+
+```{r Plot on Map, message=FALSE, fig.width=18, fig.height=11}
+
+require(ggplot2)
+all_states <- map_data("state") # states
+colnames(mydata)[1] <- "state" # rename to states
+mydata$state <- tolower(mydata$state) #set all to lower case
+Total <- merge(all_states, mydata, by.x="region", by.y = 'state') # merge data
+# we have data for delaware but not lat, long data in the maps
+i <- which(!unique(all_states$region) %in% mydata$state) 
+
+# Plot data
+ggplot() + 
+  geom_polygon(data=Total, aes(x=long, y=lat, group = group, fill=Total$total_spend),colour="white") + 
+  scale_fill_continuous(low = "thistle2", high = "darkred", guide="colorbar") + 
+  theme_bw()  + 
+  labs(fill = "Funding for School" ,title = "Funding for School between 2005 to 2012", x="", y="") + 
+  scale_y_continuous(breaks=c()) +
+  scale_x_continuous(breaks=c()) +
+  theme(panel.border =  element_blank(),
+        text = element_text(size=20))
+```
+
+
+# **Web scraping (Part 3)**
+## **Scrape from discussion forums**
+
+Coming soon..
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-98916204-1', 'auto');
+  ga('send', 'pageview');
+
+</script>

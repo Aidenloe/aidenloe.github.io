@@ -1,0 +1,127 @@
+---
+title: "Text Analysis"
+author: "Aiden Loe"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output:
+  #word_document:
+    #toc: yes
+    #toc_depth: '3'
+  html_document:
+    toc: yes
+    toc_depth: 3
+    toc_float:
+      collapsed: no
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## **Introduction**
+Hello! I am listing down things that I found difficult when it comes to text analysis. 
+
+## **White and Blank spaces**
+This took me a while to learn. Hint** white spaces and blank spaces are not the same. 
+
+`trimsw()` will not work at all if it is blank spaces. 
+
+
+Here are some useful tips to know more about regular expressions.
+
++ [:digit:] or \d: digits, 0 1 2 3 4 5 6 7 8 9, equivalent to [0-9].
+
++ \D: non-digits, equivalent to [^0-9].
+
++ [:lower:]: lower-case letters, equivalent to [a-z].
+
++ [:upper:]: upper-case letters, equivalent to [A-Z].
+
++ [:alpha:]: alphabetic characters, equivalent to [[:lower:][:upper:]] or [A-z].
+
++ [:alnum:]: alphanumeric characters, equivalent to [[:alpha:][:digit:]] or [A-z0-9].
+
++ \w: word characters, equivalent to [[:alnum:]_] or [A-z0-9_].
+
++ \W: not word, equivalent to [^A-z0-9_].
+
++ \s[:xdigit:]: hexadecimal digits (base 16), 0 1 2 3 4 5 6 7 8 9 A B C D E F a b c d e f, equivalent to [0-9A-Fa-f].
+
++ "[:blank:]": blank characters, i.e. space and tab.
+
++ "[:space:]": space characters: tab, newline, vertical tab, form feed, carriage return, space.
+
++ \s: space, ` `.
+
++ \S: not space.
+
++ [:punct:]: punctuation characters, ! " # $ % & ’ ( ) * + , - . / : ; < = > ? @ [  ] ^ _ ` { | } ~.
+
++ [:graph:]: graphical (human readable) characters: equivalent to [[:alnum:][:punct:]].
+
++ [:print:]: printable characters, equivalent to [[:alnum:][:punct:]\\s].
+
++ [:cntrl:]: control characters, like \n or \r, [\x00-\x1F\x7F].
+
+
+#### Some stuff worth remembering. 
+
+
+If you want to find out if multiple strings exists.
+
+```{r}
+Text <- c('I went out to meet some friends')
+words <- unlist(strsplit(Text, split = " "))
+grep('to|meet', words, value=T) # actual matches
+grepl('to|meet', words) # logical 
+
+```
+
+If you want to remove the rest of a string after a specific character, you can use the `gsub()` function
+
++ `.` matches any single character after the specific character 
++ `*` matches at least 0 times. 
++ `\` suppress the special meaning of metacharacters in regular expression. It has to be double backslash (i.e. `\\`) since `\` itself needs to be escaped in R. 
+
+```{r}
+
+text <- c('dd1 =~aaa', 'dd2 =~`bbb')
+trimws(gsub("\\=~.*", "", text)) 
+
+```
+
+If you want to replace multiple patterns in a single string,
+
+```{r}
+text <- c('I am having a lot of fun')
+gsub('having|fun','cool' ,text)
+```
+
+
+If you want to keep everything within the special characters only. It doesn't work if you have special characters before or after the opening and closing brackets though.
+
+```{r}
+item <- 'I like to [A1], [A2], [A3], [K1] fun'
+words <- unlist(strsplit(item, split= ' '))
+position <- (grep(c('\\['), words))
+features_special_characters <- words[position]
+(features <- gsub('\\[|\\]', "", features_special_characters))
+
+```
+
+
+#### Citations
+
++ http://stat545.com/block022_regular-expression.html
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-98916204-1', 'auto');
+  ga('send', 'pageview');
+
+</script>

@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+<meta name="author" content="Aiden Loe" />
+
+
+<title>Introduction to R</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 51px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h2 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h3 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h4 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h5 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h6 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Aiden Loe</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="about.html">About</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    R 4 Social Scientists
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li class="dropdown-header">What is R?</li>
+    <li>
+      <a href="introToR.html">Intro to R</a>
+    </li>
+    <li>
+      <a href="dataVisual.html">Data Visualisation</a>
+    </li>
+    <li>
+      <a href="datawrangling.html">Data Wrangling</a>
+    </li>
+    <li>
+      <a href="textAnalysis.html">Regular Expressions</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Big Data 4 Social Scientists
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li class="dropdown-header">What is ML?</li>
+    <li>
+      <a href="introToML.html">Intro to ML</a>
+    </li>
+    <li>
+      <a href="webscrapping.html">Web Scrapping</a>
+    </li>
+    <li>
+      <a href="datamining.html">Data Mining</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    IRT 4 Social Scientists
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li class="dropdown-header">What is IRT?</li>
+    <li>
+      <a href="introToIRT.html">Intro to IRT</a>
+    </li>
+    <li>
+      <a href="testinfo.html">Test Information</a>
+    </li>
+    <li>
+      <a href="irtplots.html">Plotting to IRT</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    CAT 4 Social Scientists
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li class="dropdown-header">What is CAT?</li>
+    <li>
+      <a href="introToCAT.html">Intro to CAT</a>
+    </li>
+    <li>
+      <a href="catSimulation.html">CAT simulation</a>
+    </li>
+  </ul>
+</li>
+<li>
+  <a href="blog.html">Blog Post</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Introduction to R</h1>
+<h4 class="author"><em>Aiden Loe</em></h4>
+<h4 class="date"><em>10 April, 2019</em></h4>
+
+</div>
+
+
+<div id="how-to-start-using-r" class="section level2">
+<h2><strong>How to start using R?</strong></h2>
+<p>You got here because you are keen on learning R, so luckily, I don’t have to give you reasons to do so.</p>
+<p>Here is the first question. How do you start using R? (Given that you have R and R studio in your computer)</p>
+<p>Think of R as the engine of a car and R studio as the structure of the car.</p>
+<p>In order for your car to work, you first need the engine. So, in order for R studio to work, you need R. Manipulation is done via R studio, and not R itself. Just like how you would want to accelerate faster or slower, listen to music or turn on/off the air-condition in the car, the functions are found in the interior of the car which is then connected to the engine. So the basic idea is, your working environment will be R studio.</p>
+</div>
+<div id="r-studio" class="section level2">
+<h2><strong>R studio</strong></h2>
+<p>This is how it looks like the first time you open Rstudio.</p>
+<div class="figure">
+<img src="images/rstudio.png" />
+
+</div>
+<p><br></p>
+</div>
+<div id="script-and-console" class="section level2">
+<h2><strong>Script and Console</strong></h2>
+<p>The best way to work in R studio is to use a script. Click the ‘+’ sign on the top left of R studio and begin using the R Script.</p>
+<div class="figure">
+<img src="images/rscript.png" />
+
+</div>
+<p><br></p>
+<p>This is an R script file. It is an easy way to record all the steps you take to clean, manipulate and analyse your data. Type all your commands here along with detailed comments - comments are extremely helpful for future reference. You can save, edit and reuse this file as many times as you like. This is also a way of saving your output - you just re-run the code. Thus, its better to create script files than to directly type in the console (bottom left box in RStudio) which is not editable.</p>
+<div id="commenting-your-r-script" class="section level4">
+<h4>Commenting your R script</h4>
+<p>All code that follows a hash symbol (#) will be ignored by R. i.e. these will be considered comments. It’s best practice to comment your script well so that its easy to come back to even a few months from now, let alone years!</p>
+</div>
+</div>
+<div id="running-r-scripts" class="section level2">
+<h2><strong>Running R scripts</strong></h2>
+<ol style="list-style-type: decimal">
+<li>Select the lines of code that you want to run and press CTRL+ENTER (Mac users COMMAND+ENTER).</li>
+<li>Run single lines of code (on which your cursor is) by pressing CTRL+ENTER. The cursor will automatically jump to the next line.</li>
+<li>Highlight the lines of code that you want to run and click the ‘Run’ button on the top right corner of the script file in Rstudio.</li>
+</ol>
+<pre class="r"><code>##------------------------------- Simple Calculations  -------------------------
+
+2+2
+
+x=2+2
+x
+
+x-3
+
+3*x
+
+x &lt;- 10 #you can also assign values using this arrow. It&#39;s exactly the same as using an = sign. I tend to use =
+x
+x = x * 2
+x</code></pre>
+<p><br></p>
+</div>
+<div id="r-help-functions-and-jfgi" class="section level2">
+<h2><strong>R help! functions and JFGI</strong></h2>
+<p>(dont know what ‘JFGI’ is?? google it!)</p>
+<p>Rstudio’s help commands are a boon. Use it shamelessly!</p>
+<ol style="list-style-type: decimal">
+<li>help command - help(“FUNCTION_NAME”)</li>
+<li>OR ?FUNCTION_NAME The help command is very useful when you know some functions but know what they do. RStudio will throw up the related documentation.</li>
+<li>?? command - ??SEARCH The ?? command is more generalised and works well if you dont even know whether a specific function exists. You can just search for terms and RStudio will suggest related functions that you can explore.</li>
+</ol>
+<p>The help text will appear in the Rstudio window on the bottom right.</p>
+<p>Anything you’re trying to achieve has already been attempted by others throughout the world. Take advantage of it by google-ing your question. There are numerous blogs, forums, tutorials and books with R code that you can just copy/paste and use.</p>
+<pre class="r"><code>help(&quot;insert package name&quot;)
+mean
+??bind</code></pre>
+<p><br></p>
+</div>
+<div id="working-directory" class="section level2">
+<h2><strong>Working Directory</strong></h2>
+<p>Your “working directory” is the “folder” where R loads and saves data from in this session.</p>
+<ul>
+<li><p>You can change this location so that its convenient to access your files.</p></li>
+<li><p>The ‘get working directory’ command will show what your working directory is currently set to.</p></li>
+<li><p>The easiest way to do it in R Studio is to do it through the menus:</p></li>
+<li><p>Go to Session -&gt; Set working directory -&gt; Choose directory…</p></li>
+</ul>
+<pre class="r"><code>getwd() #get current WD
+setwd(&quot;~/desktop&quot;) #set Work Directory</code></pre>
+<p><br></p>
+</div>
+<div id="installing-and-loading-packages" class="section level2">
+<h2><strong>Installing and Loading Packages</strong></h2>
+<p>You need to install a package only once.</p>
+<p>You will have to do it again if you update R</p>
+<p>You will need to load the package each time you start an R session. Two approaches to do this.</p>
+<pre class="r"><code>install.packages(&quot;ggplot2&quot;)
+
+library(ggplot2)
+#     OR      
+require(&quot;ggplot2&quot;)</code></pre>
+<p><br></p>
+</div>
+<div id="variables-in-r" class="section level2">
+<h2><strong>Variables in R</strong></h2>
+<p>We store data in R by putting the data into a variable</p>
+<pre class="r"><code>object = &quot;data&quot;
+object
+
+numbers = 1:10 # 1 to 10
+numbers
+
+object = c(3,4,5,2,2,5,3,7,7,8,9)    # c() is a function that means &#39;combine&#39;
+object</code></pre>
+<p><br></p>
+</div>
+<div id="data-structures" class="section level2">
+<h2><strong>Data Structures</strong></h2>
+<p>R has different types of data structures:</p>
+<ol style="list-style-type: decimal">
+<li>Vectors</li>
+<li>Matrices</li>
+<li>Lists</li>
+<li>Data Frames</li>
+</ol>
+<div id="vectors" class="section level3">
+<h3>Vectors</h3>
+<pre class="r"><code>vector1 &lt;- c(&quot;A&quot;, &quot;B&quot;, &quot;C&quot;)
+vector1[3] #refer to the third element in the vector
+vector1[1:2] #refer to elements 1 to 2 in the vector
+length(vector1) #function to get the total length of the vector
+class(vector1) #what variable type is in the vector?
+
+
+vector2 &lt;- c(5,1,-7,-1,0) 
+vector2
+class(vector2) 
+
+
+## R performs mathematical calculations on numeric objects 
+vector3&lt;- c(1:5)
+vector3
+vector3 = vector3 * 2
+vector3
+
+# You can also replace a particular element of a vector using square brackets
+vector3[3]
+vector3[3] &lt;- 106
+vector3</code></pre>
+</div>
+<div id="matrix" class="section level3">
+<h3>Matrix</h3>
+<pre class="r"><code># a set of elements that are all the same type, but with rows and columns
+
+sample1 &lt;- matrix(c(1,2,4,4,7,5), nrow=2, byrow = T) #create the matrix
+head(sample1) # see first 6 rows
+tail(sample1) # see last 6 rows
+class(sample1) # see data type
+
+sample1[1,2] #refer to specific elements using square brackets. The first number is the row and the second is the column.
+sample1[1,] #if you leave one of them blank, you get the whole row or the whole column. So in this case we have row 1
+sample1[,2] #In this case we have column 2
+
+
+sample2 &lt;- matrix(c(4,7,9,3,7,1,8,2,8,4), ncol=5)
+sample2
+
+sample3 &lt;- matrix(c(4,7,9,3,7,1,8,2,8,4), nrow=2)
+sample3
+
+# join/bind matrices together
+cbind(sample1, sample2) # c = column-wise. So join by column
+rbind(sample3, sample2) # r = row-wise. So join by row
+
+# Assign column names
+row_matrix &lt;- rbind(sample3, sample2)
+colnames(row_matrix) &lt;- c(&quot;Maths&quot;,&quot;English&quot;,&quot;Physics&quot;,&quot;Law&quot;,&quot;Physical Education&quot;) #colnames function sets column names
+row_matrix
+row_matrix[,&quot;Maths&quot;] #so now you can refer by column name</code></pre>
+</div>
+<div id="lists" class="section level3">
+<h3>Lists</h3>
+<pre class="r"><code># a set of elements that are different data structure put together
+friend &lt;- list(name=&quot;Jasmine&quot;, age = 28)
+class(friend) # see data type
+
+friend[[&quot;age&quot;]] #Double square brackets to refer to a named list element
+friend$name #This also works, but it&#39;s less safe than the double brackets method
+friend[[2]] #or you can refer to the number of the element
+length(friend) #how many elements in the list</code></pre>
+</div>
+<div id="data-frame" class="section level3">
+<h3>Data frame</h3>
+<pre class="r"><code># similar to a matrix, but different class
+# a set of elements that are all the same type, but with rows and columns
+
+family &lt;- data.frame(Names=c(&#39;John&#39;, &#39;Jane&#39;,&#39;Paul&#39;,&#39;Mary&#39;),
+           Age=c(&#39;28&#39;, &#39;72&#39;, &#39;86&#39;, &#39;32&#39;),
+           Gender=c(0,1,0,1))
+head(family) # see first 6 rows
+tail(family) # see last 6 rows
+class(family) # see data type
+
+family$Names #selecting specific columns by names</code></pre>
+<p><br></p>
+</div>
+</div>
+<div id="load-dataset" class="section level2">
+<h2><strong>Load dataset</strong></h2>
+<p>Loading your data into R studio is perhaps the most important part.</p>
+<ul>
+<li><p>We will use an online example dataset that is in my dropbox folder.</p></li>
+<li><p>The link below will show you how to automatically download datasets from dropbox using Rstudio. (<a href="http://stackoverflow.com/questions/35931923/read-csv-file-from-dropbox-and-plot-it-on-leaflet-map-in-shiny-app" class="uri">http://stackoverflow.com/questions/35931923/read-csv-file-from-dropbox-and-plot-it-on-leaflet-map-in-shiny-app</a>)</p></li>
+</ul>
+<p><em>Note:</em> If your dataset is in your computer, you have to first set the working directory to where you saved “dataset1.csv”. Otherwise you’ll get an error saying: cannot open file ‘dataset1.csv’: No such file or directory. If you don’t know how to do that, go to <strong>Working Directory</strong> section.</p>
+<pre class="r"><code>R.Version()$version.string #check R version
+
+df &lt;- read.csv(&#39;https://www.dropbox.com/s/lvzw37tkw9y5vnq/dataset1.csv?raw=1&#39;)</code></pre>
+<p>We will work with csv files for simplicity.</p>
+<p>If your dataset (csv file) is in your local folder.</p>
+<ul>
+<li>file argument is the name of your dataset.</li>
+<li>header argument tells R that the first row is the column names</li>
+</ul>
+<pre class="r"><code>dataset &lt;- read.csv(file = &#39;Dataset Name.csv&#39;, header=TRUE)</code></pre>
+<p><br></p>
+</div>
+<div id="dealing-with-variables" class="section level2">
+<h2><strong>Dealing with Variables</strong></h2>
+<p>Here are some useful functions that will give you a feel for datasets you load into R</p>
+<pre class="r"><code>## Some useful commands that will quickly give you a feel for datasets you load into R
+head(df)  # first 6 observations, top of dataset
+dim(df)   # the dimensions of the dataset (how many rows by columns)
+names(df) # variable names. You could also do colnames(ippq)
+summary(df) # summary statistics
+str(df) # gives the structure of the dataset     
+class(df) # data frame: different variables (numbers, characters etc.) stuck together in a table.
+# imported data are stored in the format of data frame, it looks almost the same as a matrix, but allows different data types (character/numeric/etc.)
+
+
+## Four ways of accessing data in the same variable
+df$job_satisfaction       # By column name (notice the $-sign)
+df[[&quot;job_satisfaction&quot;]]  # By column name (notice the double brackets)
+df[, &quot;job_satisfaction&quot;]  # By column name (notice the comma)
+df[, 40]                  # By column number
+
+## How many male/female respondents do we have?
+table(df$gender)    # table(data$variable) gives you the frequency table
+summary(df$gender)  # summary(data$variable) gives you descriptive stats for that particular variable, NAs represent missing values. It works with categorical variable...
+summary(df$happiness_at_work) # ...as well as continuous variable</code></pre>
+<p><br></p>
+</div>
+<div id="variable-calculation" class="section level2">
+<h2><strong>Variable calculation</strong></h2>
+<p>Variable calculation</p>
+<p>Lets do some calculations on the variable “job_satisfaction”</p>
+<ol style="list-style-type: decimal">
+<li>What is the mean/average score of ‘job_satisfaction’?</li>
+<li>What is the mean/average score of ‘job_satisfaction’ for males?</li>
+<li>Is there a significant differences in the average score of ‘job_satisfaction’ between males and females?</li>
+</ol>
+<pre class="r"><code>#Find the average score of &#39;job_satisfaction&#39;
+mean(df$job_satisfaction)  # Doesn&#39;t work if NAs exist in the dataset
+mean(df$job_satisfaction, na.rm = T) # Exclude NAs when calculating the average
+
+## Recode variable.
+## Lets convert gender into 0 = female, 1 = male
+df$is_male &lt;- NA #create a new variable called is_male, and set it to NA for every row
+df[df$gender==&quot;male&quot;, ]$is_male &lt;- 1  # if gender equals to male, assign 1
+df[!df$gender==&quot;male&quot;, ]$is_male &lt;- 0 # Notice the &#39;!&#39; just after the opening square bracket. If gender does not equal to male, assign 0
+df$is_male
+
+## What&#39;s the average job satisfaction  at work for men?
+# Option 1
+# get a dataset of just men
+men = df[df$is_male == 1,]
+# calculate mean job satisfaction 
+mean(df$job_satisfaction, na.rm=T) #average male job satisfaction at work
+
+# Option 2 (functions within functions)
+# this does exactly the same thing in a single line of code, and has the advantage of not copying the data into a new variable
+mean(df$job_satisfaction[df$is_male == 1], na.rm = T)
+
+
+# Option 3 (Piping)
+# passing the output from one function to the next
+require(dplyr) # need this package to use the &#39;%&gt;%&#39;</code></pre>
+<pre><code>## Warning: package &#39;dplyr&#39; was built under R version 3.5.2</code></pre>
+<pre class="r"><code>mean(df$job_satisfaction[df$is_male == 1], na.rm = T)
+df$job_satisfaction[df$is_male == 1] %&gt;% mean(na.rm=T)
+
+#Question 4
+## Are women statistically more satisfied in their jobs than men at work?
+# do a t-test to compare job satisfaction of women vs. men
+t.test(x=df$job_satisfaction[df$is_male == 1], y=df$job_satisfaction[df$is_male == 0])</code></pre>
+<p><br></p>
+</div>
+<div id="questions" class="section level2">
+<h2><strong>Questions</strong></h2>
+<p>Here are some questions for you to answer.</p>
+<p>First. Go to <a href="http://personality-testing.info/_rawdata/" class="uri">http://personality-testing.info/_rawdata/</a></p>
+<ul>
+<li>You can download the Rosenburg Self-Esteem Questionnaire Scale dataset</li>
+<li>Click on ‘RSE’ located in the last column</li>
+<li>A codebook is provided that gives an explanation of the dataset</li>
+</ul>
+<p>Make sure to set your working directory to where you saved the dataset!</p>
+<ol style="list-style-type: decimal">
+<li>Load dataset into R studio.</li>
+<li>How many variables are there in the dataset?</li>
+<li>How many participants are there in the dataset?</li>
+<li>Convert all 0s to NAs. (google!)</li>
+<li>Remove all NAs fom the dataset.</li>
+<li>How many participants are left in the dataset?</li>
+<li>Subset the dataset. (google!)
+<ul>
+<li>Data contains only males information</li>
+<li>Data contains only females information</li>
+</ul></li>
+<li>Create a new variable in the dataset for total score. [e.g. use rowMeans()]</li>
+<li>What is the average score of self-esteem?</li>
+<li>What is the average score of self-esteem for males?</li>
+<li>What is the average score of self-esteem for females?</li>
+<li>Is there a significant difference between male and female in the self-esteem score?</li>
+<li>Save your R script.</li>
+</ol>
+<p><strong>Note</strong>: For some, you might need to put the values into separate columns manually in excel. To do this, open the csv file in excel and highlight the entire column 1 (Not just the first cell!).</p>
+<p>Go to Data –&gt; Text to Column –&gt; Click “Delimited” –&gt; Check “Tab” –&gt; Click Finish.</p>
+<p>This will restructure your data. Making it easier to upload the dataset into R studio.</p>
+<br>
+<center>
+<strong>Once you finish the questions, give yourself a pat in the back and look forward to the workshop!</strong>
+</center>
+<p><br> <img src="images/youdidit.jpg" alt="Drawing" style="width: 400px;"/></p>
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-98916204-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

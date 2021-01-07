@@ -1,0 +1,373 @@
+---
+title: "What are my chances of getting an ESRC New Investigators Grant?"
+author: "Aiden"
+date: "27/11/2018"
+output: 
+  prettydoc::html_pretty:
+    theme: leonids
+    
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## ESRC New Investigators Grant (Part 1)
+
+Given my recent grant application experience with ESRC, I wanted to find out the likelihood of my grant application from a data-driven perspective. I was told by grant administrators, friends, colleagues and others that the grant is very competitive, but I wanted a further breakdown of what it means by 'very competitive', and to understand how my chances are like across different rounds. Since the data for decisions made on ESRC research grants is made available [online](https://esrc.ukri.org/about-us/performance-information/application-and-award-data/funding-decisions/), I decided to try and understand this from a data perspective.
+
+The ESRC New Investigators Grant is a relatively new scheme for early career researchers who want to become a principal investigator (PI) and work on an independent piece of research. The scheme only supports UK research organisations, with grants ranging from £100,000 to £300,000 full Economic Cost (fEC) can be awarded. More information about the scheme can be found [here](https://esrc.ukri.org/funding/funding-opportunities/new-investigator-grants/). 
+
+Since the scheme is new, there is historical data only for 5 rounds (March, July and Nov 2017, and March and July 2018). The historical data points are small, so please take the analyses in this post with a pinch of salt. These analyses also do not explain future outcome trends, but merely an understanding of historical patterns.  
+
+From the applicants perspective, there are two critical stages in the application process. The **first stage** relates to the reviews given by external reviewers. Three is the minimum number of reviewers that is necessary to review a proposal. If you pass the first stage, your proposal will be forwarded to the Grants Assessment Panel (GPAs), aka **Stage 2**. Your proposal will be submitted to two Panel Introducers who will read all the documents (proposal, reviews and response to reviews). They will need to rate the proposal before introducing it to the panel. The panel will only be able to read the reviewers' comments and your response to the reviews.
+
+
+```{r packages, echo=F, warning=F, message=F}
+require(plyr)
+require(dplyr)
+library(pdftools)
+library(data.table)
+require(RCurl)
+require(XML)        
+require(ggplot2)
+require(pander)
+require(qdap)
+dat <- read.csv('datasets/allDat.csv')
+```
+
+```{r extract data, echo=FALSE, eval=F}
+################## Extracting PDF data #########
+#################### July2018 ##########################
+t1 <- pdf_text("Call proposal data October 2018.pdf")
+t2 <- strsplit(t1,'\n')
+
+# New investigator grant
+t3 <- t2[[length(t2)]]
+title <- t3[1]
+colNames <- c('Grant_Reference','Funding','Score_Category')
+t4 <- t3[t3 %like% 'ES' ]
+
+# read fixed width format files
+ff <- tempfile()
+cat(file = ff, t4, sep='\n')
+(t5 <- read.fwf(ff, widths = c(12,15,10,16,16,12)))
+t6 <- as.data.frame(sapply(t5,trimws))
+
+# row 6
+if(ncol(t6)==6){
+  second <- t6[,4:6]
+  second <- na.omit(second)
+  t7 <- t6[,-c(4:6)]
+  names(t7) <- colNames
+  names(second) <- colNames
+  t9 <- rbind(t7,second)
+  colnames(t9)<- colNames
+}
+
+July2018 <- cbind.data.frame(t9, round= 'July2018')
+July2018
+
+
+#################### July2017 ###########################
+
+tA <- pdf_text('Call proposal data October 2017.pdf')
+t2 <- strsplit(tA,'\n')
+
+# New investigator grant
+t3 <- t2[[length(t2)]]
+title <- t3[1]
+colNames <- c('Grant_Reference','Funding','Score_Category')
+t4 <- t3[t3 %like% 'ES' ]
+
+# read fixed width format files
+ff <- tempfile()
+cat(file = ff, t4, sep='\n')
+(t5 <- read.fwf(ff, widths = c(12,15,12,16,16,12)))
+t6 <- as.data.frame(sapply(t5,trimws))
+
+# row 6
+if(ncol(t6)==6){
+  second <- t6[,4:6]
+  second <- na.omit(second)
+  t7 <- t6[,-c(4:6)]
+  names(t7) <- colNames
+  names(second) <- colNames
+  t9 <- rbind(t7,second)
+  colnames(t9)<- colNames
+}
+
+July2017 <- cbind.data.frame(t9, round= 'July2017')
+July2017
+#names(July2017) <- title
+
+###################### March2018 ############################
+
+tA <- pdf_text('Call proposal data June 2018.pdf')
+t2 <- strsplit(tA,'\n')
+
+# New investigator grant
+t3 <- t2[[length(t2)]]
+title <- t3[1]
+colNames <- c('Grant_Reference','Funding','Score_Category')
+t4 <- t3[t3 %like% 'ES' ]
+
+# read fixed width format files
+ff <- tempfile()
+cat(file = ff, t4, sep='\n')
+(t5 <- read.fwf(ff, widths = c(12,15,12,16,16,12)))
+t6 <- as.data.frame(sapply(t5,trimws))
+
+# row 6
+if(ncol(t6)==6){
+  second <- t6[,4:6]
+  second <- na.omit(second)
+  t7 <- t6[,-c(4:6)]
+  names(t7) <- colNames
+  names(second) <- colNames
+  t9 <- rbind(t7,second)
+  colnames(t9)<- colNames
+}
+
+
+March2018 <- cbind.data.frame(t9, round= 'March2018')
+March2018
+#names(March2018) <- title
+
+################### March2017 ############################
+
+tA <- pdf_text('Call proposal data June 2017.pdf')
+t2 <- strsplit(tA,'\n')
+
+# New investigator grant
+t3 <- t2[[length(t2)]]
+title <- t3[1]
+colNames <- c('Grant_Reference','Funding','Score_Category')
+t4 <- t3[t3 %like% 'ES' ]
+
+# read fixed width format files
+ff <- tempfile()
+cat(file = ff, t4, sep='\n')
+(t5 <- read.fwf(ff, widths = c(12,20,12)))
+t6 <- as.data.frame(sapply(t5,trimws))
+t7 <- t6
+# row 6
+
+  t9 <- t7
+  colnames(t9)<- colNames
+
+March2017 <- cbind.data.frame(t9, round= 'March2017')
+#names(March2017) <- title
+
+#################### Nov2017 ##########################
+
+tA <- pdf_text('Call proposal data February 2018.pdf')
+t2 <- strsplit(tA,'\n')
+
+# New investigator grant
+t3 <- t2[[length(t2)]]
+title <- t3[1]
+colNames <- c('Grant_Reference','Funding','Score_Category')
+t4 <- t3[t3 %like% 'ES' ]
+t4
+# read fixed width format files
+ff <- tempfile()
+cat(file = ff, t4, sep='\n')
+(t5 <- read.fwf(ff, widths = c(12,15,15,17,15,10,13,14,12,15,12,10)))
+t6 <- as.data.frame(sapply(t5,trimws))
+t6
+
+## November 2017
+second <- t6[,4:6]
+third  <- t6[,7:9]
+fourth <- t6[,10:12]
+t7 <- t6[,-c(4:12)]
+fourth <- na.omit(fourth)
+names(t7) <- colNames
+names(second) <- colNames
+names(third) <- colNames
+names(fourth) <- colNames
+(t8 <- rbind.data.frame(t7,second,third,fourth))
+Nov2017 <- cbind.data.frame(t8, round= 'Nov2017')
+#names(Nov2017) <- title
+
+
+```
+
+
+## Stage 1
+
+According to this [link](https://esrc.ukri.org/files/funding/guidance-for-peer-reviewers/scoring-scale-for-peer-reviewers/), proposals receiving an average reviewer score of greater than 4.5 are forwarded to the next round. Those who scored less than 4.5 are normally rejected from the pile. For example, if each of the three reviewers had given you score, say 4 (Good), 5 (Excellent) and 6 (Outstanding), then your average score will be 5. Congratulations! You have made it to Stage 2. 
+
+Note, it does not mean that if you submitted your proposal before the deadline (i.e. end July) for the November panel means your application will be evaluated in the November panel. The timetable can be found on this [website](https://www.ahssresearch.group.cam.ac.uk/res-fund-opps/esrc-new-investigators-grants-timeline-2018). One plausible delay could be that there were insufficient reviewers that reviewed your work so your application will be pushed back. See this [link](https://esrc.ukri.org/files/funding/guidance-for-peer-reviewers/faqs-for-peer-review-college-members/) on page 7 and 8. It is also stated on the [website](https://esrc.ukri.org/funding/funding-opportunities/new-investigator-grants/) that there is no guarantee that your application will be evaluated on the round you applied for, so just be mindful of it. It is necessary to have at least a minimum of 3 reviewers before the ESRC can decide on whether your proposal could be forwarded to the GPAs. The number of reviewers may increase at the discretion of the ESRC.  
+
+
+#### Some information about the data
+
+The data that I have extracted from PDFs found on the ESRC [website](https://esrc.ukri.org/about-us/performance-information/application-and-award-data/funding-decisions/) gives me the following information:
+
++ the `grant reference` of the application 
++ the `outcome` of the funding application 
++ the `score category` (I will explain later)
++ the `round` that the application was evaluated
+
+```{r Dataset, echo=F, eval=F}
+March2017
+July2017
+Nov2017
+March2018
+July2018
+
+#list format
+tt <- list(March2017, July2017, Nov2017, March2018, July2018)
+names(tt) <- c("March2017", "July2017", "Nov2017", "March2018", "July2018")
+
+#matrix format
+dat <- rbind(March2017, July2017, Nov2017, March2018, July2018)
+
+#write.csv(dat, 'allDat.csv')
+```
+
+#### Funding vs Non-Funded percentage
+
+One of the first questions I wanted to find out is the competition level of the ESRC New Investigators Grant scheme
+
+In total, `r sum(table(dat$Funding))` applications were submitted to the ESRC New Investigators Grant. The table and plot below show that the estimated success rate is `r round(prop.table(table(dat$Funding)),2)[1]*100`%, while the failure rate is `r round(prop.table(table(dat$Funding)),2)[2]*100`%. Simplistically speaking, this rate is equivalent to submitting a research paper to a top-tier journal, but not as competitive as a super top-tier journal. Nonetheless, it is fair to say that this scheme is highly competitive given that applications can come from different departments with wide-ranging research topics, researchers who may have experience of up to 4 years (many more publications than a newly PhD grad) and the amount of work the applicant needs to put in to write a potentially successful grant application. 
+
+```{r ,fig.align='center', echo = F}
+# respect the col order
+dat$round<- factor(dat$round, levels = unique(dat$round))
+
+# funded not funded percentage
+pander(round(table(dat$Funding),2), caption="Overall Funding")
+pander(round(prop.table(table(dat$Funding)),2), caption="Overall Funding in Percentage",justify = "center")
+
+# plot
+ggplot(data=dat, aes(Funding, fill = Funding)) + geom_bar( stat='count') +
+  facet_grid(.~round) + ggtitle('Funding') + theme_classic() + 
+  theme(text= element_text(size=8)) 
+
+```
+
+
+#### Aggregating funding percentage across rounds
+
+Now, the ESRC New Investigators grant has 3 [rounds](https://www.ahssresearch.group.cam.ac.uk/res-fund-opps/esrc-new-investigators-grants-timeline-2018) every year (March, July, November). The current data exists only for 5 rounds. Below is the breakdown of the success rate for each round since the scheme started. It would appear that applications sent in for the March round (`r round(prop.table(table(dat$Funding, dat$round), margin=2), 2)[7]*100`%) have the lowest success rate, compared to the other rounds. We exclude March 2017 since there were only 9 applications at that time and it was the first time the scheme was introduced.  
+
+```{r , echo = F}
+
+pander(round(table(dat$Funding, dat$round), 2), caption="Funding across rounds")
+pander(round(prop.table(table(dat$Funding, dat$round), margin=2), 2), caption= 'Funding across rounds in percentage - column wise')
+
+```
+
+
+## Stage 2
+
+If you pass the initial reviews by the external reviewers (congrats!), your application will be submitted to the Grants Assessment panels (GAPs) in responsive mode. Just to iterate, if you had a score of less than 4.5, you have a much lower chance of getting through to the GAPs. But if you achieve a score of above 4.5, then your proposal is definitely forwarded to the GAPs for consideration. 
+
+At the second stage, two panel introducers will read your proposal, reviewers' comments, and your response to the reviews. The panel introducers have to rate your proposal from a scale of 1 to 10, where 10 is an exceptionally strong proposal. You can find the rating scale in this [document](https://esrc.ukri.org/files/funding/guidance-for-peer-reviewers/scoring-scale-for-peer-reviewers/) on page 3. 
+
+Once the introducers have gone through your application and designated a score, which is about 2 months before the panel meeting, they will introduce your proposal to the panel. Only the introducers will see all the documents. Introducers tend to be selected individuals who are familiar with the topic of your proposal. Hence, they are the most important people at this current stage! The panel will only be able to see the reviewers' comments and your response to the reviews. *Unfortunately, The panel assessors will not have a chance to go through the proposal*. Given the current setup, I would imagine that your response to reviews should ideally be critically drafted such that it speaks to the reviewers’ comments and the importance of your research.
+
+The plot below shows the score category of the grant applications in Stage 2. Now, I am not sure if the data for the `score category` refers only to the average scores given by the introducers or the introducers *and* the panel. But I would imagine that the score given by the introducer plays a considerable influence on the panel's decision since they have access to all documents and probably know your proposal better than anyone else in the room! 
+
+From the plot below it is clear that very few proposals, if any, receives an average score between 9-10. Most applications seem to range between 7 to 8.9. All N/As are either the reviewer rejects, office rejects or the RO withdrawals, so they don't matter at this stage. 
+
+```{r ,fig.align='center', echo = F}
+# remove N/A
+#datOverAllScore <- dat[dat$Score_Category != "*N/A",]
+
+ggplot(dat) + geom_bar(aes(x= Score_Category, fill=Score_Category))  + facet_grid(.~round)  + 
+  ggtitle('Score Categories') +
+  scale_fill_manual(values=c("#E07332","#E09871", "#999999", "#E69F00", "#56B4E9")) + theme_classic() +
+  theme(text = element_text(size=8))
+
+```
+
+
+#### Proportion funded
+
+The table below is a breakdown of funding in the second round. Funding is always secured for applications with top scores (9-10). While the majority of applications with a score of 8-8.9 were funded, there is still a risk that a small proportion of them would not be funded (see March 2018), particularly if your application was ranked at the bottom of the score category. There were a few applications with a score of 7-7.9 that were funded (see July 2017/2018). However, that seems to be dependent on the number of exceptionally strong applications (i.e. 9-10) among other things. All proposals are ranked, even within the score categories. All applications that scored between 5-6.9 were not funded. 
+
+
+```{r , echo = F}
+
+#group data by score category and funded
+# group_by(dat,round) %>%
+#   dplyr::count(Score_Category, Funding) %>% 
+#   filter(Funding== 'Funded') -> funded
+#pander(funded, caption='Funded by Score Categories')
+
+# fundin proportion by funding, score category and round
+emphasize.strong.rows(7)
+pander(table(dat$Funding, dat$Score_Category, dat$round), caption='Funding Proportion')
+```
+
+#### Successfully funded
+
+A clearer picture is painted in the plot below that shows the number of successful proposals funded based on a break down of the score categories. Basically, if you receive a score of 5-6.9, you have no chance of getting funding from the ESRC. You may get funded if you achieve a score of 7-7.9 as seen in July 2017/2018, but that is a precarious position to be in. Thus, one should ideally aim to get a score that is within the score category of 8-8.9, or even better, a score of 9-10 to get a higher chance of getting funded by ESRC.  
+
+```{r , fig.align='center', echo = F}
+# keep those only funded
+datFunded <- dat[dat$Funding == 'Funded',]
+ggplot(datFunded) + geom_bar(aes(x= Score_Category, fill=Score_Category))  + facet_grid(.~round)  + 
+  ggtitle('Funded Successful by Score Category') +
+  scale_fill_manual(values=c("#999999", "#E69F00", "#56B4E9")) + theme_classic()+
+  theme(text = element_text(size=9))
+
+gpa <- dat[!dat$Score_Category %in% "*N/A",]
+```
+
+
+What does this mean in terms of percentages? In other words, how likely am I to get funded once I pass the first stage? The first thing is to remove all the N/As since these were applications that were eliminated in the first stage. After removing all N/As, we found that only `r sum(table(gpa$Funding))` applications made it through to Stage 2. We can see from the table below that an overall estimate of `r round(prop.table(table(gpa$Funding)),2)[1]*100`% of the proposals were funded after passing the first round. 
+
+```{r, echo = F}
+# remove all N/A since they mean 
+gpa <- dat[!dat$Score_Category %in% "*N/A",]
+pander(table(gpa$Funding), caption = 'Stage 2 overall success rate')
+pander(round(prop.table(table(gpa$Funding)),2), caption = 'Stage 2 overall success rate in percentage')
+
+```
+
+This finding puts applicants (e.g. me) at ease knowing that the chances of getting awarded the grant is quite a bit higher than the initial estimated 20% success rate. However, is the 40% success rate consistent across the different rounds? A further breakdown of the Stage 2 success rate across different rounds is shown below. We can see that applications reviewed in July 2017 had a whopping 56% success rate while the lowest was in March 2017/2018 with a success rate of about 30% to 33%. Not that great I'll say. Seems like the best time to have my application reviewed should be in the July round. 
+
+
+```{r, echo = F}
+pander(table(gpa$Funding, gpa$round), caption = 'Stage 2 success rate across rounds')
+
+pander(round(prop.table(table(gpa$Funding, gpa$round),margin=2),2), caption = 'Stage 2 success rate in percentage')
+```
+
+## Conclusion
+
+In short, this is a break down of the various stages of the ESRC New investigators Grant Scheme that are important to the applicants. Stage 1 relates to the external reviewers, and Stage 2 refers to the Panel Assessment. ESRC does not endorse the comments given by the external reviewers. The reviews are used to eliminate applications in Stage 1 and it will be used as a helpful aid during the decision making process in Stage 2. Before Stage 2, Introducer assessors will assess your proposal and introduce it to the panel. Only the introducers will see all documents. The panel will only look at the reviews and your response to the reviews. So Introducers are huge influencers at this stage.
+
+There are certain caveats to this post, and I will repeat here again to activate the recency effect. The data points are small (only 5 rounds) so please take the results with a pinch of salt. This is by no means a predictive model that can tell you future trends. Merely some analyses of historical patterns. It is also not clear how the final scores are calculated (e.g. introducers or introducers *and* panel assessors’ score) before the proposals are ranked and placed in the various score categories. Finally, I do not know whether there is a positive or negative association between the external reviewers’ score and the final score given by the introducers. So I am unable to say whether a low initial score (i.e. 4.5) would be more likely to put you in the 5-5.6 score category, or vice versa. However, it does gives a clearer picture of the competitiveness of the ESRC New Investigators Grant Scheme. Now I know that my overall chances are higher (30 to 40%) than just 20% if I make it through the first stage. Also, it would appear that a better strategy to increase my chance of getting the grant is to have my application reviewed in July…
+
+Nonetheless, these analyses are all speculative (though I do feel much better to have some data to backup what others have said) and I would take the advice from grant advisers in that you should put in the best possible application for your research topic. Accept help from whoever is willing to help you. Challenge yourself to think of creative ways to show how your proposal will stand out from others. Regularly talk to others about your grant application, though I understand you can be seen as being a bit of a narcissist (but that’s okay, it is only temporary!). Plus it will refine your ideas by getting the perspective of others. Give it your best if you have decided to write a grant application and don’t do it just for the sake of doing it. I hope this has been helpful for you. Thanks for reading. 
+
+Disclaimer: Opinions are my own and not the views of my employer.
+
+
+<center> 
+Link to [Part 2](https://aidenloe.github.io/esrc_p2.html) of this post.
+
+Link to my [github page](https://aidenloe.github.io/index.html). 
+
+<p>Copyright &copy; Aiden Loe, Inc. All rights reserved.</p>
+
+</center>
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-98916204-1', 'auto');
+  ga('send', 'pageview');
+
+</script>

@@ -1,0 +1,107 @@
+---
+title: "CAT simulation"
+author: "Aiden Loe"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output:
+  html_document:
+    toc: true
+    toc_depth: 3
+    toc_float: 
+      collapsed: false
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Welcome
+
+This page will give you a general idea of how to simulate a CAT using the `catR` package. 
+
+The developers has made it really easy for us to run simulations. 
+
+I am still building the content for this page. So please bear with it.
+
+However, with the limited information you can still run the code and try it yourself. 
+
+## Load catR package
+
+```{r load package, message= FALSE}
+require(catR)
+```
+
+## Run CAT simulation
+
+We will be using a polytomous dataset to run our simulation. There are several models that we can use - Graded Response Model (GRM), Modified Graded Response Model (MGRM), Partial Credit Model (PCM), Generalised Partial Credit Model (GPCM), Rating Scale Model (RSM), and Nominal Response Model (NRM). The ones that are more widely used are the GRM, GPCM, PCM. In our example will be using the PCM model. 
+
+```{r intro to CAT}
+### Load 'polyIQ' item bank
+bank <- read.table("https://www.dropbox.com/s/ml920oyi1z2npid/polyIQ.txt?raw=1",header = TRUE)
+bank <- as.matrix(bank)
+head(bank)
+
+### CAT design:
+#creation of logic for polytomous is exactly the same for dichtomous items.
+## two starting items
+startList <- list(nrItems = 2, theta=0)
+
+## next item selection by 'MFI', EAP ad-interim proficiency estimation
+testList <- list(method = "EAP", itemSelect = "MFI")
+
+## stop after 10 items
+stopList <- list(rule = "length", thr = 10)
+
+## final proficiency estimation using maximum likelihood
+finalList <- list(method = "BM")
+
+### generation of a CAT response pattern
+res <- randomCAT(trueTheta = 0, itemBank = bank, model="PCM",
+                 start = startList, test = testList, stop = stopList, final = finalList)
+
+## display of the output
+res
+require(catR)
+
+```
+
+
+Let's have a look at the output and discuss a little about what we see. 
+
+The output first tells you which model you have used simulating the CAT. In our case, it is the Partial Credit Model (PCM). 
+
+Then it talks a little bit about the starting parameters. Here we can see that the item with the maximum information at the ability = 0 was used for the first item. We did not control for content balancing. You have to explicitly state that you want to control for content balancing. 
+
+
+Next the output talks about the adaptive parameters. The MFI was employed for item selection and the EAP was used for the ability estimate. Note that more often than not, the Bayes Modal, which is frequently described as the MAP, often have very similar results with the EAP. 
+
+The Stopping rule section tells us that the criterion is based on the length of items, which in this case we have fixed it to a maximum of 10.
+
+The Randomesque method is used when you want to select a range of items that is considered as the next items that is best suited for the estimated ability. Within the range of items, say 5, the algorithm will randomly draw out 1. This often used to spread out the exposure and maintain item security. In our case, we did not enforce this method, so the algorithm will always select the next most optimal item for the estimated ability. 
+
+Now we have reached the Adaptive test details. This gives us the information of which 10 items were selected for the simulation. Nr is the index of the item. Item is the question that was given out. For example, item 21 is given in the first instance. The theta estimate (Est.) and the standard error (SE) is also provided for each item. That is the beauty of modern psychometric approaches. Everything is investigated at a item level rather than a scale. level.
+
+Finally, what we have is the final result of the ability estimate. 
+
+
+## Plot Simulation
+```{r Plot CAT, echo=FALSE}
+## graphical display of the output
+plot(res)
+plot(res,ci=TRUE)
+
+```
+Now we come to plotting and interpreting the plots!
+
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-98916204-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
