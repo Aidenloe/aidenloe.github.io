@@ -1,18 +1,18 @@
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
 
 <head>
 
 <meta charset="utf-8" />
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
 <meta name="author" content="Aiden Loe" />
 
 
-<title>Web Scrapping</title>
+<title>Web scraping</title>
 
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -74,9 +74,7 @@ h6 {
 
 <link rel="stylesheet" href="style.css" type="text/css" />
 
-</head>
 
-<body>
 
 <style type = "text/css">
 .main-container {
@@ -90,7 +88,6 @@ code {
 }
 img {
   max-width:100%;
-  height: auto;
 }
 .tabbed-pane {
   padding-top: 12px;
@@ -100,6 +97,9 @@ img {
 }
 button.code-folding-btn:focus {
   outline: none;
+}
+summary {
+  display: list-item;
 }
 </style>
 
@@ -115,7 +115,6 @@ body {
   padding-top: 56px;
   margin-top: -56px;
 }
-
 .section h2 {
   padding-top: 56px;
   margin-top: -56px;
@@ -135,6 +134,43 @@ body {
 .section h6 {
   padding-top: 56px;
   margin-top: -56px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
 }
 </style>
 
@@ -156,47 +192,66 @@ $(document).ready(function () {
 });
 </script>
 
-
-<div class="container-fluid main-container">
-
 <!-- tabsets -->
-<script>
-$(document).ready(function () {
-  window.buildTabsets("TOC");
-});
-</script>
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
 
 <!-- code folding -->
 
 
-
-
-<script>
-$(document).ready(function ()  {
-
-    // move toc-ignore selectors from section div to header
-    $('div.section.toc-ignore')
-        .removeClass('toc-ignore')
-        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
-
-    // establish options
-    var options = {
-      selectors: "h1,h2,h3",
-      theme: "bootstrap3",
-      context: '.toc-content',
-      hashGenerator: function (text) {
-        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
-      },
-      ignoreSelector: ".toc-ignore",
-      scrollTo: 0
-    };
-    options.showAndHide = false;
-    options.smoothScroll = true;
-
-    // tocify
-    var toc = $("#TOC").tocify(options).data("toc-tocify");
-});
-</script>
 
 <style type="text/css">
 
@@ -210,6 +265,12 @@ $(document).ready(function ()  {
 }
 }
 
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
 
 .toc-content {
   padding-left: 30px;
@@ -245,8 +306,6 @@ div.tocify {
 
 .tocify-subheader .tocify-item {
   font-size: 0.90em;
-  padding-left: 25px;
-  text-indent: 0;
 }
 
 .tocify .list-group-item {
@@ -261,6 +320,16 @@ div.tocify {
 }
 
 </style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
 
 <!-- setup 3col/9col grid for toc_float and main content  -->
 <div class="row-fluid">
@@ -323,7 +392,7 @@ div.tocify {
       <a href="introToML.html">Intro to ML</a>
     </li>
     <li>
-      <a href="webscrapping.html">Web Scrapping</a>
+      <a href="webscraping.html">Web Scraping</a>
     </li>
     <li>
       <a href="datamining.html">Data Mining</a>
@@ -380,24 +449,24 @@ div.tocify {
 
 
 
-<h1 class="title toc-ignore">Web Scrapping</h1>
-<h4 class="author"><em>Aiden Loe</em></h4>
-<h4 class="date"><em>29 November, 2018</em></h4>
+<h1 class="title toc-ignore">Web scraping</h1>
+<h4 class="author">Aiden Loe</h4>
+<h4 class="date">06 January, 2021</h4>
 
 </div>
 
 
-<div id="web-scrapping-part-1" class="section level1">
-<h1><strong>Web Scrapping (Part 1)</strong></h1>
-<p>Scrapping viewership is one area of web scrapping, but perhaps you might be interested in doing sentiment analysis on content.</p>
+<div id="web-scraping-part-1" class="section level1">
+<h1><strong>Web Scraping (Part 1)</strong></h1>
+<p>Scraping viewership is one area of web scraping, but perhaps you might be interested in doing sentiment analysis on content.</p>
 <p>So we want to extract the contents of the web pages rather than number of times someone viewed the web page.</p>
 <div id="scrape-content-wiki" class="section level2">
 <h2><strong>Scrape content (Wiki)</strong></h2>
-<p>We will be using the <code>RCurl</code> and <code>XML</code> package to help us with the scrapping.</p>
+<p>We will be using the <code>RCurl</code> and <code>XML</code> package to help us with the scraping.</p>
 <p>Let’s use the Eurovision_Song_Contest as an example.</p>
 <p>The <code>XML</code> package has plenty functions that can allow us to scrape the data.</p>
 <p>Usually we are extracting information based on the tags of the web pages.</p>
-<pre class="r"><code>##### SCRAPPING CONTENT OFF WEBSITES ######
+<pre class="r"><code>##### scraping CONTENT OFF WEBSITES ######
 require(RCurl)
 require(XML)
 # XPath is a language for querying XML 
@@ -468,7 +537,12 @@ BBCscrapper1&lt;- function(url){
   title &lt;- xpathSApply(PARSED, &quot;//h1&quot;, xmlValue) # h1 tag
   paragraph &lt;- xpathSApply(PARSED, &quot;//p&quot;, xmlValue) # p tag
   date &lt;- xpathSApply(PARSED, &quot;//div[@class=&#39;date date--v2&#39;]&quot;,xmlValue) # date, only the first is enough
-  date &lt;- date[1]
+  if(length(date) == 0){
+    date = NA
+  }else{
+    date &lt;- date[1]  
+  }
+  
   return(cbind(title,date))
   #return(as.matrix(c(title,date)))
 }
@@ -476,10 +550,8 @@ BBCscrapper1&lt;- function(url){
 
 # Use function that was just created. 
 BBCscrapper1(&quot;https://www.bbc.co.uk/news/education-46382919&quot;)</code></pre>
-<pre><code>##      title                                                         
-## [1,] &quot;Ed Farmer: Expel students who defy initiations ban, says dad&quot;
-##      date              
-## [1,] &quot;29 November 2018&quot;</code></pre>
+<pre><code>##      title                                                          date
+## [1,] &quot;Ed Farmer: Expel students who defy initiations ban, says dad&quot; NA</code></pre>
 </div>
 <div id="keeping-it-neat" class="section level2">
 <h2><strong>Keeping it neat</strong></h2>
@@ -491,22 +563,19 @@ url&lt;- c(&quot;https://www.bbc.co.uk/news/uk-england-london-46387998&quot;, &q
 ## ldply: For each element of a list, apply function then combine results into a data frame
 #put into a dataframe
 ldply(url,BBCscrapper1)</code></pre>
-<pre><code>##                                                          title
-## 1              Man murdered widow, 80, in London allotment row
-## 2 Ed Farmer: Expel students who defy initiations ban, says dad
-##               date
-## 1 29 November 2018
-## 2 29 November 2018</code></pre>
+<pre><code>##                                                          title date
+## 1              Man murdered widow, 80, in London allotment row &lt;NA&gt;
+## 2 Ed Farmer: Expel students who defy initiations ban, says dad &lt;NA&gt;</code></pre>
 </div>
 </div>
-<div id="web-scrapping-part-2" class="section level1">
-<h1><strong>Web Scrapping (Part 2)</strong></h1>
+<div id="web-scraping-part-2" class="section level1">
+<h1><strong>Web scraping (Part 2)</strong></h1>
 <p>This example below is taken from code kindly written by David stillwell.</p>
 <p>Some editing has been made to the original code.</p>
 <div id="scrape-from-wiki-tables" class="section level2">
 <h2><strong>Scrape from Wiki tables</strong></h2>
 <p>You have learned how to scrape viewership on wikipedia and content on web pages.</p>
-<p>This section is about scrapping data tables online.</p>
+<p>This section is about scraping data tables online.</p>
 <pre class="r"><code># Install the packages that you don&#39;t have first. 
 library(&quot;RCurl&quot;) # Good package for getting things from URLs, including https
 library(&quot;XML&quot;) # Has a good function for parsing HTML data
@@ -520,7 +589,13 @@ us_states = read_html(&quot;https://en.wikipedia.org/wiki/List_of_U.S._states_an
   # then extract the first node with class of wikitable
   html_node(&quot;.wikitable&quot;) %&gt;% 
   # then convert the HTML table into a data frame
-  html_table()</code></pre>
+  html_table(fill = TRUE)
+
+# rename
+names(us_states)&lt;- c(&#39;current rank&#39;, &#39;2010 rank&#39;, &#39;state&#39;, &#39;census_population_07_2019&#39;, &#39;census_population_04_2010&#39;, &#39;change_in_percentage&#39;, &#39;change in absolute&#39;, &quot;total_US_House_of_Representative_seats&quot;, &quot;est_population_per_electoral_vote_2019&quot;)
+
+# remove first row
+us_states=us_states[-1,]</code></pre>
 </div>
 <div id="scrape-from-online-tables" class="section level2">
 <h2><strong>Scrape from online tables</strong></h2>
@@ -530,37 +605,184 @@ us_states = read_html(&quot;https://en.wikipedia.org/wiki/List_of_U.S._states_an
 <pre class="r"><code>######################
 url &lt;- &quot;http://apps.saferoutesinfo.org/legislation_funding/state_apportionment.cfm&quot;
 funding&lt;-htmlParse(url) #get the data
+
 # find the table on the page and read it into a list object
 funding&lt;- readHTMLTable(funding,stringsAsFactors = FALSE)
 funding.df &lt;- do.call(&quot;rbind&quot;, funding) #flatten data
+
 # Contain empty spaces previously.
-colnames(funding.df)[1]&lt;- c(&quot;State&quot;) # shorten colname to just State. 
+colnames(funding.df)[1]&lt;- c(&quot;state&quot;) # shorten colname to just State.
 
 # Match up the tables by State/Territory names
 # so we have two data frames, x and y, and we&#39;re setting the columns we want to do the matching on by setting by.x and by.y
-mydata = merge(us_states, funding.df, by.x=&quot;State or territory&quot;, by.y=&quot;State&quot;)
-# it looks pretty good, but note that we&#39;re down to 50 US States, because the others didn&#39;t match up by name
-# e.g. &quot;District of Columbia&quot; in the us_states data, doesn&#39;t match &quot;Dist. of Col.&quot; in the funding data
-
-#Replace the total spend column name with a name that&#39;s easier to use.
-colnames(mydata)[18] = &quot;total_spend&quot;
-
-#  We need to remove commas so that R can treat it as a number.
-mydata[,&quot;Population estimate, July 1, 2017[4]&quot;] = gsub(&quot;,&quot;, &quot;&quot;, mydata[,&quot;Population estimate, July 1, 2017[4]&quot;]) 
-mydata[,&quot;Population estimate, July 1, 2017[4]&quot;] = as.numeric(mydata[,&quot;Population estimate, July 1, 2017[4]&quot;]) #this converts it to a number data type
-
-# Now we have to do the same thing with the funding totals, which are in a format like this: $17,309,568
+mydata = merge(us_states, funding.df, by.x=&quot;state&quot;, by.y=&quot;state&quot;)</code></pre>
+<pre><code>## Warning in merge.data.frame(us_states, funding.df, by.x = &quot;state&quot;, by.y =
+## &quot;state&quot;): column names &#39;NA&#39;, &#39;NA&#39;, &#39;NA&#39;, &#39;NA&#39;, &#39;NA&#39;, &#39;NA&#39; are duplicated in the
+## result</code></pre>
+<pre class="r"><code>dim(mydata) # it looks pretty good, but note that we&#39;re down to 50 US States, because the others didn&#39;t match up by name</code></pre>
+<pre><code>## [1] 50 25</code></pre>
+<pre class="r"><code># e.g. &quot;District of Columbia&quot; in the us_states data, doesn&#39;t match &quot;Dist. of Col.&quot; in the funding data
+us_states[!us_states$state %in% funding.df$state,]$state</code></pre>
+<pre><code>##  [1] &quot;Puerto Rico&quot;               &quot;District of Columbia&quot;     
+##  [3] &quot;Guam&quot;                      &quot;U.S. Virgin Islands&quot;      
+##  [5] &quot;Northern Mariana Islands&quot;  &quot;American Samoa&quot;           
+##  [7] &quot;Contiguous United States&quot;  &quot;The fifty states&quot;         
+##  [9] &quot;The fifty states and D.C.&quot; &quot;Total United States&quot;</code></pre>
+<pre class="r"><code>#Replace the total spend column name with a name that&#39;s easier to use.
+names(mydata)</code></pre>
+<pre><code>##  [1] &quot;state&quot;                                 
+##  [2] &quot;current rank&quot;                          
+##  [3] &quot;2010 rank&quot;                             
+##  [4] &quot;census_population_07_2019&quot;             
+##  [5] &quot;census_population_04_2010&quot;             
+##  [6] &quot;change_in_percentage&quot;                  
+##  [7] &quot;change in absolute&quot;                    
+##  [8] &quot;total_US_House_of_Representative_seats&quot;
+##  [9] &quot;est_population_per_electoral_vote_2019&quot;
+## [10] NA                                      
+## [11] NA                                      
+## [12] NA                                      
+## [13] NA                                      
+## [14] NA                                      
+## [15] NA                                      
+## [16] NA                                      
+## [17] &quot;Actual 2005\n\t\t\t  \t\t          &quot;   
+## [18] &quot;Actual 2006*\n\t\t\t  \t\t          &quot;  
+## [19] &quot;Actual 2007\n\t\t\t  \t\t          &quot;   
+## [20] &quot;Actual 2008\n\t\t\t  \t\t          &quot;   
+## [21] &quot;Actual 2009\n\t\t\t  \t\t          &quot;   
+## [22] &quot;Actual 2010\n\t\t\t  \t\t          &quot;   
+## [23] &quot;Actual 2011\n\t\t\t  \t\t          &quot;   
+## [24] &quot;Actual 2012\n\t\t\t  \t\t          &quot;   
+## [25] &quot;Total\n\t\t  \t\t            &quot;</code></pre>
+<pre class="r"><code>colnames(mydata)[18] = &quot;total_spend&quot; # year of 2010
+names(mydata)</code></pre>
+<pre><code>##  [1] &quot;state&quot;                                 
+##  [2] &quot;current rank&quot;                          
+##  [3] &quot;2010 rank&quot;                             
+##  [4] &quot;census_population_07_2019&quot;             
+##  [5] &quot;census_population_04_2010&quot;             
+##  [6] &quot;change_in_percentage&quot;                  
+##  [7] &quot;change in absolute&quot;                    
+##  [8] &quot;total_US_House_of_Representative_seats&quot;
+##  [9] &quot;est_population_per_electoral_vote_2019&quot;
+## [10] NA                                      
+## [11] NA                                      
+## [12] NA                                      
+## [13] NA                                      
+## [14] NA                                      
+## [15] NA                                      
+## [16] NA                                      
+## [17] &quot;Actual 2005\n\t\t\t  \t\t          &quot;   
+## [18] &quot;total_spend&quot;                           
+## [19] &quot;Actual 2007\n\t\t\t  \t\t          &quot;   
+## [20] &quot;Actual 2008\n\t\t\t  \t\t          &quot;   
+## [21] &quot;Actual 2009\n\t\t\t  \t\t          &quot;   
+## [22] &quot;Actual 2010\n\t\t\t  \t\t          &quot;   
+## [23] &quot;Actual 2011\n\t\t\t  \t\t          &quot;   
+## [24] &quot;Actual 2012\n\t\t\t  \t\t          &quot;   
+## [25] &quot;Total\n\t\t  \t\t            &quot;</code></pre>
+<pre class="r"><code>head(mydata)</code></pre>
+<pre><code>##        state current rank 2010 rank census_population_07_2019
+## 1    Alabama           24        23                 4,921,532
+## 2     Alaska           49        48                   731,158
+## 3    Arizona           14        16                 7,421,401
+## 4   Arkansas           34        33                 3,030,522
+## 5 California            1         1                39,368,078
+## 6   Colorado           21        22                 5,807,719
+##   census_population_04_2010 change_in_percentage change in absolute
+## 1                 4,779,736                 3.0%           +141,796
+## 2                   710,231                 2.9%            +20,927
+## 3                 6,392,017                16.1%         +1,029,384
+## 4                 2,915,918                 3.9%           +114,604
+## 5                37,253,956                 5.7%         +2,114,122
+## 6                 5,029,196                15.5%           +778,523
+##   total_US_House_of_Representative_seats est_population_per_electoral_vote_2019
+## 1                                      7                                  1.61%
+## 2                                      1                                  0.23%
+## 3                                      9                                  2.07%
+## 4                                      4                                  0.92%
+## 5                                     53                                 12.18%
+## 6                                      7                                  1.61%
+##        NA      NA      NA     NA     NA     NA     NA
+## 1 546,837 703,076 682,819  1.48%  1.53% –0.05%  1.67%
+## 2 243,719 731,158 710,231  0.22%  0.23% –0.01%  0.56%
+## 3 674,673 824,600 710,224  2.23%  2.04%  0.19%  2.04%
+## 4 505,087 757,631 728,980  0.91%  0.93% –0.02%  1.12%
+## 5 715,783 742,794 702,905 11.82% 11.91% –0.09% 10.22%
+## 6 645,302 829,674 718,457  1.74%  1.61%  0.14%  1.67%
+##   Actual 2005\n\t\t\t  \t\t           total_spend
+## 1                          $1,000,000  $1,313,659
+## 2                          $1,000,000    $990,000
+## 3                          $1,000,000  $1,557,644
+## 4                          $1,000,000    $990,000
+## 5                          $1,000,000 $11,039,310
+## 6                          $1,000,000  $1,254,403
+##   Actual 2007\n\t\t\t  \t\t           Actual 2008\n\t\t\t  \t\t          
+## 1                          $1,767,375                          $2,199,717
+## 2                          $1,000,000                          $1,000,000
+## 3                          $2,228,590                          $2,896,828
+## 4                          $1,027,338                          $1,297,202
+## 5                         $14,832,295                         $18,066,131
+## 6                          $1,679,463                          $2,119,802
+##   Actual 2009\n\t\t\t  \t\t           Actual 2010\n\t\t\t  \t\t          
+## 1                          $2,738,816                          $2,738,816
+## 2                          $1,000,000                          $1,000,000
+## 3                          $3,612,384                          $3,612,384
+## 4                          $1,622,447                          $1,622,447
+## 5                         $22,580,275                         $22,580,275
+## 6                          $2,659,832                          $2,659,832
+##   Actual 2011\n\t\t\t  \t\t           Actual 2012\n\t\t\t  \t\t          
+## 1                          $2,994,316                          $2,556,869
+## 2                          $1,554,670                            $933,567
+## 3                          $3,733,355                          $3,372,404
+## 4                          $1,911,273                          $1,514,664
+## 5                         $25,976,518                         $21,080,209
+## 6                          $3,022,085                          $2,483,132
+##   Total\n\t\t  \t\t            
+## 1                   $17,309,568
+## 2                    $8,478,237
+## 3                   $22,013,589
+## 4                   $10,985,371
+## 5                  $137,155,013
+## 6                   $16,878,549</code></pre>
+<pre class="r"><code># We need to remove commas so that R can treat it as a number.
+mydata[,&quot;census_population_04_2010&quot;] = gsub(&quot;,&quot;, &quot;&quot;, mydata[,&quot;census_population_04_2010&quot;]) # removes all commas
+(mydata[,&quot;census_population_04_2010&quot;] = as.numeric(mydata[,&quot;census_population_04_2010&quot;])) # converts to number data type</code></pre>
+<pre><code>##  [1]  4779736   710231  6392017  2915918 37253956  5029196  3574097   897934
+##  [9] 18801310  9687653  1360301  1567582 12830632  6483802  3046355  2853118
+## [17]  4339367  4533372  1328361  5773552  6547629  9883640  5303925  2967297
+## [25]  5988927   989415  1826341  2700551  1316470  8791894  2059179 19378102
+## [33]  9535483   672591 11536504  3751351  3831074 12702379  1052567  4625364
+## [41]   814180  6346105 25145561  2763885   625741  8001024  6724540  1852994
+## [49]  5686986   563626</code></pre>
+<pre class="r"><code># Now we have to do the same thing with the funding totals
 mydata[,&quot;total_spend&quot;] = gsub(&quot;,&quot;, &quot;&quot;, mydata[,&quot;total_spend&quot;]) #this removes all commas
 mydata[,&quot;total_spend&quot;] = gsub(&quot;\\$&quot;, &quot;&quot;, mydata[,&quot;total_spend&quot;]) #this removes all dollar signs. We have a \\ because the dollar sign is a special character.
-mydata[,&quot;total_spend&quot;] = as.numeric(mydata[,&quot;total_spend&quot;]) #this converts it to a number data type
-
-# Now we can do the plotting
+(mydata[,&quot;total_spend&quot;] = as.numeric(mydata[,&quot;total_spend&quot;])) #this converts it to a number data type</code></pre>
+<pre><code>##  [1]  1313659   990000  1557644   990000 11039310  1254403   998325   990000
+##  [9]  4494278  2578305   990000   990000  3729568  1798399   990000   990000
+## [17]  1127212  1404776   990000  1576594  1752904  3009800  1441060   990000
+## [25]  1620703   990000   990000   990000   990000  2399056   990000  5114558
+## [33]  2333556   990000  3295093  1010647   990000  3345128   990000  1186047
+## [41]   990000  1596222  7009094   990000   990000  2024830  1694515   990000
+## [49]  1554314   990000</code></pre>
+<pre class="r"><code># Now we can do the plotting
 options(scipen=9999) #stop it showing scientific notation
-plot(mydata[,&quot;Population estimate, July 1, 2017[4]&quot;], mydata[,&quot;total_spend&quot;])</code></pre>
-<p><img src="webscrapping_files/figure-html/Scrape%20Table%20(non-wiki)-1.png" width="672" /></p>
-<pre class="r"><code>## What&#39;s does the correlation between state funding and state population look like?
-cor(mydata[,&quot;Population estimate, July 1, 2017[4]&quot;], mydata[,&quot;total_spend&quot;]) # 0.9924265 - big correlation!</code></pre>
-<pre><code>## [1] 0.9890088</code></pre>
+plot(x=mydata[,&quot;census_population_04_2010&quot;], y=mydata[,&quot;total_spend&quot;], xlab = &#39;Population&#39;, ylab=&#39;Total Spending&#39;)</code></pre>
+<p><img src="webscraping_files/figure-html/Scrape%20Table%20(non-wiki)-1.png" width="672" /></p>
+<pre class="r"><code>cor.test(mydata[,&quot;census_population_04_2010&quot;], mydata[,&quot;total_spend&quot;]) # 0.9810979 - big correlation!</code></pre>
+<pre><code>## 
+##  Pearson&#39;s product-moment correlation
+## 
+## data:  mydata[, &quot;census_population_04_2010&quot;] and mydata[, &quot;total_spend&quot;]
+## t = 35.126, df = 48, p-value &lt; 0.00000000000000022
+## alternative hypothesis: true correlation is not equal to 0
+## 95 percent confidence interval:
+##  0.9667588 0.9892853
+## sample estimates:
+##       cor 
+## 0.9810979</code></pre>
 </div>
 <div id="plot-funding-data-on-map" class="section level2">
 <h2><strong>Plot funding data on map</strong></h2>
@@ -585,11 +807,11 @@ ggplot() +
   scale_x_continuous(breaks=c()) +
   theme(panel.border =  element_blank(),
         text = element_text(size=20))</code></pre>
-<p><img src="webscrapping_files/figure-html/Plot%20on%20Map-1.png" width="1728" /></p>
+<p><img src="webscraping_files/figure-html/Plot%20on%20Map-1.png" width="1728" /></p>
 </div>
 </div>
-<div id="web-scrapping-part-3" class="section level1">
-<h1><strong>Web Scrapping (Part 3)</strong></h1>
+<div id="web-scraping-part-3" class="section level1">
+<h1><strong>Web scraping (Part 3)</strong></h1>
 <div id="scrape-from-discussion-forums" class="section level2">
 <h2><strong>Scrape from discussion forums</strong></h2>
 <p>Coming soon..</p>
@@ -624,6 +846,49 @@ $(document).ready(function () {
 });
 
 
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = false;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
 </script>
 
 <!-- dynamically load mathjax for compatibility with self-contained -->
