@@ -25,7 +25,7 @@ First of all, you need to create a twitter app before you can have access to the
 We start off with loading the relevant packages.
 
 ```{r Packages,, message=FALSE}
-library("twitteR")
+require('rtweet')
 library("ggplot2")
 library("slam") 
 library("wordcloud") # depends on slam to work
@@ -34,43 +34,28 @@ library("pander")
 ```
 
 ## **Important keys**
-The four main things you will need are:
+There is an option to use the information of four important keys to access twitter data. But you have to become a twitter developer first. If not, you just need to have a twitter account and rtweet will sort it out for you when you use its functions. 
 
 + consumer_key
 + consumer secret
 + access_token
 + access_secret
 
-```{r access keys, echo=FALSE, message=FALSE}
-consumer_key = '7cvNGBgXex6LVNaONCRvR37kU'
-consumer_secret = 'Kv2sH5HsSKau743LQ0oei2jHDb7FXSInW7TGT75ZrwriUSjeLu'
-access_token = '523172873-PHBjDyiZS5eq3yGzWXCLq6UsqBItdVbt6yafS3vX'
-access_secret = 'HjIq8YtNweO8LdraVq2PcVjxQqyNqUfcsxjpljRUJVvAJ'
-```
-
-```{r Set up API, message=FALSE}
-## Set up the Twitter API session
-options(httr_oauth_cache=F) #set oauth cacheing to false so that it doesn't bring up a prompt.
-setup_twitter_oauth(consumer_key=consumer_key, 
-                    consumer_secret=consumer_secret, 
-                    access_token=access_token, 
-                    access_secret=access_secret)
-```
 
 ## **Get data**
 
 ```{r Get data}
 ## Get data for a specific Twitter username
-tweet_user = getUser('elonmusk') #will get user info from the @david_stillwell account
+tweet_user = lookup_users('elonmusk') #will get user info from the @david_stillwell account
 
 ## Explore our new data
 ls(tweet_user) #see the elements in the new list variable
 #how long the account has been a Twitter user for
-tweet_user$created 
-#user's description
-tweet_user$description 
+tweet_user$account_created_at
+#user's name
+tweet_user$name
 #how many followers the account has
-tweet_user$followersCount 
+tweet_user$followers_count
 
 
 ```
@@ -84,12 +69,10 @@ However, more often than not, you will not get the full 3200 tweets. It will alw
 We want to convert it into a data frame so we can use the data easily in R. 
 
 ```{r Harvest data, message = FALSE}
-library("twitteR")
 ## harvest tweets from user (usually return fewer)
-tweets.1 = userTimeline('elonmusk', n=3200, includeRts=FALSE)  # no re-tweets. 
-tweets = twListToDF(tweets.1) #put the Tweets in a data frame
-names(tweets) #view tweets
-nrow(tweets) #rows of tweets
+tweets = get_timeline('elonmusk', n=3200)  # no re-tweets. 
+#names(tweets) #view tweets
+dim(tweets) #rows of tweets
 
 ```
 
@@ -107,13 +90,12 @@ Here we want to reorganise data to use the columns we are interested in.
 ## reorganise data
 library("tidyr")
 library("dplyr")
-tweets <- tweets %>% 
-  select(id, statusSource, text, created) %>% ## select these 4 columns
-  extract(statusSource, "source", "Twitter for (.*?)<") %>% #strip html code and rename
-  filter(source %in% c("iPhone")) # select only rows with iphone
-names(tweets)
+tweets1 <- tweets %>% 
+  dplyr::select(user_id, source, text, created_at) %>% ## select these 4 columns
+  filter(source %in% c("Twitter for iPhone")) # select only rows with iphone
+names(tweets1)
+head(tweets1)
 
-head(tweets)
 ```
 
 ## **Tweets most frequently**
@@ -137,8 +119,8 @@ library("lubridate")
 library("scales")
 library('dplyr')
 
-tweets %>%
-  count(source, hour = hour(with_tz(created, "EST"))) %>%  #count observations by source.
+tweets1 %>%
+  count(source, hour = hour(with_tz(created_at, "EST"))) %>%  #count observations by source.
   mutate(percent = n / sum(n)) %>% #add a new column into the data frame
   
   # plot it
@@ -157,7 +139,7 @@ What is the average number of characters per tweet?
 
 ```{r Average char per tweet}
 #apply the nchar function (number of characters) to the text column of every row of the dataset
-chars_per_tweet = sapply(tweets$text, nchar) 
+chars_per_tweet = sapply(tweets1$text, nchar) 
 summary(chars_per_tweet) #report average number of characters per tweet
 hist(chars_per_tweet, breaks=30) #this is the default R histogram plot
 ```
@@ -168,7 +150,7 @@ What is the average number of words per tweet?
 
 ```{r Average word per tweet}
 ## What is the average number of words per tweet?
-word_list = strsplit(tweets$text, " ") #split the tweets into separate words by using spaces
+word_list = strsplit(tweets1$text, " ") #split the tweets into separate words by using spaces
 words_per_tweet = sapply(word_list, length) #count the number of word elements in each tweet
 summary(words_per_tweet) #report average number of words per tweet
 
@@ -199,7 +181,7 @@ summary(hash_per_tweet) #summary showing mean hashtags
 What are the top 10 most commonly used hashtags?
 ```{r Top 10 most common hash}
 # get the hashtags. This function looks for anything that starts with a # and is followed by text
-user_hashtags <- str_extract_all(tweets$text, "#\\S+") 
+user_hashtags <- str_extract_all(tweets1$text, "#\\S+") 
 user_hashtags  = unlist(user_hashtags) #put tags in vector
 
 user_hashtags_freq <- table(user_hashtags) #calculate hashtag frequencies
@@ -224,12 +206,12 @@ length(uniq_words) #shows how many total words we've collected from this user
 uniq_words<- uniq_words[!uniq_words %in% c("a", "in", "to", "is", "for", "but", "and", "on", "the", "of")] # remove some stopwords.
 uniq_words_freq = table(uniq_words) #number of times that each word is displayed
 
-wordcloud(names(uniq_words_freq),scale=c(8,1.5), min.freq=3, uniq_words_freq, random.order=FALSE, colors= "#1B9E77") #Produces the word cloud
+wordcloud(names(uniq_words_freq),scale=c(8,1.5), min.freq=10, uniq_words_freq, random.order=FALSE, colors= "#1B9E77") #Produces the word cloud
 title("words in Tweets",cex.main=3, col.main="gray51") #gives the word cloud a title
 
 ```
 
-# *Sentiment Analysis* 
+# **Sentiment Analysis** 
 
 This is a simple example of how one can conduct a simple sentiment analysis. 
 
@@ -356,19 +338,20 @@ try.error = function(x)
 companyNameOne <- "@ThreeUKSupport"
 companyNameTwo <- "@VodafoneUKhelp"
 companyNameThree <- "@BTcare"
-extractTweetsNumber <- 500 #get the 500 most recent Tweets about each
+extractTweetsNumber <- 3200 #get the 500 most recent Tweets about each
 
 # Notice we're using searchTwitter function. We didn't use this function before in the previous Twitter API lecture.
 # It uses a different Twitter API end point. Rather than getting the tweets from a certain account,
 # it gets the Tweets that contain a certain text string.
-companyOne = searchTwitter(companyNameOne, n=extractTweetsNumber, lang="en")
-companyTwo = searchTwitter(companyNameTwo, n=extractTweetsNumber, lang="en")
-companyThree = searchTwitter(companyNameThree, n=extractTweetsNumber, lang="en")
+companyOne = search_tweets(companyNameOne, n=extractTweetsNumber, lang="en")
+companyTwo = search_tweets(companyNameTwo, n=extractTweetsNumber, lang="en")
+companyThree = search_tweets(companyNameThree, n=extractTweetsNumber, lang="en")
 
 # We only want the actual tweets rather than the meta-data, and this function does that.
-companyOne =  sapply(companyOne, function(x) x$getText())
-companyTwo =  sapply(companyTwo, function(x) x$getText())
-companyThree  =  sapply(companyThree, function(x) x$getText())
+
+companyOne =  companyOne$text
+companyTwo =  companyTwo$text
+companyThree  =  companyThree$text
 
 ## Clean the Tweets
 companies = list(companyOne, companyTwo, companyThree) #create a list with the three companies in it
