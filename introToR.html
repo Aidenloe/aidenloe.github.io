@@ -312,12 +312,6 @@ div.tocify {
   border-radius: 0px;
 }
 
-.tocify-subheader {
-  display: inline;
-}
-.tocify-subheader .tocify-item {
-  font-size: 0.95em;
-}
 
 </style>
 
@@ -568,7 +562,7 @@ object</code></pre>
 <li>Data Frames</li>
 </ol>
 <div id="vectors" class="section level3">
-<h3>Vectors</h3>
+<h3><strong>Vectors</strong></h3>
 <pre class="r"><code>vector1 &lt;- c(&quot;A&quot;, &quot;B&quot;, &quot;C&quot;)
 vector1[3] #refer to the third element in the vector
 vector1[1:2] #refer to elements 1 to 2 in the vector
@@ -593,7 +587,7 @@ vector3[3] &lt;- 106
 vector3</code></pre>
 </div>
 <div id="matrix" class="section level3">
-<h3>Matrix</h3>
+<h3><strong>Matrix</strong></h3>
 <pre class="r"><code># a set of elements that are all the same type, but with rows and columns
 
 sample1 &lt;- matrix(c(1,2,4,4,7,5), nrow=2, byrow = T) #create the matrix
@@ -623,7 +617,7 @@ row_matrix
 row_matrix[,&quot;Maths&quot;] #so now you can refer by column name</code></pre>
 </div>
 <div id="lists" class="section level3">
-<h3>Lists</h3>
+<h3><strong>Lists</strong></h3>
 <pre class="r"><code># a set of elements that are different data structure put together
 friend &lt;- list(name=&quot;Jasmine&quot;, age = 28)
 class(friend) # see data type
@@ -634,7 +628,7 @@ friend[[2]] #or you can refer to the number of the element
 length(friend) #how many elements in the list</code></pre>
 </div>
 <div id="data-frame" class="section level3">
-<h3>Data frame</h3>
+<h3><strong>Data frame</strong></h3>
 <pre class="r"><code># similar to a matrix, but different class
 # a set of elements that are all the same type, but with rows and columns
 
@@ -843,7 +837,7 @@ $(document).ready(function ()  {
       ignoreSelector: ".toc-ignore",
       scrollTo: 0
     };
-    options.showAndHide = false;
+    options.showAndHide = true;
     options.smoothScroll = true;
 
     // tocify

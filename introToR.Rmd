@@ -7,7 +7,7 @@ output:
     toc: true
     toc_depth: 3
     toc_float: 
-      collapsed: false
+      collapsed: true
       
 ---
 
@@ -171,7 +171,7 @@ R has different types of data structures:
   3. Lists
   4. Data Frames
 
-### Vectors ###
+### **Vectors** 
 ```{r vectors, results='hide'}
 vector1 <- c("A", "B", "C")
 vector1[3] #refer to the third element in the vector
@@ -197,7 +197,7 @@ vector3[3] <- 106
 vector3
 ```
 
-### Matrix ###
+### **Matrix** 
 ```{r matrix, results='hide'}
 # a set of elements that are all the same type, but with rows and columns
 
@@ -229,7 +229,7 @@ row_matrix[,"Maths"] #so now you can refer by column name
 
 ```
 
-### Lists
+### **Lists**
 ```{r lists, results='hide'}
 # a set of elements that are different data structure put together
 friend <- list(name="Jasmine", age = 28)
@@ -241,7 +241,7 @@ friend[[2]] #or you can refer to the number of the element
 length(friend) #how many elements in the list
 ```
 
-### Data frame
+### **Data frame**
 ```{r dataframe, results='hide'}
 # similar to a matrix, but different class
 # a set of elements that are all the same type, but with rows and columns
