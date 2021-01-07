@@ -485,8 +485,52 @@ library(&quot;pander&quot;)</code></pre>
 tweet_user = lookup_users(&#39;elonmusk&#39;) #will get user info from the @david_stillwell account
 
 ## Explore our new data
-pander(ls(tweet_user)) #see the elements in the new list variable</code></pre>
-<p><em>account_created_at</em>, <em>account_lang</em>, <em>bbox_coords</em>, <em>coords_coords</em>, <em>country</em>, <em>country_code</em>, <em>created_at</em>, <em>description</em>, <em>display_text_width</em>, <em>ext_media_expanded_url</em>, <em>ext_media_t.co</em>, <em>ext_media_type</em>, <em>ext_media_url</em>, <em>favorite_count</em>, <em>favourites_count</em>, <em>followers_count</em>, <em>friends_count</em>, <em>geo_coords</em>, <em>hashtags</em>, <em>is_quote</em>, <em>is_retweet</em>, <em>lang</em>, <em>listed_count</em>, <em>location</em>, <em>media_expanded_url</em>, <em>media_t.co</em>, <em>media_type</em>, <em>media_url</em>, <em>mentions_screen_name</em>, <em>mentions_user_id</em>, <em>name</em>, <em>place_full_name</em>, <em>place_name</em>, <em>place_type</em>, <em>place_url</em>, <em>profile_background_url</em>, <em>profile_banner_url</em>, <em>profile_expanded_url</em>, <em>profile_image_url</em>, <em>profile_url</em>, <em>protected</em>, <em>quote_count</em>, <em>quoted_created_at</em>, <em>quoted_description</em>, <em>quoted_favorite_count</em>, <em>quoted_followers_count</em>, <em>quoted_friends_count</em>, <em>quoted_location</em>, <em>quoted_name</em>, <em>quoted_retweet_count</em>, <em>quoted_screen_name</em>, <em>quoted_source</em>, <em>quoted_status_id</em>, <em>quoted_statuses_count</em>, <em>quoted_text</em>, <em>quoted_user_id</em>, <em>quoted_verified</em>, <em>reply_count</em>, <em>reply_to_screen_name</em>, <em>reply_to_status_id</em>, <em>reply_to_user_id</em>, <em>retweet_count</em>, <em>retweet_created_at</em>, <em>retweet_description</em>, <em>retweet_favorite_count</em>, <em>retweet_followers_count</em>, <em>retweet_friends_count</em>, <em>retweet_location</em>, <em>retweet_name</em>, <em>retweet_retweet_count</em>, <em>retweet_screen_name</em>, <em>retweet_source</em>, <em>retweet_status_id</em>, <em>retweet_statuses_count</em>, <em>retweet_text</em>, <em>retweet_user_id</em>, <em>retweet_verified</em>, <em>screen_name</em>, <em>source</em>, <em>status_id</em>, <em>status_url</em>, <em>statuses_count</em>, <em>symbols</em>, <em>text</em>, <em>url</em>, <em>urls_expanded_url</em>, <em>urls_t.co</em>, <em>urls_url</em>, <em>user_id</em> and <em>verified</em></p>
+ls(tweet_user) #see the elements in the new list variable</code></pre>
+<pre><code>##  [1] &quot;account_created_at&quot;      &quot;account_lang&quot;           
+##  [3] &quot;bbox_coords&quot;             &quot;coords_coords&quot;          
+##  [5] &quot;country&quot;                 &quot;country_code&quot;           
+##  [7] &quot;created_at&quot;              &quot;description&quot;            
+##  [9] &quot;display_text_width&quot;      &quot;ext_media_expanded_url&quot; 
+## [11] &quot;ext_media_t.co&quot;          &quot;ext_media_type&quot;         
+## [13] &quot;ext_media_url&quot;           &quot;favorite_count&quot;         
+## [15] &quot;favourites_count&quot;        &quot;followers_count&quot;        
+## [17] &quot;friends_count&quot;           &quot;geo_coords&quot;             
+## [19] &quot;hashtags&quot;                &quot;is_quote&quot;               
+## [21] &quot;is_retweet&quot;              &quot;lang&quot;                   
+## [23] &quot;listed_count&quot;            &quot;location&quot;               
+## [25] &quot;media_expanded_url&quot;      &quot;media_t.co&quot;             
+## [27] &quot;media_type&quot;              &quot;media_url&quot;              
+## [29] &quot;mentions_screen_name&quot;    &quot;mentions_user_id&quot;       
+## [31] &quot;name&quot;                    &quot;place_full_name&quot;        
+## [33] &quot;place_name&quot;              &quot;place_type&quot;             
+## [35] &quot;place_url&quot;               &quot;profile_background_url&quot; 
+## [37] &quot;profile_banner_url&quot;      &quot;profile_expanded_url&quot;   
+## [39] &quot;profile_image_url&quot;       &quot;profile_url&quot;            
+## [41] &quot;protected&quot;               &quot;quote_count&quot;            
+## [43] &quot;quoted_created_at&quot;       &quot;quoted_description&quot;     
+## [45] &quot;quoted_favorite_count&quot;   &quot;quoted_followers_count&quot; 
+## [47] &quot;quoted_friends_count&quot;    &quot;quoted_location&quot;        
+## [49] &quot;quoted_name&quot;             &quot;quoted_retweet_count&quot;   
+## [51] &quot;quoted_screen_name&quot;      &quot;quoted_source&quot;          
+## [53] &quot;quoted_status_id&quot;        &quot;quoted_statuses_count&quot;  
+## [55] &quot;quoted_text&quot;             &quot;quoted_user_id&quot;         
+## [57] &quot;quoted_verified&quot;         &quot;reply_count&quot;            
+## [59] &quot;reply_to_screen_name&quot;    &quot;reply_to_status_id&quot;     
+## [61] &quot;reply_to_user_id&quot;        &quot;retweet_count&quot;          
+## [63] &quot;retweet_created_at&quot;      &quot;retweet_description&quot;    
+## [65] &quot;retweet_favorite_count&quot;  &quot;retweet_followers_count&quot;
+## [67] &quot;retweet_friends_count&quot;   &quot;retweet_location&quot;       
+## [69] &quot;retweet_name&quot;            &quot;retweet_retweet_count&quot;  
+## [71] &quot;retweet_screen_name&quot;     &quot;retweet_source&quot;         
+## [73] &quot;retweet_status_id&quot;       &quot;retweet_statuses_count&quot; 
+## [75] &quot;retweet_text&quot;            &quot;retweet_user_id&quot;        
+## [77] &quot;retweet_verified&quot;        &quot;screen_name&quot;            
+## [79] &quot;source&quot;                  &quot;status_id&quot;              
+## [81] &quot;status_url&quot;              &quot;statuses_count&quot;         
+## [83] &quot;symbols&quot;                 &quot;text&quot;                   
+## [85] &quot;url&quot;                     &quot;urls_expanded_url&quot;      
+## [87] &quot;urls_t.co&quot;               &quot;urls_url&quot;               
+## [89] &quot;user_id&quot;                 &quot;verified&quot;</code></pre>
 <pre class="r"><code>#how long the account has been a Twitter user for
 tweet_user$account_created_at</code></pre>
 <pre><code>## [1] &quot;2009-06-02 20:12:29 UTC&quot;</code></pre>
@@ -495,7 +539,7 @@ tweet_user$name</code></pre>
 <pre><code>## [1] &quot;Elon Musk&quot;</code></pre>
 <pre class="r"><code>#how many followers the account has
 tweet_user$followers_count</code></pre>
-<pre><code>## [1] 41473676</code></pre>
+<pre><code>## [1] 41474745</code></pre>
 </div>
 <div id="harvest-data" class="section level2">
 <h2><strong>Harvest data</strong></h2>
@@ -796,8 +840,7 @@ ggplot(df, aes(x=telecom, y=meanscore, fill=factor(telecom))) +
 <div id="t-test-for-sentiment-score" class="section level2">
 <h2><strong>T test for sentiment score</strong></h2>
 <p>We can further confirm our visual result by running a simple pair-wise t-test.</p>
-<pre class="r"><code>require(pander)
-# t.test between the groups
+<pre class="r"><code># t.test between the groups
 pander(with(all.scores,(t.test(score[telecom==&quot;@ThreeUKSupport&quot;],score[telecom==&quot;@VodafoneUKhelp&quot;]))),style=&quot;simple&quot;)</code></pre>
 <table>
 <caption>Welch Two Sample t-test: <code>score[telecom == "@ThreeUKSupport"]</code> and <code>score[telecom == "@VodafoneUKhelp"]</code></caption>
