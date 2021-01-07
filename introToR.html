@@ -722,9 +722,8 @@ mean(df$job_satisfaction[df$is_male == 1], na.rm = T)
 
 # Option 3 (Piping)
 # passing the output from one function to the next
-require(dplyr) # need this package to use the &#39;%&gt;%&#39;</code></pre>
-<pre><code>## Warning: package &#39;dplyr&#39; was built under R version 4.0.2</code></pre>
-<pre class="r"><code>mean(df$job_satisfaction[df$is_male == 1], na.rm = T)
+require(dplyr) # need this package to use the &#39;%&gt;%&#39;
+mean(df$job_satisfaction[df$is_male == 1], na.rm = T)
 df$job_satisfaction[df$is_male == 1] %&gt;% mean(na.rm=T)
 
 #Question 4
